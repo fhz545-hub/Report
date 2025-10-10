@@ -34,11 +34,11 @@ html,body{
 .header-img img{width:100%; height:100%; object-fit:cover; display:block}
 .header-fallback{position:absolute; inset:0; background:linear-gradient(90deg,#0b7e88,#15a3ad); display:none}
 
-/* العنوان — رُفع للأعلى */
+/* العنوان — تحت الهيدر مباشرة */
 .titlebar-wrap{
   display:grid; place-items:center;
-  padding-top:2px; padding-bottom:0;
-  transform:translateY(-2.5mm); /* رفع اسم البرنامج باتجاه الهيدر */
+  padding:0;
+  transform:translateY(-3mm); /* أقرب للهيدر */
 }
 .titlebar{
   display:inline-block; padding:6px 18px; border-radius:14px; background:var(--accent); color:#fff;
@@ -49,7 +49,7 @@ html,body{
 
 /* المحتوى (ثابت الارتفاعات) — تقليل الفواصل لرفع الجدول */
 .main{
-  padding:0 10mm; display:grid; gap:2mm; /* gap أصغر */
+  padding:0 10mm; display:grid; gap:1.5mm;
   grid-template-rows:
     auto     /* جدول التعريف */
     70mm     /* الأهداف + النبذة — ثابت */
@@ -57,28 +57,28 @@ html,body{
     22mm;    /* التواقيع — ثابت */
 }
 
-/* ===== جدول التعريف — مُصغّر ومُميّز ===== */
+/* ===== جدول التعريف — مُصغّر جدًا ومُميّز ===== */
 .table{
   width:100%; border-collapse:collapse; table-layout:fixed; background:#fff;
   border:1px solid var(--line);
-  font-size:12.5px;                 /* أصغر */
-  line-height:1.3;                  /* صفوف أكثر تماسكًا */
-  margin-top:-2mm;                  /* رفع الجدول للأعلى قليلًا */
-  border-top:3px solid var(--accent);/* شريط علوي بلون الهوية */
+  font-size:12.3px;               /* أصغر قليلًا */
+  line-height:1.25;               /* تماسك أكبر */
+  margin-top:-3mm;                /* تحت العنوان مباشرة */
+  border-top:3px solid var(--accent);
   box-shadow:0 4px 14px rgba(0,0,0,.04);
 }
 .table th,.table td{
   border:1px solid var(--line);
-  padding:1.2mm 2.6mm;              /* تضييق الصفوف */
+  padding:0.9mm 2.2mm;           /* أقل من 1mm رأسيًا */
   vertical-align:top;
   word-break:break-word; overflow-wrap:anywhere;
 }
 .table th{
-  width:23.5%;                      /* رؤوس أضيق */
+  width:23.5%;
   background:linear-gradient(180deg,#f1fafb,#e9f5f6);
   color:#215a55; font-weight:800;
 }
-.table tr:nth-child(even) td{ background:#fafcfd } /* تمييز صفوف خفيف */
+.table tr:nth-child(even) td{ background:#fafcfd }
 .table td{ color:#0f172a }
 .table [contenteditable]{outline:none}
 .table [contenteditable]:focus{box-shadow:inset 0 0 0 2px rgba(47,127,121,.18); border-radius:4px}
@@ -155,7 +155,7 @@ html,body{
     <div class="header-fallback" id="headerFallback"></div>
   </div>
 
-  <!-- العنوان (مرفوع) -->
+  <!-- العنوان (ملاصق للهيدر) -->
   <div class="titlebar-wrap">
     <div class="titlebar" id="titlebar" contenteditable="true">تقرير تنفيذ برنامج (قابل للتعديل)</div>
   </div>
@@ -163,7 +163,7 @@ html,body{
   <!-- المحتوى -->
   <div class="main">
 
-    <!-- جدول التعريف (مُصغّر ومرفوع) -->
+    <!-- جدول التعريف (مُصغّر جدًا ومرفوع) -->
     <table class="table" role="table" aria-label="بيانات البرنامج">
       <tr>
         <th contenteditable="true">مقدّم البرنامج</th>
@@ -242,7 +242,7 @@ html,body{
 
 <script>
 /* ====== أدوات عامة ====== */
-const STORAGE_KEY='school_report_v7';
+const STORAGE_KEY='school_report_v8';
 function toast(msg){ const t=document.createElement('div'); t.className='toast'; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(), 2200); }
 function setBusy(b){ const btn=document.getElementById('btnPdf'); const sel=document.getElementById('pdfQuality'); [btn,sel].forEach(el=>{ if(el) el.disabled=!!b; }); }
 
@@ -384,7 +384,7 @@ async function generateSinglePagePdf(){
   return { pdf, filename };
 }
 
-/* تنبيهات امتلاء */
+/* تنبيه امتلاء */
 function checkFillWarnings(){
   const boxes=[document.getElementById('goalsText'), document.getElementById('aboutText')];
   const over = boxes.some(el => el?.dataset?.full==='1');
@@ -398,7 +398,6 @@ function refitAll(){
   checkFillWarnings();
 }
 function bindUI(){
-  // لصق آمن + FitText
   ['goalsText','aboutText'].forEach(id=>{
     const el=document.getElementById(id);
     installPlainPaste(el);
@@ -407,7 +406,6 @@ function bindUI(){
     const ro=new ResizeObserver(()=>{ fitTextToBox(el); checkFillWarnings(); }); ro.observe(el); ro.observe(el.parentElement);
   });
 
-  // ملاءمة بسيطة لعنوان التقرير
   const title=document.getElementById('titlebar');
   function fitTitle(){
     const wrap=title.parentElement; const maxW=wrap.clientWidth*.72; let s=18, min=14, max=22;
@@ -418,14 +416,12 @@ function bindUI(){
   ['input','keyup'].forEach(evt=> title.addEventListener(evt, ()=>{ fitTitle(); saveState(); }));
   const roT=new ResizeObserver(fitTitle); roT.observe(title); roT.observe(title.parentElement); fitTitle();
 
-  // زر PDF
   document.getElementById('btnPdf')?.addEventListener('click', async ()=>{
     try{ setBusy(true); saveState(); const {pdf, filename}=await generateSinglePagePdf(); pdf.save(filename); toast('تم إنشاء PDF ✅'); }
     catch(e){ console.error(e); alert('تعذّر إنشاء PDF.'); }
     finally{ setBusy(false); }
   });
 
-  // حفظ تلقائي
   document.querySelectorAll('[contenteditable], .table th, .table td').forEach(el=>{
     ['input','keyup','blur'].forEach(evt=> el.addEventListener(evt, saveState));
   });
