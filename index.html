@@ -15,8 +15,7 @@
 :root{
   --ink:#1f2937; --muted:#6b7280; --line:#d1d5db;
   --paper:#ffffff; --bg:#f5f7fb;
-  --accent:#2f7f79;  /* اللون الرئيس */
-  --footer:#0e3b46;  /* شريط سفلي */
+  --accent:#2f7f79;  --footer:#0e3b46;
   --base:14px; --title:18px; --name:17px;
 }
 *{box-sizing:border-box}
@@ -30,7 +29,7 @@ html,body{height:100%; margin:0; background:var(--bg); color:var(--ink);
   display:grid; grid-template-rows: 30mm auto 2mm auto 6mm; overflow:hidden;
 }
 
-/* الهيدر + بديل عند الفشل */
+/* الهيدر + بديل */
 .header-img{height:30mm; overflow:hidden; background:#eee; position:relative}
 .header-img img{width:100%; height:100%; object-fit:cover; display:block}
 .header-fallback{position:absolute; inset:0; background:linear-gradient(90deg,#0b7e88,#15a3ad); display:none}
@@ -49,7 +48,6 @@ html,body{height:100%; margin:0; background:var(--bg); color:var(--ink);
 .main{
   padding:0 10mm;
   display:grid; grid-template-rows: 44mm 74mm 58mm 22mm; gap:4mm;
-  /* جدول | أهداف+نبذة (واسعان) | شواهد | تواقيع */
 }
 
 /* جدول المعلومات */
@@ -65,7 +63,7 @@ html,body{height:100%; margin:0; background:var(--bg); color:var(--ink);
 .table [contenteditable]{outline:none}
 .table [contenteditable]:focus{box-shadow:inset 0 0 0 3px rgba(47,127,121,.15)}
 
-/* الأهداف + النبذة — ثابتان مع FitText ثنائي الاتجاه (تكبير/تصغير) */
+/* الأهداف + النبذة — FitText يكبّر/يصغّر تلقائياً */
 .split{display:grid; grid-template-columns:1fr 1fr; gap:4mm; height:74mm}
 .card{
   border:1px solid var(--line); border-radius:8px; background:#fff;
@@ -80,10 +78,8 @@ html,body{height:100%; margin:0; background:var(--bg); color:var(--ink);
 }
 .fittext{
   width:100%; height:100%;
-  white-space:pre-wrap;      /* يحافظ على الأسطر */
-  word-break:break-word;     /* يمنع خروج الكلمات */
-  line-height:1.6;
-  font-size:15px;            /* «وسط» افتراضي */
+  white-space:pre-wrap; word-break:break-word;
+  line-height:1.6; font-size:15px; /* وسط افتراضي */
 }
 
 /* الشواهد — صورتان */
@@ -110,7 +106,7 @@ html,body{height:100%; margin:0; background:var(--bg); color:var(--ink);
 /* الشريط السفلي */
 .footer-bar{height:6mm; background:var(--footer)}
 
-/* الأزرار (خارج الورقة ولا تظهر في PDF) */
+/* الأزرار */
 .actions{
   position:fixed; top:10px; right:10px; left:10px; display:flex; gap:8px; z-index:9999;
 }
@@ -122,7 +118,7 @@ html,body{height:100%; margin:0; background:var(--bg); color:var(--ink);
 }
 .btn svg{width:18px; height:18px; fill:#fff}
 
-/* معاينة الهاتف — مقياس آمن */
+/* معاينة الهاتف */
 @media (max-width:600px){
   .sheet{transform:scale(0.92); transform-origin:top center;}
 }
@@ -181,18 +177,18 @@ html,body{height:100%; margin:0; background:var(--bg); color:var(--ink);
       </tr>
     </table>
 
-    <!-- الأهداف + النبذة (FitText ذكي يكبّر/يصغّر) -->
+    <!-- الأهداف + النبذة -->
     <div class="split">
       <div class="card">
         <div class="head">الأهداف</div>
         <div class="body">
-          <div id="goalsText" class="fittext" contenteditable="true">اكتب الأهداف هنا. إذا كان النص قليلاً سيكبر الخط تلقائيًا ليصبح وسطًا واضحًا. وإذا زاد سيصغر تدريجيًا ليدخل الصندوق بالكامل دون نقاط أو قص.</div>
+          <div id="goalsText" class="fittext" contenteditable="true">اكتب الأهداف هنا…</div>
         </div>
       </div>
       <div class="card">
         <div class="head">نبذة عن البرنامج</div>
         <div class="body">
-          <div id="aboutText" class="fittext" contenteditable="true">اكتب نبذة موجزة عن البرنامج. اللصق من Word أو أي مكان خارجي سيكون نصًا صافياً دون تنسيق يسبب تداخلًا.</div>
+          <div id="aboutText" class="fittext" contenteditable="true">اكتب النبذة هنا…</div>
         </div>
       </div>
     </div>
@@ -227,12 +223,94 @@ html,body{height:100%; margin:0; background:var(--bg); color:var(--ink);
 </div>
 
 <script>
-/* ضمان الهيدر */
+/* ========= أدوات مساعدة عامة ========= */
+
+/* تحويل <img> الحالي إلى DataURL (يُجنّب CORS ويضمن الالتقاط) */
+async function imgElementToDataURL(imgEl){
+  if(!imgEl || !imgEl.src) return;
+  // إن كان src أصلاً dataURL نخرج
+  if (imgEl.src.startsWith('data:image')) return;
+
+  // نضمن التحميل
+  await (imgEl.decode ? imgEl.decode().catch(()=>{}) : new Promise(res=>{
+    if (imgEl.complete && imgEl.naturalWidth>0) return res();
+    imgEl.addEventListener('load', res, {once:true});
+    imgEl.addEventListener('error', res, {once:true});
+  }));
+
+  try{
+    const w = Math.max(1, imgEl.naturalWidth);
+    const h = Math.max(1, imgEl.naturalHeight);
+    const cvs = document.createElement('canvas');
+    cvs.width = w; cvs.height = h;
+    const ctx = cvs.getContext('2d', {alpha:false});
+    ctx.drawImage(imgEl, 0, 0, w, h);
+    const data = cvs.toDataURL('image/jpeg', 0.95);
+    imgEl.src = data; // استبدال المصدر بنسخة dataURL
+  }catch(e){
+    // إن فشل (CORS)، اتركه وشأنه—سنتعامل عبر fallback الهيدر أو عبر انتظار الصور
+    console.warn('imgElementToDataURL failed (likely CORS):', e);
+  }
+}
+
+/* انتظار كل الصور داخل #sheet (بما فيها الهيدر والشواهد) */
+async function waitForImagesReady() {
+  const imgs = Array.from(document.querySelectorAll('#sheet img'))
+    .filter(img => img && img.src && img.src.length > 0);
+
+  // حاول تحويل كل صورة إلى DataURL أولاً
+  for (const im of imgs){ await imgElementToDataURL(im); }
+
+  // ثم انتظر اكتمالها (لضمان أن dataURL رُسم داخل <img>)
+  const waitOne = (img) => {
+    if (img.complete && img.naturalWidth > 0) return Promise.resolve();
+    if (img.decode) return img.decode().catch(()=>Promise.resolve());
+    return new Promise((res)=> {
+      img.addEventListener('load',  res, {once:true});
+      img.addEventListener('error', res, {once:true});
+    });
+  };
+  await Promise.all(imgs.map(waitOne));
+  await new Promise(r => setTimeout(r, 60));
+}
+
+/* FitText: يكبّر/يصغّر ليناسب الصندوق */
+function fitTextToBox(el, opts={}){
+  if(!el) return;
+  const parent = el.parentElement;
+  const maxH = parent.clientHeight, maxW = parent.clientWidth;
+  const minSize = opts.minSize ?? 12;
+  const maxSize = opts.maxSize ?? 18;
+  let size = opts.baseSize ?? 15;
+  function setSize(s){
+    const line = Math.max(1.25, Math.min(1.6, 1.3 + (s-12)*0.05));
+    el.style.fontSize=s+'px'; el.style.lineHeight=line;
+  }
+  el.style.wordBreak='break-word'; el.style.whiteSpace='pre-wrap'; el.style.overflow='hidden';
+  setSize(size);
+
+  let guard=0;
+  while (guard++<80 && (el.scrollHeight>maxH || el.scrollWidth>maxW) && size>minSize){ size-=0.5; setSize(size); }
+  guard=0;
+  const roomy=()=> el.scrollHeight<maxH*0.95 && el.scrollWidth<maxW*0.98;
+  while (guard++<80 && roomy() && size<maxSize){ size+=0.5; setSize(size); if(el.scrollHeight>maxH||el.scrollWidth>maxW){ size-=0.5; setSize(size); break; } }
+}
+
+/* تنظيف اللصق (نص صِرف) */
+function installPlainPaste(el){
+  el.addEventListener('paste', (e)=>{
+    e.preventDefault();
+    const text = (e.clipboardData || window.clipboardData).getData('text');
+    document.execCommand('insertText', false, text);
+  });
+}
+
+/* ========= تهيئة الهيدر ========= */
 (function ensureHeader(){
   const img = document.getElementById('headerPic');
   const fb  = document.getElementById('headerFallback');
   let done=false;
-  function ok(){ if(!done){ done=true; fb.style.display='none'; } }
+  function ok(){ if(!done){ done=true; fb.style.display='none'; imgElementToDataURL(img); } }
   function fail(){ if(!done){ done=true; fb.style.display='block'; } }
   if (img.complete && img.naturalWidth>0) ok();
   else{
@@ -251,76 +329,23 @@ try{
   }
 }catch{}
 
-/* FitText ثنائي الاتجاه: يكبّر عند النص القصير ويصغّر عند الطويل
-   - يحافظ على line-height متناسبًا
-   - يمنع القصّ والتمرير والنقاط
-*/
-function fitTextToBox(el, opts={}){
-  if(!el) return;
-  const parent = el.parentElement;           // .body (محدد الارتفاع)
-  const maxH = parent.clientHeight, maxW = parent.clientWidth;
-  const minSize = opts.minSize ?? 12;        // حد أدنى للمقروئية
-  const maxSize = opts.maxSize ?? 18;        // حد أقصى «وسط كبير»
-  let size = opts.baseSize ?? 15;            // وسط افتراضي
-  // نبدأ بحجم “وسط”
-  el.style.wordBreak   = 'break-word';
-  el.style.whiteSpace  = 'pre-wrap';
-  el.style.overflow    = 'hidden';
-
-  function setSize(s){
-    const line = Math.max(1.25, Math.min(1.6, 1.3 + (s-12)*0.05)); // توازن للسطر
-    el.style.fontSize   = s+'px';
-    el.style.lineHeight = line;
-  }
-  setSize(size);
-
-  // pokud overflow => صغّر
-  let guard = 0;
-  while (guard++ < 80 && (el.scrollHeight > maxH || el.scrollWidth > maxW) && size > minSize){
-    size -= 0.5; setSize(size);
-  }
-
-  // إذا فيه مساحة فاضية كبيرة => كبّر تدريجيًا حتى نقترب من 95% من الارتفاع
-  guard = 0;
-  function roomy(){ return el.scrollHeight < maxH * 0.95 && el.scrollWidth < maxW * 0.98; }
-  while (guard++ < 80 && roomy() && size < maxSize){
-    size += 0.5; setSize(size);
-    if (el.scrollHeight > maxH || el.scrollWidth > maxW){ // تراجع خطوة إذا تعدّى
-      size -= 0.5; setSize(size); break;
-    }
-  }
-}
-
-/* تنظيف اللصق: لصق نص صِرف بدون تنسيقات خارجية */
-function installPlainPaste(el){
-  el.addEventListener('paste', (e)=>{
-    e.preventDefault();
-    const text = (e.clipboardData || window.clipboardData).getData('text');
-    // نحترم الأسطر
-    document.execCommand('insertText', false, text);
-  });
-}
-
-/* تفعيل FitText والمراقبات */
+/* تفعيل FitText للمربعات */
 const FT_IDS = ['goalsText','aboutText'];
 function refitAll(){ FT_IDS.forEach(id=> fitTextToBox(document.getElementById(id))); }
-
 document.addEventListener('DOMContentLoaded', ()=>{
   FT_IDS.forEach(id=>{
     const node = document.getElementById(id);
-    installPlainPaste(node);                 // لصق آمن
+    installPlainPaste(node);
     const fitNow = ()=>fitTextToBox(node);
     ['input','keyup'].forEach(evt=> node.addEventListener(evt, fitNow));
-    // راقب تغيّر حجم الحاوية أو الصفحة
-    const ro = new ResizeObserver(fitNow);
-    ro.observe(node); ro.observe(node.parentElement);
+    const ro = new ResizeObserver(fitNow); ro.observe(node); ro.observe(node.parentElement);
   });
   refitAll();
 });
 window.addEventListener('load', refitAll);
 window.addEventListener('resize', ()=>{ clearTimeout(window.__ftT); window.__ftT=setTimeout(refitAll,120); });
 
-/* الشواهد: Canvas بخلفية مموهة + الصورة كاملة */
+/* الشواهد: إنشاء صورة ممتلئة أنيقة (خلفية مموهة + الأصل كاملًا) */
 function renderContainedPretty(imgBlob, box){
   return new Promise((resolve,reject)=>{
     const url = URL.createObjectURL(imgBlob);
@@ -332,16 +357,12 @@ function renderContainedPretty(imgBlob, box){
         const bh = Math.max(1, Math.floor(box.clientHeight * dpr));
         const cvs = document.createElement('canvas'); cvs.width=bw; cvs.height=bh;
         const ctx = cvs.getContext('2d', {alpha:false});
-        // خلفية "cover" مموهة
         const cover = Math.max(bw/img.naturalWidth, bh/img.naturalHeight);
         const cw = Math.floor(img.naturalWidth * cover);
         const ch = Math.floor(img.naturalHeight * cover);
         const cx = Math.floor((bw - cw)/2), cy = Math.floor((bh - ch)/2);
-        ctx.filter = 'blur(20px) brightness(1.03)';
-        ctx.drawImage(img, cx, cy, cw, ch);
-        ctx.filter = 'none';
-        ctx.fillStyle = 'rgba(255,255,255,0.08)'; ctx.fillRect(0,0,bw,bh);
-        // الصورة الأصلية كاملة
+        ctx.filter = 'blur(20px) brightness(1.03)'; ctx.drawImage(img, cx, cy, cw, ch); ctx.filter='none';
+        ctx.fillStyle='rgba(255,255,255,0.08)'; ctx.fillRect(0,0,bw,bh);
         const contain = Math.min(bw/img.naturalWidth, bh/img.naturalHeight);
         const dw = Math.floor(img.naturalWidth * contain);
         const dh = Math.floor(img.naturalHeight * contain);
@@ -364,22 +385,28 @@ async function handlePhoto(inputEl){
     const dataUrl = await renderContainedPretty(file, box);
     let img = box.querySelector('img');
     if(!img){ img = document.createElement('img'); box.appendChild(img); }
-    img.src = dataUrl;
+    img.src = dataUrl;              // dataURL جاهزة
+    await imgElementToDataURL(img); // (احتياط) يضمن أنها dataURL فعلًا
   }catch(e){ console.error(e); }
 }
 
-/* PDF صفحة واحدة مع دقة هيدر عالية */
+/* ======== PDF: صفحة واحدة + كل الصور تظهر ======== */
 async function generateSinglePagePdf(){
-  await new Promise(r=>setTimeout(r,50)); // انتظار خفيف لـFitText/الهيدر
+  // 1) تأكد أن كل <img> داخل الورقة أصبحت DataURL وجاهزة
+  await waitForImagesReady();
+
+  // 2) التقط الورقة
   const sheet = document.getElementById('sheet');
   const canvas = await html2canvas(sheet, {
     scale: Math.min(window.devicePixelRatio || 2, 3),
     backgroundColor:'#ffffff',
     useCORS:true, allowTaint:false,
     scrollX:0, scrollY:-window.scrollY,
-    imageTimeout: 1500,
+    imageTimeout: 2000,
     ignoreElements: (el)=> el?.dataset?.nopdf === 'true' || el?.tagName === 'INPUT'
   });
+
+  // 3) أنشئ PDF صفحة واحدة
   const imgData = canvas.toDataURL('image/jpeg', 0.98);
   const { jsPDF } = window.jspdf;
   const pdf = new jsPDF({orientation:'p', unit:'mm', format:'a4'});
@@ -389,11 +416,12 @@ async function generateSinglePagePdf(){
   const imgH_byWidth  = (canvas.height * imgW_byWidth) / canvas.width;
   const imgH_byHeight = pageH;
   const imgW_byHeight = (canvas.width * imgH_byHeight) / canvas.height;
-  let drawW, drawH, ox, oy;
+  let drawW, drawH;
   if (imgH_byWidth <= pageH){ drawW = imgW_byWidth; drawH = imgH_byWidth; }
   else { drawW = imgW_byHeight; drawH = imgH_byHeight; }
-  ox = (pageW - drawW)/2; oy = (pageH - drawH)/2;
+  const ox = (pageW - drawW)/2; const oy = (pageH - drawH)/2;
   pdf.addImage(imgData, 'JPEG', ox, oy, drawW, drawH, undefined, 'FAST');
+
   const title = (document.getElementById('titlebar').innerText || 'تقرير').replace(/[\\\/:*?"<>|]+/g,' ').trim();
   const hijri = (document.getElementById('hijriDate').innerText || '').replace(/\s+/g,' ').trim();
   const filename = `${(title||'تقرير')} - ${hijri||''}`.replace(/\s{2,}/g,' ') + '.pdf';
@@ -404,7 +432,7 @@ async function generateSinglePagePdf(){
 document.addEventListener('DOMContentLoaded', ()=>{
   document.getElementById('btnPdf')?.addEventListener('click', async ()=>{
     try{ const { pdf, filename } = await generateSinglePagePdf(); pdf.save(filename); }
-    catch(e){ console.error(e); alert('تعذّر إنشاء PDF. تأكّد من وجود header.jpg محليًا أو دعم CORS.'); }
+    catch(e){ console.error(e); alert('تعذّر إنشاء PDF.'); }
   });
   document.getElementById('btnShare')?.addEventListener('click', async ()=>{
     try{
@@ -417,7 +445,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
         a.href=url; a.download=filename; document.body.appendChild(a); a.click(); a.remove();
         setTimeout(()=>URL.revokeObjectURL(url), 60000);
       }
-    }catch(e){ console.error(e); alert('المشاركة غير مدعومة على هذا المتصفح — تم تجهيز تنزيل بديل.'); }
+    }catch(e){ console.error(e); alert('المشاركة غير مدعومة — تم تجهيز تنزيل بديل.'); }
   });
 });
 </script>
