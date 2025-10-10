@@ -17,8 +17,10 @@
   --base:14px; --title:18px; --name:17px;
 }
 *{box-sizing:border-box}
-html,body{height:100%; margin:0; background:var(--bg); color:var(--ink);
-  font-family:"Tajawal",system-ui,sans-serif; line-height:1.6; font-size:var(--base);}
+html,body{
+  height:100%; margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Tajawal",system-ui,sans-serif; line-height:1.6; font-size:var(--base);
+}
 
 /* ورقة A4 صفحة واحدة */
 .sheet{
@@ -32,10 +34,10 @@ html,body{height:100%; margin:0; background:var(--bg); color:var(--ink);
 .header-img img{width:100%; height:100%; object-fit:cover; display:block}
 .header-fallback{position:absolute; inset:0; background:linear-gradient(90deg,#0b7e88,#15a3ad); display:none}
 
-/* العنوان — أُلصق للهيدر أكثر */
+/* العنوان — تحت الهيدر مباشرة */
 .titlebar-wrap{
+  position:relative; top:-6mm; /* أُلصق للهيدر */
   display:grid; place-items:center; padding:0;
-  transform:translateY(-4mm);
 }
 .titlebar{
   display:inline-block; padding:6px 18px; border-radius:14px; background:var(--accent); color:#fff;
@@ -44,9 +46,9 @@ html,body{height:100%; margin:0; background:var(--bg); color:var(--ink);
 }
 .titlebar[contenteditable]:focus{outline:2px dashed rgba(255,255,255,.7); outline-offset:4px}
 
-/* المحتوى (ثابت الارتفاعات) — فجوات أصغر لرفع الجدول */
+/* المحتوى — فجوات مصغّرة لرفع الجدول */
 .main{
-  padding:0 10mm; display:grid; gap:1.2mm;
+  padding:0 10mm; display:grid; gap:0.8mm; /* أصغر */
   grid-template-rows:
     auto     /* جدول التعريف */
     70mm     /* الأهداف + النبذة — ثابت */
@@ -60,13 +62,13 @@ html,body{height:100%; margin:0; background:var(--bg); color:var(--ink);
   border:1px solid var(--line);
   font-size:12.3px;
   line-height:1.2;                 /* تماسك عالٍ */
-  margin-top:-4.5mm;               /* أقرب ما يكون للعنوان */
+  margin-top:-6mm;                 /* تحت العنوان مباشرة */
   border-top:3px solid var(--accent);
   box-shadow:0 4px 14px rgba(0,0,0,.04);
 }
 .table th,.table td{
   border:1px solid var(--line);
-  padding:0.8mm 2mm;              /* أقل من 1مم رأسيًا */
+  padding:0.7mm 1.8mm;            /* أقل من 1مم رأسيًا */
   text-align:center;              /* توسيط أفقي */
   vertical-align:middle;          /* توسيط عمودي */
   word-break:break-word; overflow-wrap:anywhere;
@@ -87,27 +89,38 @@ html,body{height:100%; margin:0; background:var(--bg); color:var(--ink);
   border:1px solid var(--line); border-radius:8px; background:#fff;
   display:grid; grid-template-rows:12mm 1fr; position:relative; overflow:hidden;
 }
-.card .head{padding:0 4mm; display:flex; align-items:center; background:#f3fafb; color:#0b7e88;
-  font-weight:800; border-bottom:1px solid var(--line); font-size:var(--base)}
+.card .head{
+  padding:0 4mm; display:flex; align-items:center; background:#f3fafb; color:#0b7e88;
+  font-weight:800; border-bottom:1px solid var(--line); font-size:var(--base)
+}
 .card .body{padding:3mm 4mm; overflow:hidden; display:flex; align-items:flex-start; justify-content:stretch}
-.fittext{width:100%; height:100%; white-space:pre-wrap; word-break:break-word; overflow:hidden; line-height:1.6; font-size:15px; font-weight:400}
+.fittext{
+  width:100%; height:100%;
+  white-space:pre-wrap; word-break:break-word; overflow:hidden;
+  line-height:1.6; font-size:15px; font-weight:400;
+}
 
-/* أدوات نص (تختفي بالـPDF) */
+/* أدوات النص (لا تظهر في PDF) */
 .toolstrip{position:absolute; top:12mm; inset-inline-end:6px; z-index:5; display:flex; gap:6px}
 .toolbtn{border:1px solid var(--line); background:#fff; color:#111; font-weight:800; padding:4px 8px; border-radius:8px; cursor:pointer; font-size:12px; box-shadow:0 2px 8px rgba(0,0,0,.08)}
 .toolbtn:active{transform:scale(0.98)}
 
 /* الشواهد — ثابتة */
 .gallery{display:grid; grid-template-columns:1fr 1fr; gap:4mm; height:58mm}
-.photo{position:relative; background:#fff; border:1px solid var(--line); border-radius:8px;
-  display:flex; align-items:center; justify-content:center; overflow:hidden}
+.photo{
+  position:relative; background:#fff; border:1px solid var(--line); border-radius:8px;
+  display:flex; align-items:center; justify-content:center; overflow:hidden;
+}
 .photo input[type="file"]{position:absolute; inset:0; opacity:0; cursor:pointer; z-index:2}
 .photo .hint{position:absolute; z-index:1; color:#6b7280; font-size:var(--base); pointer-events:none; text-align:center; padding:6px 8px}
 .photo img{max-width:100%; max-height:100%; display:block}
 
 /* التواقيع */
 .signatures{height:22mm; display:grid; grid-template-columns:1fr 1fr; gap:4mm}
-.sig{background:#fff; border:1px solid var(--line); border-radius:8px; display:grid; grid-template-rows:9mm 1fr; text-align:center}
+.sig{
+  background:#fff; border:1px solid var(--line); border-radius:8px;
+  display:grid; grid-template-rows:9mm 1fr; text-align:center;
+}
 .sig h4{margin:0; display:grid; place-items:center; color:#1597a0; font-weight:800; font-size:var(--name); border-bottom:1px solid var(--line)}
 .sig .name{font-weight:800; font-size:var(--name); display:grid; place-items:center}
 
@@ -142,7 +155,7 @@ html,body{height:100%; margin:0; background:var(--bg); color:var(--ink);
     <div class="header-fallback" id="headerFallback"></div>
   </div>
 
-  <!-- العنوان (ملتصق أكثر بالهيدر) -->
+  <!-- العنوان (ملاصق للهيدر) -->
   <div class="titlebar-wrap">
     <div class="titlebar" id="titlebar" contenteditable="true">تقرير تنفيذ برنامج (قابل للتعديل)</div>
   </div>
@@ -150,7 +163,7 @@ html,body{height:100%; margin:0; background:var(--bg); color:var(--ink);
   <!-- المحتوى -->
   <div class="main">
 
-    <!-- جدول التعريف (مرفوع وموحد التوسيط) -->
+    <!-- جدول التعريف (مرفوع وموحّد التوسيط) -->
     <table class="table" role="table" aria-label="بيانات البرنامج">
       <tr>
         <th contenteditable="true">مقدّم البرنامج</th>
@@ -228,11 +241,13 @@ html,body{height:100%; margin:0; background:var(--bg); color:var(--ink);
 </div>
 
 <script>
-const STORAGE_KEY='school_report_v9';
+/* نسخة تخزين جديدة لضمان تحميل التعديلات */
+const STORAGE_KEY='school_report_v10';
+
 function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2200)}
 function setBusy(b){['btnPdf','pdfQuality'].forEach(id=>{const el=document.getElementById(id); if(el) el.disabled=!!b;});}
 
-/* FitText ثابت للمربعات */
+/* FitText ثابت */
 function fitTextToBox(el,{minSize=12,maxSize=20,baseSize=15}={}){
   if(!el) return;
   const parent=el.parentElement, maxH=parent.clientHeight, maxW=parent.clientWidth;
@@ -244,11 +259,13 @@ function fitTextToBox(el,{minSize=12,maxSize=20,baseSize=15}={}){
   while(i++<60 && roomy() && s<maxSize){ s+=0.5; set(s); if(el.scrollHeight>maxH||el.scrollWidth>maxW){ s-=0.5; set(s); break; } }
   if(el.scrollHeight>maxH-2||s<=minSize) el.dataset.full='1'; else delete el.dataset.full;
 }
+
+/* أدوات النص */
 function adjText(id,dir){const el=document.getElementById(id); if(!el) return; const cur=parseFloat(getComputedStyle(el).fontSize)||15; const next=Math.max(12,Math.min(20,cur+(dir>0?1:-1))); el.style.fontSize=next+'px'; fitTextToBox(el);}
 function toggleBold(id){const el=document.getElementById(id); if(!el) return; el.style.fontWeight=(getComputedStyle(el).fontWeight>='600')?'400':'700'; fitTextToBox(el);}
 function installPlainPaste(el){el.addEventListener('paste',e=>{e.preventDefault();const t=(e.clipboardData||window.clipboardData).getData('text');document.execCommand('insertText',false,t);});}
 
-/* صور + PDF */
+/* الصور والـPDF */
 async function imageToDataURL(img,{maxSide=2000,quality=0.92}={}){await(img.decode?img.decode().catch(()=>{}):new Promise(r=>{if(img.complete&&img.naturalWidth>0)return r();img.addEventListener('load',r,{once:true});img.addEventListener('error',r,{once:true});}));const w=img.naturalWidth,h=img.naturalHeight,s=Math.min(1,maxSide/Math.max(w,h));const nw=Math.max(1,Math.floor(w*s)),nh=Math.max(1,Math.floor(h*s));const c=document.createElement('canvas');c.width=nw;c.height=nh;const x=c.getContext('2d',{alpha:false});x.imageSmoothingQuality='high';x.drawImage(img,0,0,nw,nh);return c.toDataURL('image/jpeg',quality);}
 function renderContainedPrettyFromFile(file,box){return new Promise((res,rej)=>{const url=URL.createObjectURL(file);const img=new Image();img.onload=async()=>{try{const tmp=new Image();tmp.src=await imageToDataURL(img,{maxSide:2000,quality:0.9});await(tmp.decode?tmp.decode().catch(()=>{}):Promise.resolve());const dpr=Math.min(window.devicePixelRatio||1,2.5);const bw=Math.max(1,Math.floor(box.clientWidth*dpr)),bh=Math.max(1,Math.floor(box.clientHeight*dpr));const c=document.createElement('canvas');c.width=bw;c.height=bh;const ctx=c.getContext('2d',{alpha:false});const cover=Math.max(bw/tmp.naturalWidth,bh/tmp.naturalHeight);const cw=Math.floor(tmp.naturalWidth*cover),ch=Math.floor(tmp.naturalHeight*cover);const cx=Math.floor((bw-cw)/2),cy=Math.floor((bh-ch)/2);ctx.filter='blur(18px) brightness(1.03)';ctx.drawImage(tmp,cx,cy,cw,ch);ctx.filter='none';ctx.fillStyle='rgba(255,255,255,0.08)';ctx.fillRect(0,0,bw,bh);const contain=Math.min(bw/tmp.naturalWidth,bh/tmp.naturalHeight);const dw=Math.floor(tmp.naturalWidth*contain),dh=Math.floor(tmp.naturalHeight*contain);const dx=Math.floor((bw-dw)/2),dy=Math.floor((bh-dh)/2);ctx.imageSmoothingQuality='high';ctx.drawImage(tmp,dx,dy,dw,dh);res(c.toDataURL('image/jpeg',0.92));}catch(e){rej(e);}URL.revokeObjectURL(url);};img.onerror=()=>{URL.revokeObjectURL(url);rej(new Error('تعذّر قراءة الصورة'));};img.src=url;});}
 async function handlePhoto(inputEl){const f=inputEl?.files?.[0]; if(!f) return; const box=inputEl.parentElement; box.querySelector('.hint')?.remove(); try{const dataUrl=await renderContainedPrettyFromFile(f,box);let img=box.querySelector('img');if(!img){img=document.createElement('img');box.appendChild(img);}img.src=dataUrl;saveState();}catch(e){console.error(e);toast('تعذّر معالجة الصورة');}}
@@ -293,18 +310,42 @@ async function generateSinglePagePdf(){
 function checkFillWarnings(){const boxes=[document.getElementById('goalsText'),document.getElementById('aboutText')];const over=boxes.some(el=>el?.dataset?.full==='1');if(over)toast('تنبيه: النص ممتلئ — قلّل المحتوى أو حجم الخط');}
 function refitAll(){fitTextToBox(document.getElementById('goalsText'));fitTextToBox(document.getElementById('aboutText'));checkFillWarnings();}
 function bindUI(){
-  ['goalsText','aboutText'].forEach(id=>{const el=document.getElementById(id);installPlainPaste(el);const fitNow=()=>{fitTextToBox(el);checkFillWarnings();saveState();};['input','keyup','blur'].forEach(evt=>el.addEventListener(evt,fitNow));const ro=new ResizeObserver(()=>{fitTextToBox(el);checkFillWarnings();});ro.observe(el);ro.observe(el.parentElement);});
+  ['goalsText','aboutText'].forEach(id=>{
+    const el=document.getElementById(id);
+    installPlainPaste(el);
+    const fitNow=()=>{fitTextToBox(el);checkFillWarnings();saveState();};
+    ['input','keyup','blur'].forEach(evt=> el.addEventListener(evt, fitNow));
+    const ro=new ResizeObserver(()=>{fitTextToBox(el);checkFillWarnings();}); ro.observe(el); ro.observe(el.parentElement);
+  });
+
   const title=document.getElementById('titlebar');
-  function fitTitle(){const wrap=title.parentElement;const maxW=wrap.clientWidth*.72;let s=18,min=14,max=22;const set=x=>{title.style.fontSize=x+'px';title.style.lineHeight=1.25;};set(s);let i=0;while(i++<60&&title.scrollWidth>maxW&&s>min){s-=0.5;set(s);}i=0;while(i++<60&&title.scrollWidth<maxW*.9&&s<max){s+=0.5;set(s);if(title.scrollWidth>maxW){s-=0.5;set(s);break;}}}
-  ['input','keyup'].forEach(evt=>title.addEventListener(evt,()=>{fitTitle();saveState();}));
-  const roT=new ResizeObserver(fitTitle);roT.observe(title);roT.observe(title.parentElement);fitTitle();
-  document.getElementById('btnPdf')?.addEventListener('click',async()=>{try{setBusy(true);saveState();const {pdf,filename}=await generateSinglePagePdf();pdf.save(filename);toast('تم إنشاء PDF ✅');}catch(e){console.error(e);alert('تعذّر إنشاء PDF.');}finally{setBusy(false);}});
-  document.querySelectorAll('[contenteditable], .table th, .table td').forEach(el=>{['input','keyup','blur'].forEach(evt=>el.addEventListener(evt,saveState));});
+  function fitTitle(){
+    const wrap=title.parentElement; const maxW=wrap.clientWidth*.72; let s=18, min=14, max=22;
+    const set=x=>{ title.style.fontSize=x+'px'; title.style.lineHeight=1.25; };
+    set(s); let i=0; while(i++<60 && title.scrollWidth>maxW && s>min){ s-=0.5; set(s); }
+    i=0; while(i++<60 && title.scrollWidth<maxW*.9 && s<max){ s+=0.5; set(s); if(title.scrollWidth>maxW){ s-=0.5; set(s); break; } }
+  }
+  ['input','keyup'].forEach(evt=> title.addEventListener(evt, ()=>{ fitTitle(); saveState(); }));
+  const roT=new ResizeObserver(fitTitle); roT.observe(title); roT.observe(title.parentElement); fitTitle();
+
+  document.getElementById('btnPdf')?.addEventListener('click', async ()=>{
+    try{ setBusy(true); saveState(); const {pdf, filename}=await generateSinglePagePdf(); pdf.save(filename); toast('تم إنشاء PDF ✅'); }
+    catch(e){ console.error(e); alert('تعذّر إنشاء PDF.'); }
+    finally{ setBusy(false); }
+  });
+
+  document.querySelectorAll('[contenteditable], .table th, .table td').forEach(el=>{
+    ['input','keyup','blur'].forEach(evt=> el.addEventListener(evt, saveState));
+  });
 }
 
 /* إقلاع */
-document.addEventListener('DOMContentLoaded',()=>{restoreState();refitAll();bindUI();});
-window.addEventListener('resize',()=>{clearTimeout(window.__ftR);window.__ftR=setTimeout(()=>{refitAll();},120);});
+document.addEventListener('DOMContentLoaded', ()=>{
+  restoreState();
+  refitAll();
+  bindUI();
+});
+window.addEventListener('resize', ()=>{ clearTimeout(window.__ftR); window.__ftR=setTimeout(()=>{ refitAll(); }, 120); });
 </script>
 
 </body>
