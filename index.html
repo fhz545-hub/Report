@@ -34,11 +34,8 @@ html,body{
 .header-img img{width:100%; height:100%; object-fit:cover; display:block}
 .header-fallback{position:absolute; inset:0; background:linear-gradient(90deg,#0b7e88,#15a3ad); display:none}
 
-/* العنوان — تحت الهيدر مباشرة */
-.titlebar-wrap{
-  position:relative; top:-6mm; /* أُلصق للهيدر */
-  display:grid; place-items:center; padding:0;
-}
+/* العنوان */
+.titlebar-wrap{display:grid; place-items:center; padding:0}
 .titlebar{
   display:inline-block; padding:6px 18px; border-radius:14px; background:var(--accent); color:#fff;
   font-weight:800; font-size:var(--title); text-align:center; max-width:72%; line-height:1.25;
@@ -46,31 +43,26 @@ html,body{
 }
 .titlebar[contenteditable]:focus{outline:2px dashed rgba(255,255,255,.7); outline-offset:4px}
 
-/* المحتوى — فجوات مصغّرة لرفع الجدول */
+/* المحتوى (ثابت الارتفاعات) */
 .main{
-  padding:0 10mm; display:grid; gap:0.8mm; /* أصغر */
+  padding:0 10mm; display:grid; gap:1.5mm;
   grid-template-rows:
     auto     /* جدول التعريف */
-    70mm     /* الأهداف + النبذة — ثابت */
-    58mm     /* الشواهد — ثابت */
-    22mm;    /* التواقيع — ثابت */
+    70mm     /* الأهداف + النبذة */
+    58mm     /* الشواهد */
+    22mm;    /* التواقيع */
 }
 
-/* ===== جدول التعريف — مُصغّر جدًا ومُوسّط ===== */
+/* جدول التعريف — الأسلوب الافتراضي (سيُعاد ضبطه في طبقة override) */
 .table{
   width:100%; border-collapse:collapse; table-layout:fixed; background:#fff;
-  border:1px solid var(--line);
-  font-size:12.3px;
-  line-height:1.2;                 /* تماسك عالٍ */
-  margin-top:-6mm;                 /* تحت العنوان مباشرة */
-  border-top:3px solid var(--accent);
-  box-shadow:0 4px 14px rgba(0,0,0,.04);
+  border:1px solid var(--line); font-size:12.5px; line-height:1.3;
+  border-top:3px solid var(--accent); box-shadow:0 4px 14px rgba(0,0,0,.04);
 }
 .table th,.table td{
   border:1px solid var(--line);
-  padding:0.7mm 1.8mm;            /* أقل من 1مم رأسيًا */
-  text-align:center;              /* توسيط أفقي */
-  vertical-align:middle;          /* توسيط عمودي */
+  padding:1.6mm 2.6mm;
+  vertical-align:top; text-align:right;
   word-break:break-word; overflow-wrap:anywhere;
 }
 .table th{
@@ -100,11 +92,6 @@ html,body{
   line-height:1.6; font-size:15px; font-weight:400;
 }
 
-/* أدوات النص (لا تظهر في PDF) */
-.toolstrip{position:absolute; top:12mm; inset-inline-end:6px; z-index:5; display:flex; gap:6px}
-.toolbtn{border:1px solid var(--line); background:#fff; color:#111; font-weight:800; padding:4px 8px; border-radius:8px; cursor:pointer; font-size:12px; box-shadow:0 2px 8px rgba(0,0,0,.08)}
-.toolbtn:active{transform:scale(0.98)}
-
 /* الشواهد — ثابتة */
 .gallery{display:grid; grid-template-columns:1fr 1fr; gap:4mm; height:58mm}
 .photo{
@@ -127,7 +114,7 @@ html,body{
 /* الشريط السفلي */
 .footer-bar{height:6mm; background:var(--footer)}
 
-/* أدوات أعلى الصفحة (لا تظهر في PDF) */
+/* شريط الأزرار (لا يظهر بالـPDF) */
 .actions{position:fixed; top:10px; right:10px; left:10px; display:flex; gap:8px; z-index:9999}
 .btn{display:inline-flex; align-items:center; gap:8px; border:1px solid var(--line); background:var(--accent); color:#fff; font-weight:700; padding:8px 12px; border-radius:10px; cursor:pointer; font-size:var(--base); box-shadow:0 4px 10px rgba(0,0,0,.08)}
 .btn[disabled]{opacity:.55; cursor:not-allowed}
@@ -135,9 +122,31 @@ html,body{
 
 @media (max-width:600px){ .sheet{transform:scale(0.92); transform-origin:top center;} }
 .toast{position:fixed; bottom:12px; left:50%; transform:translateX(-50%); background:#111827; color:#fff; padding:10px 14px; border-radius:10px; font-size:13px; z-index:99999; opacity:.98;}
+
+/* ===================== */
+/* طبقة OVERRIDE القوية  */
+/* ===================== */
+.v11 .titlebar-wrap{
+  position:relative !important;
+  top:-8mm !important;            /* ألصق العنوان بالهيدر */
+  padding:0 !important;
+}
+.v11 .main{ gap:0.6mm !important; }
+
+.v11 .table{
+  margin-top:-7mm !important;     /* ألصق الجدول بالعنوان */
+  border-top:3px solid var(--accent) !important;
+}
+.v11 .table th,
+.v11 .table td{
+  padding:0.6mm 1.6mm !important; /* أقل من 1مم رأسيًا */
+  line-height:1.2 !important;
+  text-align:center !important;   /* توسيط أفقي */
+  vertical-align:middle !important;/* توسيط عمودي */
+}
 </style>
 </head>
-<body>
+<body class="v11">
 
 <!-- أدوات التحكم (لا تظهر في PDF) -->
 <div class="actions" data-nopdf="true">
@@ -155,7 +164,7 @@ html,body{
     <div class="header-fallback" id="headerFallback"></div>
   </div>
 
-  <!-- العنوان (ملاصق للهيدر) -->
+  <!-- العنوان -->
   <div class="titlebar-wrap">
     <div class="titlebar" id="titlebar" contenteditable="true">تقرير تنفيذ برنامج (قابل للتعديل)</div>
   </div>
@@ -163,7 +172,7 @@ html,body{
   <!-- المحتوى -->
   <div class="main">
 
-    <!-- جدول التعريف (مرفوع وموحّد التوسيط) -->
+    <!-- جدول التعريف -->
     <table class="table" role="table" aria-label="بيانات البرنامج">
       <tr>
         <th contenteditable="true">مقدّم البرنامج</th>
@@ -212,7 +221,7 @@ html,body{
       </div>
     </div>
 
-    <!-- الشواهد (ثابت) -->
+    <!-- الشواهد -->
     <div class="gallery">
       <div class="photo" data-slot="1">
         <input type="file" accept="image/*" onchange="handlePhoto(this)">
@@ -241,8 +250,8 @@ html,body{
 </div>
 
 <script>
-/* نسخة تخزين جديدة لضمان تحميل التعديلات */
-const STORAGE_KEY='school_report_v10';
+/* مفتاح تخزين جديد لضمان قراءة النسخة الحديثة */
+const STORAGE_KEY='school_report_v11';
 
 function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2200)}
 function setBusy(b){['btnPdf','pdfQuality'].forEach(id=>{const el=document.getElementById(id); if(el) el.disabled=!!b;});}
