@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>تقرير تنفيذ برنامج — وزارة التعليم</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<!-- PDF -->
+<script defer src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+<style>
+:root{
+  --ink:#1f2937; --muted:#6b7280; --line:#d1d5db;
+  --paper:#ffffff; --bg:#f5f7fb;
+  --accent:#2f7f79;         /* لون العنوان والأزرار */
+  --footer:#0e3b46;         /* لون الشريط السفلي */
+  --base:14px; --title:18px; --name:17px;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%; margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Tajawal",system-ui,sans-serif; line-height:1.6; font-size:var(--base);}
+
+/* ورقة A4 صفحة واحدة */
+.sheet{
+  width:210mm; height:297mm; margin:12px auto; background:var(--paper);
+  border:1px solid #e5e7eb; box-shadow:0 10px 28px rgba(0,0,0,.08);
+  display:grid; grid-template-rows: 30mm auto 2mm auto 6mm; overflow:hidden;
+}
+
+/* الهيدر */
+.header-img{height:30mm; overflow:hidden; background:#eee; position:relative}
+.header-img img{width:100%; height:100%; object-fit:cover; display:block}
+.header-fallback{
+  position:absolute; inset:0;
+  background:linear-gradient(90deg,#0b7e88,#15a3ad); /* بديل أنيق إذا لم تُحمَّل الصورة */
+  display:none;
+}
+
+/* عنوان التقرير (كبسولة نحيفة) */
+.titlebar-wrap{display:grid; place-items:center; margin-top:4px}
+.titlebar{
+  display:inline-block; padding:6px 18px; border-radius:14px;
+  background:var(--accent); color:#fff; font-weight:800; font-size:var(--title);
+  text-align:center; max-width:72%; line-height:1.25;
+  filter:drop-shadow(0 10px 8px rgba(0,0,0,.20));
+}
+.titlebar[contenteditable]:focus{outline:2px dashed rgba(255,255,255,.7); outline-offset:4px}
+
+/* المحتوى — رفعنا الجدول لأعلى مع تقليل الفراغ */
+.main{
+  padding:0 10mm;
+  display:grid; grid-template-rows: 46mm 66mm 66mm 22mm; gap:4mm;
+  /* جدول | أهداف | شواهد | تواقيع */
+}
+
+/* جدول المعلومات — قابل للتعديل */
+.table{
+  width:100%; height:46mm; border-collapse:collapse; table-layout:fixed;
+  background:#fff; border:1px solid var(--line);
+}
+.table th,.table td{
+  border:1px solid var(--line); padding:3mm 4mm; font-size:var(--base); vertical-align:top;
+  word-break:break-word; overflow-wrap:anywhere;
+}
+.table th{background:#f0f7f7; color:#255c57; width:26%; font-weight:800}
+.table [contenteditable]{outline:none}
+.table [contenteditable]:focus{box-shadow:inset 0 0 0 3px rgba(47,127,121,.15)}
+
+/* الأهداف + النبذة — أكبر وثابتان تمامًا */
+.split{display:grid; grid-template-columns:1fr 1fr; gap:4mm; height:66mm}
+.card{
+  border:1px solid var(--line); border-radius:8px; background:#fff;
+  display:grid; grid-template-rows:12mm calc(66mm - 12mm); overflow:hidden;
+}
+.card .head{
+  padding:0 4mm; display:flex; align-items:center; background:#f3fafb;
+  color:#0b7e88; font-weight:800; border-bottom:1px solid var(--line); font-size:var(--base);
+}
+.card .body{padding:3mm 4mm; overflow:hidden}
+.clamp{
+  display:-webkit-box; -webkit-box-orient: vertical; overflow:hidden;
+  -webkit-line-clamp: 10; line-clamp: 10;  /* قص أنيق بدل التمرير */
+  margin:0; padding:0 5mm;
+}
+.clamp li{margin:.3em 0}
+.clamp li::marker{color:#0b988f}
+
+/* الشواهد — صورتان أصغر ومتناسقتان (66مم) */
+.gallery{
+  height:66mm; display:grid; grid-template-columns:1fr 1fr; gap:4mm;
+}
+.photo{
+  position:relative; background:#fff; border:1px solid var(--line); border-radius:8px;
+  display:flex; align-items:center; justify-content:center; overflow:hidden;
+}
+.photo input[type="file"]{position:absolute; inset:0; opacity:0; cursor:pointer; z-index:2}
+.photo .hint{
+  position:absolute; z-index:1; color:#6b7280; font-size:var(--base);
+  pointer-events:none; text-align:center; padding:6px 8px
+}
+.photo img{max-width:100%; max-height:100%; display:block}
+
+/* التواقيع */
+.signatures{height:22mm; display:grid; grid-template-columns:1fr 1fr; gap:4mm}
+.sig{
+  background:#fff; border:1px solid var(--line); border-radius:8px;
+  display:grid; grid-template-rows:9mm auto; text-align:center;
+}
+.sig h4{margin:0; display:grid; place-items:center; color:#1597a0; font-weight:800; font-size:var(--name); border-bottom:1px solid var(--line)}
+.sig .name{font-weight:800; font-size:var(--name); display:grid; place-items:center}
+
+/* الشريط السفلي */
+.footer-bar{height:6mm; background:var(--footer)}
+
+/* الأزرار (خارج الورقة ولا تظهر في PDF) */
+.actions{
+  position:fixed; top:10px; right:10px; left:10px; display:flex; gap:8px; z-index:9999;
+}
+.btn{
+  display:inline-flex; align-items:center; gap:8px;
+  border:1px solid var(--line); background:var(--accent); color:#fff;
+  font-weight:700; padding:8px 12px; border-radius:10px; cursor:pointer; font-size:var(--base);
+  box-shadow:0 4px 10px rgba(0,0,0,.08);
+}
+.btn svg{width:18px; height:18px; fill:#fff}
+
+/* جوال: معاينة مصغّرة مع الحفاظ على أبعاد A4 */
+@media (max-width:600px){
+  .sheet{transform:scale(0.92); transform-origin:top center;}
+}
+</style>
+</head>
+<body>
+
+<!-- الأزرار (تعمل أينما وضعتها طالما المعرّفات ثابتة) -->
+<div class="actions" data-nopdf="true">
+  <button class="btn" id="btnPdf" type="button" title="حفظ PDF">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7l-4-4zm-3 16H7v-2h7v2zM6 8V5h9v3H6z"/></svg>
+    حفظ PDF
+  </button>
+  <button class="btn" id="btnShare" type="button" title="مشاركة">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a2.48 2.48 0 0 0 0-1.39l7.02-4.11A2.99 2.99 0 1 0 14 5a2.9 2.9 0 0 0 .05.53L7.03 9.64a3 3 0 1 0 0 4.72l7.02 4.11c-.03.17-.05.35-.05.53a3 3 0 1 0 3-3z"/></svg>
+    مشاركة
+  </button>
+</div>
+
+<div class="sheet" id="sheet">
+
+  <!-- الهيدر مع بديل احتياطي -->
+  <div class="header-img">
+    <img id="headerPic" src="header.jpg" alt="هيدر وزارة التعليم" crossOrigin="anonymous">
+    <div class="header-fallback" id="headerFallback" aria-hidden="true"></div>
+  </div>
+
+  <!-- عنوان التقرير -->
+  <div class="titlebar-wrap">
+    <div class="titlebar" id="titlebar" contenteditable="true">تقرير تنفيذ برنامج (قابل للتعديل)</div>
+  </div>
+
+  <div style="height:2mm" aria-hidden="true"></div>
+
+  <!-- المحتوى -->
+  <div class="main">
+
+    <!-- جدول المعلومات (مرفوع قريب العنوان) -->
+    <table class="table" role="table" aria-label="بيانات البرنامج">
+      <tr>
+        <th contenteditable="true">مقدّم البرنامج</th>
+        <td contenteditable="true">اكتب اسم الجهة المنفذة للبرنامج</td>
+        <th contenteditable="true">المكان</th>
+        <td contenteditable="true"></td>
+      </tr>
+      <tr>
+        <th contenteditable="true">التاريخ (هجري أم القرى)</th>
+        <td id="hijriDate" contenteditable="true"></td>
+        <th contenteditable="true">المستفيدون</th>
+        <td contenteditable="true"></td>
+      </tr>
+      <tr>
+        <th contenteditable="true">عدد الحضور</th>
+        <td contenteditable="true"></td>
+        <th contenteditable="true">مدة البرنامج</th>
+        <td contenteditable="true"></td>
+      </tr>
+    </table>
+
+    <!-- الأهداف + النبذة (أكبر وثابتان) -->
+    <div class="split">
+      <div class="card">
+        <div class="head">الأهداف</div>
+        <div class="body">
+          <ul class="clamp" contenteditable="true">
+            <li>هدف 1 …</li><li>هدف 2 …</li><li>هدف 3 …</li><li>هدف 4 …</li>
+            <li>هدف 5 …</li><li>هدف 6 …</li><li>هدف 7 …</li><li>هدف 8 …</li><li>هدف 9 …</li><li>هدف 10 …</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card">
+        <div class="head">نبذة عن البرنامج</div>
+        <div class="body">
+          <ul class="clamp" contenteditable="true">
+            <li>فكرة عامة …</li><li>الفئة المستهدفة …</li><li>الأثر المتوقع …</li><li>آلية التنفيذ …</li>
+            <li>الشركاء …</li><li>الزمن …</li><li>التوثيق …</li><li>الختام …</li><li>…</li><li>…</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- الشواهد: صورتان متناسقتان -->
+    <div class="gallery">
+      <div class="photo">
+        <input type="file" accept="image/*" onchange="handlePhoto(this)">
+        <div class="hint">أضف صورة (1/2)</div>
+      </div>
+      <div class="photo">
+        <input type="file" accept="image/*" onchange="handlePhoto(this)">
+        <div class="hint">أضف صورة (2/2)</div>
+      </div>
+    </div>
+
+    <!-- التواقيع -->
+    <div class="signatures">
+      <div class="sig">
+        <h4 contenteditable="true">رائد النشاط</h4>
+        <div class="name" contenteditable="true">اسم المعلم</div>
+      </div>
+      <div class="sig">
+        <h4>مدير المدرسة</h4>
+        <div class="name">فهد حامد علي الزهراني</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-bar" aria-hidden="true"></div>
+</div>
+
+<script>
+/* 1) ضمان إظهار الهيدر:
+   - ننتظر تحميل header.jpg
+   - إن فشل التحميل، نظهر fallback (تدرّج) كي لا تختفي مساحة الهيدر في الصفحة وPDF */
+(function ensureHeader(){
+  const img = document.getElementById('headerPic');
+  const fallback = document.getElementById('headerFallback');
+  let settled = false;
+  function ok(){ if(!settled){ settled=true; fallback.style.display='none'; } }
+  function fail(){ if(!settled){ settled=true; fallback.style.display='block'; } }
+  if(!img){ return; }
+  if(img.complete && img.naturalWidth>0){ ok(); }
+  else{
+    img.addEventListener('load', ok, {once:true});
+    img.addEventListener('error', fail, {once:true});
+    // مهلة احتياطية: إن تأخر التحميل نُظهر البديل
+    setTimeout(()=>{ if(!settled) fail(); }, 2000);
+  }
+})();
+
+/* 2) التاريخ الهجري (قابل للتعديل) */
+try{
+  const el = document.getElementById('hijriDate');
+  if(el && !el.textContent.trim()){
+    const fmt = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura',{day:'2-digit',month:'long',year:'numeric'});
+    el.textContent = fmt.format(new Date());
+  }
+}catch{}
+
+/* 3) احتواء الصور داخل الشواهد: Canvas بخلفية مموهة + الصورة كاملة */
+function renderContainedPretty(imgBlob, box){
+  return new Promise((resolve,reject)=>{
+    const url = URL.createObjectURL(imgBlob);
+    const img = new Image();
+    img.onload = ()=>{
+      try{
+        const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+        const bw = Math.max(1, Math.floor(box.clientWidth  * dpr));
+        const bh = Math.max(1, Math.floor(box.clientHeight * dpr));
+        const cvs = document.createElement('canvas'); cvs.width=bw; cvs.height=bh;
+        const ctx = cvs.getContext('2d', {alpha:false});
+        // خلفية "cover" مموهة
+        const cover = Math.max(bw/img.naturalWidth, bh/img.naturalHeight);
+        const cw = Math.floor(img.naturalWidth * cover);
+        const ch = Math.floor(img.naturalHeight * cover);
+        const cx = Math.floor((bw - cw)/2), cy = Math.floor((bh - ch)/2);
+        ctx.filter = 'blur(20px) brightness(1.03)';
+        ctx.drawImage(img, cx, cy, cw, ch);
+        ctx.filter = 'none';
+        ctx.fillStyle = 'rgba(255,255,255,0.08)'; ctx.fillRect(0,0,bw,bh);
+        // الصورة الأصلية كاملة
+        const contain = Math.min(bw/img.naturalWidth, bh/img.naturalHeight);
+        const dw = Math.floor(img.naturalWidth * contain);
+        const dh = Math.floor(img.naturalHeight * contain);
+        const dx = Math.floor((bw - dw)/2), dy = Math.floor((bh - dh)/2);
+        ctx.imageSmoothingQuality='high';
+        ctx.drawImage(img, dx, dy, dw, dh);
+        resolve(cvs.toDataURL('image/jpeg', 0.92));
+      }catch(err){ reject(err); }
+      URL.revokeObjectURL(url);
+    };
+    img.onerror = ()=>{ URL.revokeObjectURL(url); reject(new Error('تعذّر قراءة الصورة')); };
+    img.src = url;
+  });
+}
+async function handlePhoto(inputEl){
+  const file = inputEl?.files?.[0]; if(!file) return;
+  const box = inputEl.parentElement;
+  box.querySelector('.hint')?.remove();
+  try{
+    const dataUrl = await renderContainedPretty(file, box);
+    let img = box.querySelector('img');
+    if(!img){ img = document.createElement('img'); box.appendChild(img); }
+    img.src = dataUrl;
+  }catch(e){ console.error(e); }
+}
+
+/* 4) توليد PDF — صفحة واحدة دائمًا */
+async function generateSinglePagePdf(){
+  const sheet = document.getElementById('sheet');
+  // نضمن ظهور الهيدر أو بديله قبل اللقطة
+  await new Promise(r=>setTimeout(r,50));
+  const canvas = await html2canvas(sheet, {
+    scale: Math.min(window.devicePixelRatio || 2, 3),
+    backgroundColor:'#ffffff',
+    useCORS:true, allowTaint:false,
+    scrollX:0, scrollY:-window.scrollY,
+    ignoreElements: (el)=> el?.dataset?.nopdf === 'true' || el?.tagName === 'INPUT'
+  });
+  const imgData = canvas.toDataURL('image/jpeg', 0.98);
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF({orientation:'p', unit:'mm', format:'a4'});
+  // ملاءمة صورة الصفحة بالكامل داخل ورقة واحدة
+  const pageW = pdf.internal.pageSize.getWidth();
+  const pageH = pdf.internal.pageSize.getHeight();
+  const imgW_byWidth  = pageW;
+  const imgH_byWidth  = (canvas.height * imgW_byWidth) / canvas.width;
+  const imgH_byHeight = pageH;
+  const imgW_byHeight = (canvas.width * imgH_byHeight) / canvas.height;
+  let drawW, drawH, ox, oy;
+  if (imgH_byWidth <= pageH){ drawW = imgW_byWidth; drawH = imgH_byWidth; }
+  else { drawW = imgW_byHeight; drawH = imgH_byHeight; }
+  ox = (pageW - drawW)/2; oy = (pageH - drawH)/2;
+  pdf.addImage(imgData, 'JPEG', ox, oy, drawW, drawH, undefined, 'FAST');  // صفحة واحدة فقط
+  const title = (document.getElementById('titlebar').innerText || 'تقرير').replace(/[\\\/:*?"<>|]+/g,' ').trim();
+  const hijri = (document.getElementById('hijriDate').innerText || '').replace(/\s+/g,' ').trim();
+  const filename = `${(title||'تقرير')} - ${hijri||''}`.replace(/\s{2,}/g,' ') + '.pdf';
+  return { pdf, filename };
+}
+
+/* 5) أزرار: حفظ ومشاركة */
+document.addEventListener('DOMContentLoaded', ()=>{
+  document.getElementById('btnPdf')?.addEventListener('click', async ()=>{
+    try{
+      const { pdf, filename } = await generateSinglePagePdf();
+      pdf.save(filename);
+    }catch(e){ console.error(e); alert('تعذّر إنشاء PDF. تأكّد من وجود header.jpg محليًا أو دعم CORS.'); }
+  });
+
+  document.getElementById('btnShare')?.addEventListener('click', async ()=>{
+    try{
+      const { pdf, filename } = await generateSinglePagePdf();
+      const blob = pdf.output('blob');
+      const file = new File([blob], filename, {type:'application/pdf'});
+      if (navigator.canShare && navigator.canShare({ files:[file] })){
+        await navigator.share({ files:[file], title: filename, text:'مشاركة التقرير' });
+      }else{
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href=url; a.download=filename;
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(()=>URL.revokeObjectURL(url), 60000);
+      }
+    }catch(e){ console.error(e); alert('المشاركة غير مدعومة على هذا المتصفح — تم تجهيز تنزيل بديل.'); }
+  });
+});
+</script>
+
+</body>
+</html>
