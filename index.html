@@ -15,41 +15,59 @@
   --paper:#ffffff; --bg:#f6f8fb;
   --accent:#2f7f79; --accentDeep:#0e3b46; --footer:#0e3b46;
   --base:14px; --title:19px; --name:17px;
-
   --gap-top:4mm; --gap-mid:4mm; --gap-gallery:4.5mm; --gap-sign:5mm;
 }
 
-/* وضوح الخط */
 *{box-sizing:border-box}
 html,body{
   height:100%; margin:0; background:var(--bg); color:var(--ink);
   font-family:"Tajawal",system-ui,sans-serif; font-size:var(--base); line-height:1.6;
   -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-  text-rendering:optimizeLegibility; font-feature-settings:"rlig" 1,"calt" 1;
+  text-rendering:optimizeLegibility;
 }
 
-/* ورقة A4 */
+/* ورقة */
 .sheet{
   width:210mm; height:297mm; margin:12px auto; background:var(--paper);
   border:1px solid #e5e7eb; box-shadow:0 10px 28px rgba(0,0,0,.08);
-  display:grid; grid-template-rows:30mm auto 6mm; overflow:hidden;
+  display:grid; grid-template-rows:30mm auto 6mm; overflow:hidden; position:relative;
+}
+.sheet:before{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(1200px 400px at 50% -10%, rgba(47,127,121,.10), transparent 60%);
 }
 
-/* الهيدر */
+/* الهيدر + زر PDF داخل الهيدر */
 .header-img{position:relative; height:30mm; overflow:hidden; background:var(--accentDeep)}
 .header-img img{width:100%; height:100%; object-fit:cover; display:block}
 .header-fallback{position:absolute; inset:0; background:linear-gradient(90deg,#0b7e88,#15a3ad); display:none}
 
-/* أزرار (لا تُطبع) */
-.actions{position:fixed; top:10px; right:10px; left:10px; display:flex; gap:8px; z-index:9999}
-.btn{display:inline-flex; align-items:center; gap:8px; border:1px solid var(--line); background:var(--accentDeep); color:#fff; font-weight:700; padding:8px 12px; border-radius:10px; cursor:pointer}
-.btn[disabled]{opacity:.55; cursor:not-allowed}
-.toast{position:fixed; bottom:12px; left:50%; transform:translateX(-50%); background:#111827; color:#fff; padding:10px 14px; border-radius:10px; font-size:13px; z-index:99999; opacity:.98}
+/* زر PDF داخل الهيدر (لا يُطبع) */
+.header-action{position:absolute; top:10px; right:12px; z-index:20}
+.header-action [data-nopdf]{/* just to make sure */ }
+.pdf-chip{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:10px 14px; border-radius:14px;
+  background:linear-gradient(180deg, var(--accent), var(--accentDeep));
+  color:#fff; font-weight:800; letter-spacing:.6px;
+  border:1px solid rgba(255,255,255,.25);
+  box-shadow:0 10px 22px rgba(14,59,70,.25), inset 0 1px 0 rgba(255,255,255,.18);
+  cursor:pointer; user-select:none;
+  transition:transform .08s ease, filter .2s ease;
+}
+.pdf-chip svg{width:18px; height:18px; flex:0 0 18px; filter:drop-shadow(0 1px 0 rgba(0,0,0,.2))}
+.pdf-chip:hover{filter:brightness(1.05)}
+.pdf-chip:active{transform:translateY(1px)}
+/* نبضة ضوئية خفيفة */
+.pdf-chip::after{
+  content:""; position:absolute; inset:-2px; border-radius:16px; pointer-events:none;
+  background:radial-gradient(24px 24px at 85% 30%, rgba(255,255,255,.35), transparent 60%);
+}
 
 /* المحتوى */
 .main{padding:0 10mm; display:flex; flex-direction:column; min-height:0}
 
-/* الجدول — عنوان داخل الصف الأول + صفوف مريحة */
+/* الجدول */
 .table{
   margin-top:var(--gap-top);
   width:100%; border-collapse:separate; border-spacing:0; table-layout:fixed; background:#fff;
@@ -58,7 +76,7 @@ html,body{
 }
 .table th,.table td{
   border-right:1px solid var(--line); border-bottom:1px solid var(--line);
-  padding:2.2mm 2.6mm; /* ارتفاع صف مريح ومتناسق مع الهوية */
+  padding:2.4mm 2.6mm;
   vertical-align:middle; text-align:center; font-size:13.4px; line-height:1.35;
   word-break:break-word; overflow-wrap:anywhere;
 }
@@ -69,12 +87,11 @@ html,body{
 .table .title-row th{
   padding:4mm 5mm;
   background:linear-gradient(180deg,rgba(47,127,121,.97),rgba(14,59,70,.98));
-  color:#fff; font-weight:800; font-size:var(--title); line-height:1.2;
-  position:relative;
+  color:#fff; font-weight:800; font-size:var(--title); line-height:1.2; position:relative;
 }
 .table .title-row th::after{
   content:""; position:absolute; inset-inline:0; bottom:0; height:3px;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);
 }
 .table .title-row [contenteditable]:focus{outline:2px dashed rgba(255,255,255,.85); outline-offset:4px}
 
@@ -85,36 +102,42 @@ html,body{
   color:#1d6a65; font-weight:800;
 }
 
-/* الأهداف والنبذة — أصغر قليلاً */
+/* الأهداف والنبذة */
 .split{
   margin-top:var(--gap-mid);
   display:grid; grid-template-columns:1fr 1fr; gap:4mm;
-  height:66mm; /* أصغر من السابق */
+  height:66mm;
 }
 .card{
-  border:1px solid var(--line); border-radius:12px; background:#fff;
+  border:1px solid var(--line); border-radius:14px; background:#fff;
   display:grid; grid-template-rows:12mm 1fr; overflow:hidden;
-  box-shadow:0 6px 16px rgba(0,0,0,.06);
+  box-shadow:0 8px 18px rgba(0,0,0,.06); position:relative;
 }
 .card .head{
   padding:0 4mm; display:flex; align-items:center;
   background:linear-gradient(180deg,#f6fbfc,#eef7f8);
   color:#0b7e88; font-weight:800; border-bottom:1px solid var(--line)
 }
-.card .body{padding:3mm 4mm; overflow:hidden; display:flex}
+.card .body{padding:3mm 4mm; overflow:hidden; display:flex; position:relative}
 .fittext{width:100%; height:100%; white-space:pre-wrap; word-break:break-word; overflow:hidden; line-height:1.6; font-size:15px}
 
-/* أدوات البطاقات (لا تُطبع) */
-.tools{position:absolute; top:12mm; inset-inline-end:8px; display:flex; gap:6px; z-index:6}
-.toolbtn{border:1px solid var(--line); background:#fff; padding:4px 8px; font-weight:800; font-size:12px; border-radius:8px; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.08)}
+/* شريط أدوات الكتابة داخل المربع */
+.tools{
+  position:absolute; top:8px; inset-inline-end:8px; z-index:6;
+  display:flex; gap:6px; background:rgba(255,255,255,.85);
+  border:1px solid var(--line); border-radius:10px; padding:3px 6px;
+  box-shadow:0 4px 12px rgba(0,0,0,.08); backdrop-filter:saturate(140%) blur(4px);
+}
+.toolbtn{min-width:34px; height:28px; border:1px solid var(--line); background:#fff;
+  font-weight:800; font-size:12px; border-radius:8px; cursor:pointer}
 .toolbtn:active{transform:scale(.98)}
+.card:hover{box-shadow:0 10px 22px rgba(0,0,0,.08)}
 
-/* الشواهد — 4 صور أكبر */
+/* الشواهد — 4 صور */
 .gallery{
   margin-top:var(--gap-gallery);
   display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr;
-  gap:4mm; height:116mm; /* أكبر من قبل */
-  margin-top:auto;
+  gap:4mm; height:116mm; margin-top:auto;
 }
 .photo{
   position:relative; background:#fff; border:1px solid var(--line); border-radius:14px;
@@ -123,11 +146,7 @@ html,body{
 }
 .photo input{position:absolute; inset:0; opacity:0; cursor:pointer; z-index:3}
 .photo .hint{position:absolute; color:#6b7280; font-size:var(--base); z-index:2; text-align:center; padding:4px 8px}
-.photo::before{ /* لمسة فنية */
-  content:""; position:absolute; inset:0; pointer-events:none;
-  background:linear-gradient(180deg,transparent,rgba(47,127,121,.05));
-  z-index:1;
-}
+.photo::before{content:""; position:absolute; inset:0; pointer-events:none; background:linear-gradient(180deg,transparent,rgba(47,127,121,.05)); z-index:1;}
 .photo img{position:absolute; inset:0; width:100%; height:100%; object-fit:contain; z-index:2; display:block}
 
 /* التواقيع */
@@ -136,28 +155,33 @@ html,body{
 .sig h4{margin:0; display:grid; place-items:center; color:#1597a0; font-weight:800; font-size:var(--name); border-bottom:1px solid var(--line)}
 .sig .name{display:grid; place-items:center; font-weight:800; font-size:var(--name)}
 
-/* الشريط السفلي */
+/* شريط سفلي */
 .footer-bar{height:6mm; background:var(--footer)}
-
-@media (max-width:600px){ .sheet{transform:none} }
 </style>
 </head>
 <body>
-
-<!-- زر وحيد للـ PDF -->
-<div class="actions" data-nopdf="true">
-  <button class="btn" id="btnPdf" type="button">حفظ PDF</button>
-</div>
 
 <div class="sheet" id="sheet">
   <!-- الهيدر -->
   <div class="header-img">
     <img id="headerPic" src="header.jpg" alt="هيدر وزارة التعليم" crossOrigin="anonymous">
+
+    <!-- زر PDF داخل الهيدر (لا يُطبع) -->
+    <div class="header-action" data-nopdf="true">
+      <button id="btnPdf" class="pdf-chip" type="button" title="Save as PDF">
+        <!-- أيقونة ملف -->
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path fill="currentColor" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Zm0 2.5L19.5 10H14V4.5ZM8.5 14H10a2 2 0 1 0 0-4H8v6h.5v-2Zm1-3.5H10a1 1 0 1 1 0 2H9.5v-2ZM12 16h1.5c1.38 0 2.5-1.12 2.5-2.5S14.88 11 13.5 11H12v5Zm1-4h.5a1.5 1.5 0 0 1 0 3H13v-3Zm-4.5 6H16v1H8.5v-1Z"/>
+        </svg>
+        PDF
+      </button>
+    </div>
+
     <div class="header-fallback" id="headerFallback"></div>
   </div>
 
   <div class="main">
-    <!-- الجدول: العنوان داخل الصف الأول -->
+    <!-- الجدول (العنوان داخل الصف الأول) -->
     <table class="table" id="infoTable" role="table" aria-label="بيانات البرنامج">
       <tr class="title-row">
         <th colspan="4">
@@ -184,30 +208,33 @@ html,body{
       </tr>
     </table>
 
-    <!-- الأهداف + النبذة (مع الأدوات) -->
+    <!-- الأهداف + النبذة -->
     <div class="split">
       <div class="card">
         <div class="head">الأهداف</div>
-        <div class="tools" data-nopdf="true">
-          <button class="toolbtn" onclick="adjText('goals',+1)">+A</button>
-          <button class="toolbtn" onclick="adjText('goals',-1)">−A</button>
-          <button class="toolbtn" onclick="toggleBold('goals')">B</button>
+        <div class="body">
+          <div class="tools" data-nopdf="true">
+            <button class="toolbtn" onclick="adjText('goals',+1)">+A</button>
+            <button class="toolbtn" onclick="adjText('goals',-1)">−A</button>
+            <button class="toolbtn" onclick="toggleBold('goals')">B</button>
+          </div>
+          <div id="goals" class="fittext" contenteditable="true">اكتب الأهداف هنا…</div>
         </div>
-        <div class="body"><div id="goals" class="fittext" contenteditable="true">اكتب الأهداف هنا…</div></div>
       </div>
-
       <div class="card">
         <div class="head">نبذة عن البرنامج</div>
-        <div class="tools" data-nopdf="true">
-          <button class="toolbtn" onclick="adjText('about',+1)">+A</button>
-          <button class="toolbtn" onclick="adjText('about',-1)">−A</button>
-          <button class="toolbtn" onclick="toggleBold('about')">B</button>
+        <div class="body">
+          <div class="tools" data-nopdf="true">
+            <button class="toolbtn" onclick="adjText('about',+1)">+A</button>
+            <button class="toolbtn" onclick="adjText('about',-1)">−A</button>
+            <button class="toolbtn" onclick="toggleBold('about')">B</button>
+          </div>
+          <div id="about" class="fittext" contenteditable="true">اكتب النبذة هنا…</div>
         </div>
-        <div class="body"><div id="about" class="fittext" contenteditable="true">اكتب النبذة هنا…</div></div>
       </div>
     </div>
 
-    <!-- الشواهد: 4 صور كبيرة -->
+    <!-- الشواهد (4 صور) -->
     <div class="gallery" id="gallery">
       <div class="photo"><input type="file" accept="image/*"><div class="hint">(1/4) أضف صورة</div></div>
       <div class="photo"><input type="file" accept="image/*"><div class="hint">(2/4) أضف صورة</div></div>
@@ -215,7 +242,7 @@ html,body{
       <div class="photo"><input type="file" accept="image/*"><div class="hint">(4/4) أضف صورة</div></div>
     </div>
 
-    <!-- التواقيع أسفل الصفحة -->
+    <!-- التواقيع -->
     <div class="signatures">
       <div class="sig"><h4 contenteditable="true">رائد النشاط</h4><div class="name" contenteditable="true">اسم المعلم</div></div>
       <div class="sig"><h4>مدير المدرسة</h4><div class="name">فهد حامد علي الزهراني</div></div>
@@ -226,14 +253,8 @@ html,body{
 </div>
 
 <script>
-/* مفاتيح تخزين */
-const STORAGE_KEY='report_v13_fx_gallery4_pdfok';
-
-/* رسائل صغيرة */
-function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2000)}
+const STORAGE_KEY='report_v15_headerPDF_chip';
 function setBusy(b){const el=document.getElementById('btnPdf'); if(el) el.disabled=!!b;}
-
-/* ضبط نص البطاقات */
 function fitBox(id){
   const el=document.getElementById(id); if(!el) return;
   const p=el.parentElement; let s=parseFloat(getComputedStyle(el).fontSize)||15;
@@ -245,7 +266,6 @@ function fitBox(id){
 function adjText(id,dir){const el=document.getElementById(id); if(!el) return; const cur=parseFloat(getComputedStyle(el).fontSize)||15; const next=Math.max(12,Math.min(20,cur+(dir>0?1:-1))); el.style.fontSize=next+'px'; fitBox(id);}
 function toggleBold(id){const el=document.getElementById(id); if(!el) return; el.style.fontWeight=(getComputedStyle(el).fontWeight>='600')?'400':'700'; fitBox(id);}
 
-/* تحويل أي صورة إلى DataURL (لـ PDF) */
 async function toDataURL(img,{maxSide=2400,q=0.95}={}){
   await (img.decode?.().catch(()=>{}) || new Promise(r=>{if(img.complete&&img.naturalWidth)r();else{img.addEventListener('load',r,{once:true});img.addEventListener('error',r,{once:true});}}));
   const w=img.naturalWidth,h=img.naturalHeight,s=Math.min(1,maxSide/Math.max(w,h));
@@ -254,40 +274,28 @@ async function toDataURL(img,{maxSide=2400,q=0.95}={}){
   c.getContext('2d',{alpha:false}).drawImage(img,0,0,cw,ch);
   return c.toDataURL('image/jpeg',q);
 }
-
-/* معالجة صور الشواهد: تعبئة بلا تشويه داخل المربع */
 async function renderFillNoDistortion(file,box){
   return new Promise((resolve,reject)=>{
     const url=URL.createObjectURL(file);
     const img=new Image();
     img.onload=async()=>{
       try{
-        // نجهّز لوح بنفس أبعاد المربع لملء نظيف
         const dpr=Math.min(window.devicePixelRatio||1,2.5);
         const W=Math.max(1,Math.floor(box.clientWidth*dpr));
         const H=Math.max(1,Math.floor(box.clientHeight*dpr));
         const c=document.createElement('canvas'); c.width=W; c.height=H;
         const ctx=c.getContext('2d',{alpha:false});
         ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,W,H);
-
-        // حساب احتواء كامل (contain) ثم تحييد الفراغ بخلفية ناعمة
         const ratioContain=Math.min(W/img.naturalWidth,H/img.naturalHeight);
         const newW=Math.floor(img.naturalWidth*ratioContain);
         const newH=Math.floor(img.naturalHeight*ratioContain);
         const x=Math.floor((W-newW)/2), y=Math.floor((H-newH)/2);
-
-        // خلفية لطيفة (blur خفيف) لإلغاء فراغات بدون قصّ
         const cover=Math.max(W/img.naturalWidth,H/img.naturalHeight);
         const bgW=Math.floor(img.naturalWidth*cover), bgH=Math.floor(img.naturalHeight*cover);
         const bgX=Math.floor((W-bgW)/2), bgY=Math.floor((H-bgH)/2);
-        ctx.filter='blur(16px) brightness(1.02)';
-        ctx.drawImage(img,bgX,bgY,bgW,bgH);
-        ctx.filter='none';
-        ctx.globalAlpha=0.12; ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,W,H); ctx.globalAlpha=1;
-
-        // الصورة الرئيسية بدون تشويه
+        ctx.filter='blur(16px) brightness(1.02)'; ctx.drawImage(img,bgX,bgY,bgW,bgH);
+        ctx.filter='none'; ctx.globalAlpha=0.12; ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,W,H); ctx.globalAlpha=1;
         ctx.drawImage(img,x,y,newW,newH);
-
         const data=c.toDataURL('image/jpeg',0.92);
         URL.revokeObjectURL(url);
         resolve(data);
@@ -297,30 +305,24 @@ async function renderFillNoDistortion(file,box){
     img.src=url;
   });
 }
-
-/* ربط تعامل الإدخال */
 function bindPhotoBox(box){
-  const input=box.querySelector('input[type=file]');
-  const hint=box.querySelector('.hint');
+  const input=box.querySelector('input[type=file]'); const hint=box.querySelector('.hint');
   const setImage=(src)=>{ let img=box.querySelector('img'); if(!img){img=document.createElement('img'); box.appendChild(img);} img.src=src; hint?.remove(); save(); };
   input.addEventListener('change', async e=>{
     const f=e.target.files?.[0]; if(!f) return;
-    try{ setImage(await renderFillNoDistortion(f, box)); }catch{ toast('تعذّر معالجة الصورة'); }
+    try{ setImage(await renderFillNoDistortion(f, box)); }catch{ alert('تعذّر معالجة الصورة'); }
   });
-  // فتح المتصفح عند الضغط في أي مكان
   box.addEventListener('click', ()=> input.click());
-  // سحب وإفلات
   ['dragover','dragenter'].forEach(ev=> box.addEventListener(ev, e=>{e.preventDefault(); box.style.outline='2px dashed #2f7f79';}));
   ['dragleave','drop'].forEach(ev=> box.addEventListener(ev, e=>{e.preventDefault(); box.style.outline='none';}));
   box.addEventListener('drop', async e=>{
     const f=e.dataTransfer?.files?.[0]; if(!f) return;
-    try{ setImage(await renderFillNoDistortion(f, box)); }catch{ toast('تعذّر معالجة الصورة'); }
+    try{ setImage(await renderFillNoDistortion(f, box)); }catch{ alert('تعذّر معالجة الصورة'); }
   });
-  // لصق صورة
   box.addEventListener('paste', async e=>{
     const item=[...(e.clipboardData?.items||[])].find(it=>it.type.startsWith('image/'));
     if(!item) return;
-    try{ setImage(await renderFillNoDistortion(item.getAsFile(), box)); }catch{ toast('تعذّر معالجة الصورة'); }
+    try{ setImage(await renderFillNoDistortion(item.getAsFile(), box)); }catch{ alert('تعذّر معالجة الصورة'); }
   });
 }
 
@@ -355,9 +357,8 @@ function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(snap()));}
   }catch{}
 })();
 
-/* PDF صفحة واحدة — يعمل */
+/* PDF — يعمل ويدمج الصور */
 async function makePdf(){
-  // تأكيد تحويل كل الصور (الهيدر + الشواهد) إلى dataURL
   const imgs=[...document.querySelectorAll('#sheet img')];
   for(const im of imgs){ if(!im.src.startsWith('data:image')){ try{ im.src=await toDataURL(im); }catch{} } }
   const canvas=await html2canvas(document.getElementById('sheet'),{
@@ -370,25 +371,21 @@ async function makePdf(){
   const W=pdf.internal.pageSize.getWidth(),H=pdf.internal.pageSize.getHeight();
   const w=W,h=(canvas.height*W)/canvas.width,fit=h<=H,drawW=fit?w:(canvas.width*H)/canvas.height,drawH=fit?h:H;
   pdf.addImage(img,'JPEG',(W-drawW)/2,(H-drawH)/2,drawW,drawH,'','FAST');
-  const title=(document.getElementById('reportTitle').innerText||'تقرير').replace(/[\\\/:*?"<>|]+/g,' ').trim();
+  const title=(document.getElementById('reportTitle').innerText||'Report').replace(/[\\\/:*?"<>|]+/g,' ').trim();
   const hijri=(document.getElementById('hijriDate').innerText||'').replace(/\s+/g,' ').trim();
   pdf.save(`${title} - ${hijri}.pdf`);
 }
 
 /* تشغيل */
 document.addEventListener('DOMContentLoaded', ()=>{
-  // أدوات نص
   ['goals','about'].forEach(id=>{
     const el=document.getElementById(id);
     ['input','keyup','blur'].forEach(evt=> el.addEventListener(evt, ()=>{fitBox(id); save();}));
     fitBox(id);
   });
-  // ربط الشواهد
   document.querySelectorAll('.gallery .photo').forEach(bindPhotoBox);
-
-  // زر PDF
   document.getElementById('btnPdf')?.addEventListener('click', async ()=>{
-    try{ setBusy(true); save(); await makePdf(); toast('تم إنشاء PDF ✅'); }
+    try{ setBusy(true); save(); await makePdf(); }
     catch(e){ console.error(e); alert('تعذّر إنشاء PDF.'); }
     finally{ setBusy(false); }
   });
