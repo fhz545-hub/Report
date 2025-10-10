@@ -34,8 +34,12 @@ html,body{
 .header-img img{width:100%; height:100%; object-fit:cover; display:block}
 .header-fallback{position:absolute; inset:0; background:linear-gradient(90deg,#0b7e88,#15a3ad); display:none}
 
-/* العنوان */
-.titlebar-wrap{display:grid; place-items:center; padding-top:4px; padding-bottom:0} /* قرّبناه أكثر */
+/* العنوان — رُفع للأعلى */
+.titlebar-wrap{
+  display:grid; place-items:center;
+  padding-top:2px; padding-bottom:0;
+  transform:translateY(-2.5mm); /* رفع اسم البرنامج باتجاه الهيدر */
+}
 .titlebar{
   display:inline-block; padding:6px 18px; border-radius:14px; background:var(--accent); color:#fff;
   font-weight:800; font-size:var(--title); text-align:center; max-width:72%; line-height:1.25;
@@ -43,41 +47,43 @@ html,body{
 }
 .titlebar[contenteditable]:focus{outline:2px dashed rgba(255,255,255,.7); outline-offset:4px}
 
-/* المحتوى (ثابت الارتفاعات) */
+/* المحتوى (ثابت الارتفاعات) — تقليل الفواصل لرفع الجدول */
 .main{
-  padding:0 10mm; display:grid; gap:3mm; /* gap أصغر لرفع الجدول */
+  padding:0 10mm; display:grid; gap:2mm; /* gap أصغر */
   grid-template-rows:
-    auto     /* جدول التعريف (ارتفاع تلقائي صغير) */
+    auto     /* جدول التعريف */
     70mm     /* الأهداف + النبذة — ثابت */
     58mm     /* الشواهد — ثابت */
     22mm;    /* التواقيع — ثابت */
 }
 
-/* جدول التعريف — نسخة «مُصغّرة أنيقة» */
+/* ===== جدول التعريف — مُصغّر ومُميّز ===== */
 .table{
-  width:100%; border-collapse:collapse; table-layout:fixed;
-  background:#fff; border:1px solid var(--line);
-  font-size:13px; /* أصغر من بقية الصفحة */
+  width:100%; border-collapse:collapse; table-layout:fixed; background:#fff;
+  border:1px solid var(--line);
+  font-size:12.5px;                 /* أصغر */
+  line-height:1.3;                  /* صفوف أكثر تماسكًا */
+  margin-top:-2mm;                  /* رفع الجدول للأعلى قليلًا */
+  border-top:3px solid var(--accent);/* شريط علوي بلون الهوية */
+  box-shadow:0 4px 14px rgba(0,0,0,.04);
 }
-.table tr{}
 .table th,.table td{
   border:1px solid var(--line);
-  padding:2.2mm 3.2mm;       /* تقليل التباعد العمودي */
-  line-height:1.4;           /* صفوف أكثر تماسكًا */
+  padding:1.6mm 2.6mm;              /* تضييق الصفوف */
   vertical-align:top;
   word-break:break-word; overflow-wrap:anywhere;
 }
 .table th{
-  width:24%;                  /* رأس أضيق قليلًا */
-  background:#f4f9fa;
-  color:#255c57;
-  font-weight:800;
+  width:23.5%;                      /* رؤوس أضيق */
+  background:linear-gradient(180deg,#f1fafb,#e9f5f6);
+  color:#215a55; font-weight:800;
 }
-.table td{color:#111827}
+.table tr:nth-child(even) td{ background:#fafcfd } /* تمييز صفوف خفيف */
+.table td{ color:#0f172a }
 .table [contenteditable]{outline:none}
 .table [contenteditable]:focus{box-shadow:inset 0 0 0 2px rgba(47,127,121,.18); border-radius:4px}
 
-/* بطاقات الأهداف/النبذة — ثابتة الارتفاع بدون تمرير */
+/* الأهداف/النبذة — ثابتان */
 .split{display:grid; grid-template-columns:1fr 1fr; gap:4mm; height:70mm}
 .card{
   border:1px solid var(--line); border-radius:8px; background:#fff;
@@ -94,12 +100,12 @@ html,body{
   line-height:1.6; font-size:15px; font-weight:400;
 }
 
-/* شريط الأدوات للنصوص (لا يظهر في PDF) */
+/* أداة النص (لا تظهر في PDF) */
 .toolstrip{position:absolute; top:12mm; inset-inline-end:6px; z-index:5; display:flex; gap:6px}
 .toolbtn{border:1px solid var(--line); background:#fff; color:#111; font-weight:800; padding:4px 8px; border-radius:8px; cursor:pointer; font-size:12px; box-shadow:0 2px 8px rgba(0,0,0,.08)}
 .toolbtn:active{transform:scale(0.98)}
 
-/* الشواهد — ثابتة الارتفاع */
+/* الشواهد — ثابتة */
 .gallery{display:grid; grid-template-columns:1fr 1fr; gap:4mm; height:58mm}
 .photo{
   position:relative; background:#fff; border:1px solid var(--line); border-radius:8px;
@@ -133,7 +139,7 @@ html,body{
 </head>
 <body>
 
-<!-- أدوات التحكم العامة (تظهر في المتصفح فقط) -->
+<!-- أدوات التحكم (لا تظهر في PDF) -->
 <div class="actions" data-nopdf="true">
   <button class="btn" id="btnPdf" type="button" title="حفظ PDF">حفظ PDF</button>
   <select id="pdfQuality" class="select" title="جودة PDF">
@@ -149,19 +155,19 @@ html,body{
     <div class="header-fallback" id="headerFallback"></div>
   </div>
 
-  <!-- العنوان -->
+  <!-- العنوان (مرفوع) -->
   <div class="titlebar-wrap">
     <div class="titlebar" id="titlebar" contenteditable="true">تقرير تنفيذ برنامج (قابل للتعديل)</div>
   </div>
 
-  <!-- المحتوى الثابت -->
+  <!-- المحتوى -->
   <div class="main">
 
     <!-- جدول التعريف (مُصغّر ومرفوع) -->
     <table class="table" role="table" aria-label="بيانات البرنامج">
       <tr>
         <th contenteditable="true">مقدّم البرنامج</th>
-        <td contenteditable="true">اسم الجهة المنفذة</td> <!-- تم التعديل هنا -->
+        <td contenteditable="true">اسم الجهة المنفذة</td>
         <th contenteditable="true">المكان</th>
         <td contenteditable="true"></td>
       </tr>
@@ -236,11 +242,11 @@ html,body{
 
 <script>
 /* ====== أدوات عامة ====== */
-const STORAGE_KEY='school_report_v6';
+const STORAGE_KEY='school_report_v7';
 function toast(msg){ const t=document.createElement('div'); t.className='toast'; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(), 2200); }
 function setBusy(b){ const btn=document.getElementById('btnPdf'); const sel=document.getElementById('pdfQuality'); [btn,sel].forEach(el=>{ if(el) el.disabled=!!b; }); }
 
-/* FitText (ثابت) */
+/* FitText ثابت */
 function fitTextToBox(el, {minSize=12, maxSize=20, baseSize=15}={}){
   if(!el) return;
   const parent=el.parentElement, maxH=parent.clientHeight, maxW=parent.clientWidth;
@@ -254,12 +260,8 @@ function fitTextToBox(el, {minSize=12, maxSize=20, baseSize=15}={}){
   while(g++<60 && roomy() && s<maxSize){ s+=0.5; set(s); if(el.scrollHeight>maxH || el.scrollWidth>maxW){ s-=0.5; set(s); break; } }
   if (el.scrollHeight>maxH-2 || s<=minSize) el.dataset.full='1'; else delete el.dataset.full;
 }
-
-/* أدوات النص */
 function adjText(id, dir){ const el=document.getElementById(id); if(!el) return; const cur=parseFloat(getComputedStyle(el).fontSize)||15; const next=Math.max(12, Math.min(20, cur + (dir>0 ? 1 : -1))); el.style.fontSize=next+'px'; fitTextToBox(el); }
 function toggleBold(id){ const el=document.getElementById(id); if(!el) return; el.style.fontWeight=(getComputedStyle(el).fontWeight >= '600') ? '400' : '700'; fitTextToBox(el); }
-
-/* لصق نص صِرف */
 function installPlainPaste(el){ el.addEventListener('paste', (e)=>{ e.preventDefault(); const t=(e.clipboardData||window.clipboardData).getData('text'); document.execCommand('insertText', false, t); }); }
 
 /* ضغط وتحويل صورة <img> إلى DataURL (تقنين الصور) */
@@ -313,7 +315,7 @@ async function waitForImagesReady(){
   await Promise.all(imgs.map(waitOne)); await new Promise(r=>setTimeout(r,60));
 }
 
-/* الهيدر: إظهار بديل عند الفشل */
+/* الهيدر: بديل عند الفشل */
 (function ensureHeader(){
   const img=document.getElementById('headerPic'), fb=document.getElementById('headerFallback');
   let done=false; const ok=()=>{ if(!done){done=true; fb.style.display='none'; }}; const fail=()=>{ if(!done){done=true; fb.style.display='block'; }};
@@ -386,7 +388,7 @@ async function generateSinglePagePdf(){
 function checkFillWarnings(){
   const boxes=[document.getElementById('goalsText'), document.getElementById('aboutText')];
   const over = boxes.some(el => el?.dataset?.full==='1');
-  if (over) toast('تنبيه: النص ممتلئ جدًا — قلّل المحتوى أو حجم الخط');
+  if (over) toast('تنبيه: النص ممتلئ — قلّل المحتوى أو حجم الخط');
 }
 
 /* تفعيل الأدوات والملاءمة */
@@ -405,7 +407,7 @@ function bindUI(){
     const ro=new ResizeObserver(()=>{ fitTextToBox(el); checkFillWarnings(); }); ro.observe(el); ro.observe(el.parentElement);
   });
 
-  // العنوان — ملاءمة مبسطة
+  // ملاءمة بسيطة لعنوان التقرير
   const title=document.getElementById('titlebar');
   function fitTitle(){
     const wrap=title.parentElement; const maxW=wrap.clientWidth*.72; let s=18, min=14, max=22;
