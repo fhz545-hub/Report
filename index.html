@@ -17,22 +17,24 @@
   --base:14px; --title:18px; --name:17px;
 }
 *{box-sizing:border-box}
-html,body{height:100%; margin:0; background:var(--bg); color:var(--ink);
-  font-family:"Tajawal",system-ui,sans-serif; line-height:1.6; font-size:var(--base);}
+html,body{
+  height:100%; margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Tajawal",system-ui,sans-serif; line-height:1.6; font-size:var(--base);
+}
 
-/* ورقة A4 صفحة واحدة — نجعل منطقة المحتوى 1fr كي تتمدّد حتى الشريط */
+/* ورقة A4 صفحة واحدة */
 .sheet{
   width:210mm; height:297mm; margin:12px auto; background:var(--paper);
   border:1px solid #e5e7eb; box-shadow:0 10px 28px rgba(0,0,0,.08);
-  display:grid; grid-template-rows: 30mm auto 1fr 6mm; overflow:hidden;
+  display:grid; grid-template-rows: 30mm auto auto 6mm; overflow:hidden;
 }
 
-/* الهيدر + بديل */
+/* الهيدر */
 .header-img{height:30mm; overflow:hidden; background:#eee; position:relative}
 .header-img img{width:100%; height:100%; object-fit:cover; display:block}
 .header-fallback{position:absolute; inset:0; background:linear-gradient(90deg,#0b7e88,#15a3ad); display:none}
 
-/* العنوان — قريب جدًا من الهيدر */
+/* العنوان */
 .titlebar-wrap{display:grid; place-items:center; padding-top:4px; padding-bottom:2px}
 .titlebar{
   display:inline-block; padding:6px 18px; border-radius:14px; background:var(--accent); color:#fff;
@@ -41,17 +43,17 @@ html,body{height:100%; margin:0; background:var(--bg); color:var(--ink);
 }
 .titlebar[contenteditable]:focus{outline:2px dashed rgba(255,255,255,.7); outline-offset:4px}
 
-/* المحتوى — يتمدّد لملء الفراغ المتاح بين العنوان والشريط السفلي */
+/* المحتوى (ثابت الارتفاعات) */
 .main{
-  padding:0 10mm 0 10mm; display:grid; gap:4mm;
+  padding:0 10mm; display:grid; gap:4mm;
   grid-template-rows:
-    auto      /* جدول التعريف (يرتفع طبيعيًا ولكن صغير) */
-    1.1fr     /* الأهداف + النبذة (تأخذ نصيبًا أكبر) */
-    1fr       /* الشواهد (تتمدد كذلك) */
-    22mm;     /* التواقيع ثابتة */
+    auto     /* جدول التعريف (ارتفاع تلقائي صغير) */
+    70mm     /* الأهداف + النبذة — ثابت */
+    58mm     /* الشواهد — ثابت */
+    22mm;    /* التواقيع — ثابت */
 }
 
-/* جدول المعلومات — رُفع فوق وقُرّب للعنوان */
+/* جدول التعريف */
 .table{
   width:100%; border-collapse:collapse; table-layout:fixed; background:#fff; border:1px solid var(--line);
 }
@@ -63,27 +65,41 @@ html,body{height:100%; margin:0; background:var(--bg); color:var(--ink);
 .table [contenteditable]{outline:none}
 .table [contenteditable]:focus{box-shadow:inset 0 0 0 3px rgba(47,127,121,.15)}
 
-/* الأهداف + النبذة — تتمدّدان رأسيًا */
-.split{
-  display:grid; grid-template-columns:1fr 1fr; gap:4mm;
-  /* ارتفاع هذا الصف يُدار بواسطة 1.1fr في .main */
-}
+/* بطاقات الأهداف/النبذة — ثابتة الارتفاع بدون تمرير */
+.split{display:grid; grid-template-columns:1fr 1fr; gap:4mm; height:70mm}
 .card{
   border:1px solid var(--line); border-radius:8px; background:#fff;
-  display:grid; grid-template-rows:12mm 1fr; overflow:hidden;
+  display:grid; grid-template-rows:12mm 1fr; position:relative; overflow:hidden;
 }
 .card .head{
   padding:0 4mm; display:flex; align-items:center; background:#f3fafb; color:#0b7e88;
   font-weight:800; border-bottom:1px solid var(--line); font-size:var(--base)
 }
-.card .body{padding:3mm 4mm; overflow:hidden; display:flex; align-items:flex-start}
+.card .body{
+  padding:3mm 4mm; overflow:hidden; display:flex; align-items:flex-start; justify-content:stretch;
+}
 .fittext{
-  width:100%; height:100%; white-space:pre-wrap; word-break:break-word; overflow:hidden;
-  line-height:1.6; font-size:15px; /* “وسط” افتراضي؛ سيكبر/يصغر تلقائيًا */
+  width:100%; height:100%;
+  white-space:pre-wrap; word-break:break-word; overflow:hidden;
+  line-height:1.6; font-size:15px; font-weight:400; /* “وسط” افتراضي */
 }
 
-/* الشواهد — تتمدّد أيضًا (نفس ارتفاع الصف 1fr) */
-.gallery{display:grid; grid-template-columns:1fr 1fr; gap:4mm; height:100%}
+/* شريط أدوات بسيط للمربعات (لا يظهر في PDF) */
+.toolstrip{
+  position:absolute; top:12mm; inset-inline-end:6px; z-index:5; display:flex; gap:6px;
+}
+.toolstrip [data-nopdf]{}
+.toolbtn{
+  border:1px solid var(--line); background:#fff; color:#111; font-weight:800;
+  padding:4px 8px; border-radius:8px; cursor:pointer; font-size:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+.toolbtn:active{transform:scale(0.98)}
+/* نخفي الشريط عن PDF باستعمال data-nopdf على الأزرار وdiv الحاوي */
+.toolstrip[data-nopdf="true"]{}
+
+/* الشواهد — ثابتة الارتفاع */
+.gallery{display:grid; grid-template-columns:1fr 1fr; gap:4mm; height:58mm}
 .photo{
   position:relative; background:#fff; border:1px solid var(--line); border-radius:8px;
   display:flex; align-items:center; justify-content:center; overflow:hidden;
@@ -92,7 +108,7 @@ html,body{height:100%; margin:0; background:var(--bg); color:var(--ink);
 .photo .hint{position:absolute; z-index:1; color:#6b7280; font-size:var(--base); pointer-events:none; text-align:center; padding:6px 8px}
 .photo img{max-width:100%; max-height:100%; display:block}
 
-/* التواقيع (ثابتة الارتفاع وتلتصق قبل الشريط) */
+/* التواقيع */
 .signatures{height:22mm; display:grid; grid-template-columns:1fr 1fr; gap:4mm}
 .sig{
   background:#fff; border:1px solid var(--line); border-radius:8px;
@@ -102,33 +118,22 @@ html,body{height:100%; margin:0; background:var(--bg); color:var(--ink);
 .sig .name{font-weight:800; font-size:var(--name); display:grid; place-items:center}
 
 /* الشريط السفلي */
-.footer-bar{background:var(--footer);}
+.footer-bar{height:6mm; background:var(--footer)}
 
-/* الأزرار (خارج الورقة ولا تظهر في PDF) — حذفنا “مشاركة” و“إعادة الهيدر” */
+/* أدوات أعلى الصفحة (لا تظهر في PDF) */
 .actions{position:fixed; top:10px; right:10px; left:10px; display:flex; gap:8px; z-index:9999}
 .btn{display:inline-flex; align-items:center; gap:8px; border:1px solid var(--line); background:var(--accent); color:#fff; font-weight:700; padding:8px 12px; border-radius:10px; cursor:pointer; font-size:var(--base); box-shadow:0 4px 10px rgba(0,0,0,.08)}
 .btn[disabled]{opacity:.55; cursor:not-allowed}
-.btn svg{width:18px; height:18px; fill:#fff}
 .select{background:#fff; border:1px solid var(--line); border-radius:8px; padding:6px 10px; font-weight:700}
-
-/* ملائمة الهاتف — معاينة مصغرة مع الحفاظ على نسب A4 */
-@media (max-width:600px){
-  .sheet{transform:scale(0.92); transform-origin:top center;}
-}
-
-/* Toast صغير */
-.toast{position:fixed; bottom:12px; left:50%; transform:translateX(-50%); background:#111827; color:#fff;
-  padding:10px 14px; border-radius:10px; font-size:13px; z-index:99999; opacity:.98;}
+@media (max-width:600px){ .sheet{transform:scale(0.92); transform-origin:top center;} }
+.toast{position:fixed; bottom:12px; left:50%; transform:translateX(-50%); background:#111827; color:#fff; padding:10px 14px; border-radius:10px; font-size:13px; z-index:99999; opacity:.98;}
 </style>
 </head>
 <body>
 
-<!-- أدوات التحكم (لا تظهر في PDF) -->
+<!-- أدوات التحكم العامة (تظهر في المتصفح فقط) -->
 <div class="actions" data-nopdf="true">
-  <button class="btn" id="btnPdf" type="button" title="حفظ PDF">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7l-4-4zm-3 16H7v-2h7v2zM6 8V5h9v3H6z"/></svg>
-    حفظ PDF
-  </button>
+  <button class="btn" id="btnPdf" type="button" title="حفظ PDF">حفظ PDF</button>
   <select id="pdfQuality" class="select" title="جودة PDF">
     <option value="normal">جودة: عادي</option>
     <option value="high">جودة: عالي</option>
@@ -147,10 +152,10 @@ html,body{height:100%; margin:0; background:var(--bg); color:var(--ink);
     <div class="titlebar" id="titlebar" contenteditable="true">تقرير تنفيذ برنامج (قابل للتعديل)</div>
   </div>
 
-  <!-- المحتوى المتمدد -->
+  <!-- المحتوى الثابت -->
   <div class="main">
 
-    <!-- جدول التعريف (مرفوع لأعلى) -->
+    <!-- جدول التعريف -->
     <table class="table" role="table" aria-label="بيانات البرنامج">
       <tr>
         <th contenteditable="true">مقدّم البرنامج</th>
@@ -172,23 +177,35 @@ html,body{height:100%; margin:0; background:var(--bg); color:var(--ink);
       </tr>
     </table>
 
-    <!-- الأهداف + النبذة (تتمدّدان لملء المساحة) -->
+    <!-- الأهداف + النبذة (ثابتان) -->
     <div class="split">
       <div class="card">
         <div class="head">الأهداف</div>
+        <!-- شريط الأدوات (يختفي في PDF) -->
+        <div class="toolstrip" data-nopdf="true">
+          <button class="toolbtn" onclick="adjText('goalsText', +1)">+A</button>
+          <button class="toolbtn" onclick="adjText('goalsText', -1)">−A</button>
+          <button class="toolbtn" onclick="toggleBold('goalsText')">B</button>
+        </div>
         <div class="body">
           <div id="goalsText" class="fittext" contenteditable="true">اكتب الأهداف هنا…</div>
         </div>
       </div>
+
       <div class="card">
         <div class="head">نبذة عن البرنامج</div>
+        <div class="toolstrip" data-nopdf="true">
+          <button class="toolbtn" onclick="adjText('aboutText', +1)">+A</button>
+          <button class="toolbtn" onclick="adjText('aboutText', -1)">−A</button>
+          <button class="toolbtn" onclick="toggleBold('aboutText')">B</button>
+        </div>
         <div class="body">
           <div id="aboutText" class="fittext" contenteditable="true">اكتب النبذة هنا…</div>
         </div>
       </div>
     </div>
 
-    <!-- الشواهد (تتمدّد أيضًا) -->
+    <!-- الشواهد (ثابت) -->
     <div class="gallery">
       <div class="photo" data-slot="1">
         <input type="file" accept="image/*" onchange="handlePhoto(this)">
@@ -200,7 +217,7 @@ html,body{height:100%; margin:0; background:var(--bg); color:var(--ink);
       </div>
     </div>
 
-    <!-- التواقيع (ثابتة وتلتصق قبل الشريط) -->
+    <!-- التواقيع -->
     <div class="signatures">
       <div class="sig">
         <h4 contenteditable="true">رائد النشاط</h4>
@@ -217,48 +234,73 @@ html,body{height:100%; margin:0; background:var(--bg); color:var(--ink);
 </div>
 
 <script>
-/* ====== أدوات مساعدة ====== */
-const STORAGE_KEY='school_report_v4';
+/* ====== أدوات عامة ====== */
+const STORAGE_KEY='school_report_v5';
 function toast(msg){ const t=document.createElement('div'); t.className='toast'; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(), 2200); }
 function setBusy(b){ const btn=document.getElementById('btnPdf'); const sel=document.getElementById('pdfQuality'); [btn,sel].forEach(el=>{ if(el) el.disabled=!!b; }); }
 
-/* FitText (تكبير/تصغير) للأهداف/النبذة + للعنوان */
+/* FitText ثابت: لا يمدّ الصندوق، بل يصغّر/يكبّر داخل ارتفاع ثابت */
 function fitTextToBox(el, {minSize=12, maxSize=20, baseSize=15}={}){
   if(!el) return;
   const parent=el.parentElement, maxH=parent.clientHeight, maxW=parent.clientWidth;
-  let s=baseSize; const set=sz=>{ el.style.fontSize=sz+'px'; el.style.lineHeight=Math.max(1.25, Math.min(1.6, 1.3 + (sz-12)*0.05)); };
-  el.style.whiteSpace='pre-wrap'; el.style.wordBreak='break-word'; el.style.overflow='hidden'; set(s);
-  let g=0; while(g++<90 && (el.scrollHeight>maxH || el.scrollWidth>maxW) && s>minSize){ s-=0.5; set(s); }
-  g=0; const roomy=()=> el.scrollHeight<maxH*.95 && el.scrollWidth<maxW*.98;
-  while(g++<90 && roomy() && s<maxSize){ s+=0.5; set(s); if(el.scrollHeight>maxH || el.scrollWidth>maxW){ s-=0.5; set(s); break; } }
+  let s = parseFloat(getComputedStyle(el).fontSize) || baseSize;
+  s = Math.max(minSize, Math.min(maxSize, s));
+  const set=sz=>{ el.style.fontSize=sz+'px'; el.style.lineHeight=Math.max(1.25, Math.min(1.6, 1.3 + (sz-12)*0.05)); };
+  el.style.whiteSpace='pre-wrap'; el.style.wordBreak='break-word'; el.style.overflow='hidden';
+  set(s);
+
+  // تصغير لو في فائض
+  let g=0;
+  while(g++<90 && (el.scrollHeight>maxH || el.scrollWidth>maxW) && s>minSize){ s-=0.5; set(s); }
+
+  // تكبير قليل لو فيه فراغ كبير
+  g=0; const roomy=()=> el.scrollHeight<maxH*.92 && el.scrollWidth<maxW*.96;
+  while(g++<60 && roomy() && s<maxSize){ s+=0.5; set(s); if(el.scrollHeight>maxH || el.scrollWidth>maxW){ s-=0.5; set(s); break; } }
+
+  // تنبيه امتلاء شديد
+  if (el.scrollHeight>maxH-2 || s<=minSize){
+    el.dataset.full='1';
+  }else{
+    delete el.dataset.full;
+  }
 }
-function fitTitle(){
-  const el=document.getElementById('titlebar'), wrap=el.parentElement;
-  const maxW=wrap.clientWidth*.72; let s=18, min=14, max=22;
-  const set=x=>{ el.style.fontSize=x+'px'; el.style.lineHeight=1.25; };
-  set(s); let i=0; while(i++<60 && el.scrollWidth>maxW && s>min){ s-=0.5; set(s); }
-  i=0; while(i++<60 && el.scrollWidth<maxW*.9 && s<max){ s+=0.5; set(s); if(el.scrollWidth>maxW){ s-=0.5; set(s); break; } }
+
+/* أزرار الأدوات */
+function adjText(id, dir){  // dir = +1 أو -1
+  const el=document.getElementById(id); if(!el) return;
+  const cur=parseFloat(getComputedStyle(el).fontSize)||15;
+  const next=Math.max(12, Math.min(20, cur + (dir>0 ? 1 : -1)));
+  el.style.fontSize=next+'px';
+  fitTextToBox(el);
 }
+function toggleBold(id){
+  const el=document.getElementById(id); if(!el) return;
+  el.style.fontWeight = (getComputedStyle(el).fontWeight >= '600') ? '400' : '700';
+  fitTextToBox(el);
+}
+
+/* تنظيف اللصق (نص صِرف) */
 function installPlainPaste(el){
   el.addEventListener('paste', (e)=>{ e.preventDefault(); const t=(e.clipboardData||window.clipboardData).getData('text'); document.execCommand('insertText', false, t); });
 }
 
-/* ضغط وتحويل صورة <img> إلى DataURL */
-async function imageToDataURL(img, {maxSide=2400, quality=0.92}={}){
+/* ضغط وتحويل صورة <img> إلى DataURL (تقنين أحجام الصور) */
+async function imageToDataURL(img, {maxSide=2000, quality=0.92}={}){
   await (img.decode ? img.decode().catch(()=>{}) : new Promise(res=>{ if(img.complete&&img.naturalWidth>0) return res(); img.addEventListener('load',res,{once:true}); img.addEventListener('error',res,{once:true}); }));
   const w=img.naturalWidth, h=img.naturalHeight, scale=Math.min(1, maxSide/Math.max(w,h));
   const nw=Math.max(1,Math.floor(w*scale)), nh=Math.max(1,Math.floor(h*scale));
-  const c=document.createElement('canvas'); c.width=nw; c.height=nh; const x=c.getContext('2d',{alpha:false}); x.imageSmoothingQuality='high'; x.drawImage(img,0,0,nw,nh);
+  const c=document.createElement('canvas'); c.width=nw; c.height=nh; const x=c.getContext('2d',{alpha:false});
+  x.imageSmoothingQuality='high'; x.drawImage(img,0,0,nw,nh);
   return c.toDataURL('image/jpeg', quality);
 }
 
-/* معالجة صور الشواهد (خلفية cover مموهة + الصورة contain وسط) */
+/* معالجة صور الشواهد (خلفية cover مموهة + contain) */
 function renderContainedPrettyFromFile(file, box){
   return new Promise((resolve,reject)=>{
     const url=URL.createObjectURL(file); const img=new Image();
     img.onload=async ()=>{
       try{
-        const tmp=new Image(); tmp.src=await imageToDataURL(img,{maxSide:2400, quality:0.9});
+        const tmp=new Image(); tmp.src=await imageToDataURL(img,{maxSide:2000, quality:0.9});
         await (tmp.decode ? tmp.decode().catch(()=>{}) : Promise.resolve());
         const dpr=Math.min(window.devicePixelRatio||1, 2.5);
         const bw=Math.max(1,Math.floor(box.clientWidth*dpr)), bh=Math.max(1,Math.floor(box.clientHeight*dpr));
@@ -266,7 +308,7 @@ function renderContainedPrettyFromFile(file, box){
         const cover=Math.max(bw/tmp.naturalWidth, bh/tmp.naturalHeight);
         const cw=Math.floor(tmp.naturalWidth*cover), ch=Math.floor(tmp.naturalHeight*cover);
         const cx=Math.floor((bw-cw)/2), cy=Math.floor((bh-ch)/2);
-        ctx.filter='blur(20px) brightness(1.03)'; ctx.drawImage(tmp,cx,cy,cw,ch); ctx.filter='none';
+        ctx.filter='blur(18px) brightness(1.03)'; ctx.drawImage(tmp,cx,cy,cw,ch); ctx.filter='none';
         ctx.fillStyle='rgba(255,255,255,0.08)'; ctx.fillRect(0,0,bw,bh);
         const contain=Math.min(bw/tmp.naturalWidth, bh/tmp.naturalHeight);
         const dw=Math.floor(tmp.naturalWidth*contain), dh=Math.floor(tmp.naturalHeight*contain);
@@ -286,10 +328,10 @@ async function handlePhoto(inputEl){
   catch(e){ console.error(e); toast('تعذّر معالجة الصورة'); }
 }
 
-/* انتظار وتحويل جميع <img> داخل الورقة لضمان ظهورها في PDF */
+/* انتظار وتحويل كل صور الورقة لضمان ظهورها في PDF */
 async function waitForImagesReady(){
   const imgs=Array.from(document.querySelectorAll('#sheet img')).filter(im=>im && im.src);
-  for(const im of imgs){ if(!im.src.startsWith('data:image')){ try{ im.src=await imageToDataURL(im,{maxSide:2400, quality:0.92}); }catch(e){} } }
+  for(const im of imgs){ if(!im.src.startsWith('data:image')){ try{ im.src=await imageToDataURL(im,{maxSide:2000, quality:0.92}); }catch(e){} } }
   const waitOne=im=> (im.complete&&im.naturalWidth>0)?Promise.resolve():(im.decode?im.decode().catch(()=>Promise.resolve()):new Promise(res=>{im.addEventListener('load',res,{once:true}); im.addEventListener('error',res,{once:true});}));
   await Promise.all(imgs.map(waitOne)); await new Promise(r=>setTimeout(r,60));
 }
@@ -301,7 +343,7 @@ async function waitForImagesReady(){
   if (img.complete && img.naturalWidth>0) ok(); else { img.addEventListener('load',ok,{once:true}); img.addEventListener('error',fail,{once:true}); setTimeout(()=>{ if(!done) fail(); },1500); }
 })();
 
-/* التاريخ الهجري (قابل للتعديل) */
+/* التاريخ الهجري الافتراضي */
 (function(){ try{ const el=document.getElementById('hijriDate'); if(el && !el.textContent.trim()){ const fmt=new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura',{day:'2-digit',month:'long',year:'numeric'}); el.textContent=fmt.format(new Date()); } }catch{} })();
 
 /* حفظ/استرجاع */
@@ -329,7 +371,8 @@ function applyState(s){
   const s2n=document.querySelector('.signatures .sig:nth-child(2) .name'); if(s2n) s2n.innerHTML=s.sig2n;
   if(Array.isArray(s.table)){ const cells=Array.from(document.querySelectorAll('.table th, .table td')); s.table.forEach((v,i)=>{ if(cells[i]) cells[i].innerHTML=v; }); }
   if(Array.isArray(s.photos)){ const boxes=Array.from(document.querySelectorAll('.gallery .photo')); s.photos.forEach((src,i)=>{ if(!src) return; let img=boxes[i].querySelector('img'); if(!img){ img=document.createElement('img'); boxes[i].appendChild(img); } img.src=src; boxes[i].querySelector('.hint')?.remove(); }); }
-  fitTitle(); fitTextToBox(document.getElementById('goalsText')); fitTextToBox(document.getElementById('aboutText'));
+  // إعادة ملاءمة الخط
+  refitAll();
 }
 function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(collectState())); }
 function restoreState(){ try{ const s=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null'); applyState(s); }catch{} }
@@ -340,7 +383,7 @@ async function generateSinglePagePdf(){
   const scale = qSel==='high' ? Math.min(window.devicePixelRatio||2, 3) : Math.min(window.devicePixelRatio||1.5, 2.2);
   const jpegQ = qSel==='high' ? 0.98 : 0.92;
 
-  await waitForImagesReady(); // يضمن ظهور الصور
+  await waitForImagesReady();
   const sheet=document.getElementById('sheet');
   const canvas=await html2canvas(sheet,{
     scale, backgroundColor:'#ffffff', useCORS:true, allowTaint:false,
@@ -364,34 +407,48 @@ async function generateSinglePagePdf(){
   return { pdf, filename };
 }
 
-/* تفعيل الواجهة */
+/* تنبيهات امتلاء المربعات */
+function checkFillWarnings(){
+  const boxes=[document.getElementById('goalsText'), document.getElementById('aboutText')];
+  const over = boxes.some(el => el?.dataset?.full==='1');
+  if (over) toast('تنبيه: النص ممتلئ جدًا — قلّل المحتوى أو حجم الخط');
+}
+
+/* تفعيل الأدوات والملاءمة */
+function refitAll(){
+  fitTextToBox(document.getElementById('goalsText'));
+  fitTextToBox(document.getElementById('aboutText'));
+  checkFillWarnings();
+}
 function bindUI(){
-  // لصق آمن + FitText لمربعي النص
+  // لصق آمن + FitText
   ['goalsText','aboutText'].forEach(id=>{
     const el=document.getElementById(id);
     installPlainPaste(el);
-    const fitNow=()=>fitTextToBox(el);
-    ['input','keyup'].forEach(evt=> el.addEventListener(evt, fitNow));
-    const ro=new ResizeObserver(fitNow); ro.observe(el); ro.observe(el.parentElement);
+    const fitNow=()=>{ fitTextToBox(el); checkFillWarnings(); saveState(); };
+    ['input','keyup','blur'].forEach(evt=> el.addEventListener(evt, fitNow));
+    const ro=new ResizeObserver(()=>{ fitTextToBox(el); checkFillWarnings(); }); ro.observe(el); ro.observe(el.parentElement);
   });
-  // Fit للعنوان
-  const title=document.getElementById('titlebar');
-  installPlainPaste(title);
-  ['input','keyup'].forEach(evt=> title.addEventListener(evt, fitTitle));
-  const roT=new ResizeObserver(fitTitle); roT.observe(title); roT.observe(title.parentElement);
 
-  // زر PDF فقط
+  // العنوان — ملاءمة بسيطة للعرض
+  const title=document.getElementById('titlebar');
+  function fitTitle(){
+    const wrap=title.parentElement; const maxW=wrap.clientWidth*.72; let s=18, min=14, max=22;
+    const set=x=>{ title.style.fontSize=x+'px'; title.style.lineHeight=1.25; };
+    set(s); let i=0; while(i++<60 && title.scrollWidth>maxW && s>min){ s-=0.5; set(s); }
+    i=0; while(i++<60 && title.scrollWidth<maxW*.9 && s<max){ s+=0.5; set(s); if(title.scrollWidth>maxW){ s-=0.5; set(s); break; } }
+  }
+  ['input','keyup'].forEach(evt=> title.addEventListener(evt, ()=>{ fitTitle(); saveState(); }));
+  const roT=new ResizeObserver(fitTitle); roT.observe(title); roT.observe(title.parentElement); fitTitle();
+
+  // زر PDF
   document.getElementById('btnPdf')?.addEventListener('click', async ()=>{
-    try{
-      setBusy(true); saveState();
-      const {pdf, filename}=await generateSinglePagePdf();
-      pdf.save(filename);
-      toast('تم إنشاء PDF ✅');
-    }catch(e){ console.error(e); alert('تعذّر إنشاء PDF.'); }
+    try{ setBusy(true); saveState(); const {pdf, filename}=await generateSinglePagePdf(); pdf.save(filename); toast('تم إنشاء PDF ✅'); }
+    catch(e){ console.error(e); alert('تعذّر إنشاء PDF.'); }
     finally{ setBusy(false); }
   });
 
-  // حفظ تلقائي للجدول/النصوص
+  // حفظ تلقائي لخلايا الجدول والتواقيع
   document.querySelectorAll('[contenteditable], .table th, .table td').forEach(el=>{
     ['input','keyup','blur'].forEach(evt=> el.addEventListener(evt, saveState));
   });
@@ -399,12 +456,11 @@ function bindUI(){
 
 /* إقلاع */
 document.addEventListener('DOMContentLoaded', ()=>{
-  restoreState(); fitTitle();
-  fitTextToBox(document.getElementById('goalsText'));
-  fitTextToBox(document.getElementById('aboutText'));
+  restoreState();
+  refitAll();
   bindUI();
 });
-window.addEventListener('resize', ()=>{ clearTimeout(window.__ftR); window.__ftR=setTimeout(()=>{ fitTitle(); fitTextToBox(document.getElementById('goalsText')); fitTextToBox(document.getElementById('aboutText')); }, 120); });
+window.addEventListener('resize', ()=>{ clearTimeout(window.__ftR); window.__ftR=setTimeout(()=>{ refitAll(); }, 120); });
 </script>
 
 </body>
