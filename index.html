@@ -22,7 +22,7 @@ html,body{
   font-family:"Tajawal",system-ui,sans-serif; line-height:1.6; font-size:var(--base);
 }
 
-/* ورقة A4 صفحة واحدة */
+/* ورقة A4 */
 .sheet{
   width:210mm; height:297mm; margin:12px auto; background:var(--paper);
   border:1px solid #e5e7eb; box-shadow:0 10px 28px rgba(0,0,0,.08);
@@ -43,17 +43,17 @@ html,body{
 }
 .titlebar[contenteditable]:focus{outline:2px dashed rgba(255,255,255,.7); outline-offset:4px}
 
-/* المحتوى (ثابت الارتفاعات) */
+/* المحتوى */
 .main{
   padding:0 10mm; display:grid; gap:1.5mm;
   grid-template-rows:
-    auto     /* جدول التعريف */
-    70mm     /* الأهداف + النبذة */
-    58mm     /* الشواهد */
-    22mm;    /* التواقيع */
+    auto
+    70mm
+    58mm
+    22mm;
 }
 
-/* جدول التعريف — الأسلوب الافتراضي (سيُعاد ضبطه في طبقة override) */
+/* جدول التعريف (القيم الأساسية – ستُلغى لاحقًا بالـoverride) */
 .table{
   width:100%; border-collapse:collapse; table-layout:fixed; background:#fff;
   border:1px solid var(--line); font-size:12.5px; line-height:1.3;
@@ -75,7 +75,7 @@ html,body{
 .table [contenteditable]{outline:none}
 .table [contenteditable]:focus{box-shadow:inset 0 0 0 2px rgba(47,127,121,.18); border-radius:4px}
 
-/* الأهداف/النبذة — ثابتان */
+/* الأهداف/النبذة */
 .split{display:grid; grid-template-columns:1fr 1fr; gap:4mm; height:70mm}
 .card{
   border:1px solid var(--line); border-radius:8px; background:#fff;
@@ -86,35 +86,25 @@ html,body{
   font-weight:800; border-bottom:1px solid var(--line); font-size:var(--base)
 }
 .card .body{padding:3mm 4mm; overflow:hidden; display:flex; align-items:flex-start; justify-content:stretch}
-.fittext{
-  width:100%; height:100%;
-  white-space:pre-wrap; word-break:break-word; overflow:hidden;
-  line-height:1.6; font-size:15px; font-weight:400;
-}
+.fittext{width:100%; height:100%; white-space:pre-wrap; word-break:break-word; overflow:hidden; line-height:1.6; font-size:15px; font-weight:400}
 
-/* الشواهد — ثابتة */
+/* الشواهد */
 .gallery{display:grid; grid-template-columns:1fr 1fr; gap:4mm; height:58mm}
-.photo{
-  position:relative; background:#fff; border:1px solid var(--line); border-radius:8px;
-  display:flex; align-items:center; justify-content:center; overflow:hidden;
-}
+.photo{position:relative; background:#fff; border:1px solid var(--line); border-radius:8px; display:flex; align-items:center; justify-content:center; overflow:hidden}
 .photo input[type="file"]{position:absolute; inset:0; opacity:0; cursor:pointer; z-index:2}
 .photo .hint{position:absolute; z-index:1; color:#6b7280; font-size:var(--base); pointer-events:none; text-align:center; padding:6px 8px}
 .photo img{max-width:100%; max-height:100%; display:block}
 
 /* التواقيع */
 .signatures{height:22mm; display:grid; grid-template-columns:1fr 1fr; gap:4mm}
-.sig{
-  background:#fff; border:1px solid var(--line); border-radius:8px;
-  display:grid; grid-template-rows:9mm 1fr; text-align:center;
-}
+.sig{background:#fff; border:1px solid var(--line); border-radius:8px; display:grid; grid-template-rows:9mm 1fr; text-align:center}
 .sig h4{margin:0; display:grid; place-items:center; color:#1597a0; font-weight:800; font-size:var(--name); border-bottom:1px solid var(--line)}
 .sig .name{font-weight:800; font-size:var(--name); display:grid; place-items:center}
 
-/* الشريط السفلي */
+/* شريط سفلي */
 .footer-bar{height:6mm; background:var(--footer)}
 
-/* شريط الأزرار (لا يظهر بالـPDF) */
+/* شريط الأزرار (يُستثنى من PDF) */
 .actions{position:fixed; top:10px; right:10px; left:10px; display:flex; gap:8px; z-index:9999}
 .btn{display:inline-flex; align-items:center; gap:8px; border:1px solid var(--line); background:var(--accent); color:#fff; font-weight:700; padding:8px 12px; border-radius:10px; cursor:pointer; font-size:var(--base); box-shadow:0 4px 10px rgba(0,0,0,.08)}
 .btn[disabled]{opacity:.55; cursor:not-allowed}
@@ -123,32 +113,32 @@ html,body{
 @media (max-width:600px){ .sheet{transform:scale(0.92); transform-origin:top center;} }
 .toast{position:fixed; bottom:12px; left:50%; transform:translateX(-50%); background:#111827; color:#fff; padding:10px 14px; border-radius:10px; font-size:13px; z-index:99999; opacity:.98;}
 
-/* ===================== */
-/* طبقة OVERRIDE القوية  */
-/* ===================== */
-.v11 .titlebar-wrap{
+/* =============================== */
+/* طبقة OVERRIDE القوية — v12 فقط */
+/* =============================== */
+.v12 .titlebar-wrap{
   position:relative !important;
-  top:-8mm !important;            /* ألصق العنوان بالهيدر */
+  top:-10mm !important;           /* العنوان ملتصق بالهيدر */
   padding:0 !important;
 }
-.v11 .main{ gap:0.6mm !important; }
-
-.v11 .table{
-  margin-top:-7mm !important;     /* ألصق الجدول بالعنوان */
+.v12 .main{ gap:0 !important; }   /* لا فجوات بين العنوان والجدول */
+.v12 .table{
+  margin-top:-8mm !important;     /* الجدول ملتصق بالعنوان */
   border-top:3px solid var(--accent) !important;
 }
-.v11 .table th,
-.v11 .table td{
-  padding:0.6mm 1.6mm !important; /* أقل من 1مم رأسيًا */
-  line-height:1.2 !important;
+.v12 .table th,
+.v12 .table td{
+  padding:0.5mm 1.6mm !important; /* أقل من 1 مم رأسيًا */
+  line-height:1.18 !important;
   text-align:center !important;   /* توسيط أفقي */
   vertical-align:middle !important;/* توسيط عمودي */
+  font-size:12.2px !important;
 }
 </style>
 </head>
-<body class="v11">
+<body class="v12">
 
-<!-- أدوات التحكم (لا تظهر في PDF) -->
+<!-- أدوات التحكم -->
 <div class="actions" data-nopdf="true">
   <button class="btn" id="btnPdf" type="button" title="حفظ PDF">حفظ PDF</button>
   <select id="pdfQuality" class="select" title="جودة PDF">
@@ -194,55 +184,28 @@ html,body{
       </tr>
     </table>
 
-    <!-- الأهداف + النبذة (ثابتان) -->
+    <!-- الأهداف + النبذة -->
     <div class="split">
       <div class="card">
         <div class="head">الأهداف</div>
-        <div class="toolstrip" data-nopdf="true">
-          <button class="toolbtn" onclick="adjText('goalsText', +1)">+A</button>
-          <button class="toolbtn" onclick="adjText('goalsText', -1)">−A</button>
-          <button class="toolbtn" onclick="toggleBold('goalsText')">B</button>
-        </div>
-        <div class="body">
-          <div id="goalsText" class="fittext" contenteditable="true">اكتب الأهداف هنا…</div>
-        </div>
+        <div class="body"><div id="goalsText" class="fittext" contenteditable="true">اكتب الأهداف هنا…</div></div>
       </div>
-
       <div class="card">
         <div class="head">نبذة عن البرنامج</div>
-        <div class="toolstrip" data-nopdf="true">
-          <button class="toolbtn" onclick="adjText('aboutText', +1)">+A</button>
-          <button class="toolbtn" onclick="adjText('aboutText', -1)">−A</button>
-          <button class="toolbtn" onclick="toggleBold('aboutText')">B</button>
-        </div>
-        <div class="body">
-          <div id="aboutText" class="fittext" contenteditable="true">اكتب النبذة هنا…</div>
-        </div>
+        <div class="body"><div id="aboutText" class="fittext" contenteditable="true">اكتب النبذة هنا…</div></div>
       </div>
     </div>
 
     <!-- الشواهد -->
     <div class="gallery">
-      <div class="photo" data-slot="1">
-        <input type="file" accept="image/*" onchange="handlePhoto(this)">
-        <div class="hint">أضف صورة (1/2)</div>
-      </div>
-      <div class="photo" data-slot="2">
-        <input type="file" accept="image/*" onchange="handlePhoto(this)">
-        <div class="hint">أضف صورة (2/2)</div>
-      </div>
+      <div class="photo" data-slot="1"><input type="file" accept="image/*" onchange="handlePhoto(this)"><div class="hint">أضف صورة (1/2)</div></div>
+      <div class="photo" data-slot="2"><input type="file" accept="image/*" onchange="handlePhoto(this)"><div class="hint">أضف صورة (2/2)</div></div>
     </div>
 
     <!-- التواقيع -->
     <div class="signatures">
-      <div class="sig">
-        <h4 contenteditable="true">رائد النشاط</h4>
-        <div class="name" contenteditable="true">اسم المعلم</div>
-      </div>
-      <div class="sig">
-        <h4>مدير المدرسة</h4>
-        <div class="name">فهد حامد علي الزهراني</div>
-      </div>
+      <div class="sig"><h4 contenteditable="true">رائد النشاط</h4><div class="name" contenteditable="true">اسم المعلم</div></div>
+      <div class="sig"><h4>مدير المدرسة</h4><div class="name">فهد حامد علي الزهراني</div></div>
     </div>
   </div>
 
@@ -250,13 +213,12 @@ html,body{
 </div>
 
 <script>
-/* مفتاح تخزين جديد لضمان قراءة النسخة الحديثة */
-const STORAGE_KEY='school_report_v11';
-
+/* مفتاح جديد لضمان تحميل التنسيق الجديد */
+const STORAGE_KEY='school_report_v12';
 function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2200)}
 function setBusy(b){['btnPdf','pdfQuality'].forEach(id=>{const el=document.getElementById(id); if(el) el.disabled=!!b;});}
 
-/* FitText ثابت */
+/* FitText */
 function fitTextToBox(el,{minSize=12,maxSize=20,baseSize=15}={}){
   if(!el) return;
   const parent=el.parentElement, maxH=parent.clientHeight, maxW=parent.clientWidth;
@@ -266,29 +228,30 @@ function fitTextToBox(el,{minSize=12,maxSize=20,baseSize=15}={}){
   let i=0; while(i++<90 && (el.scrollHeight>maxH||el.scrollWidth>maxW) && s>minSize){ s-=0.5; set(s); }
   i=0; const roomy=()=> el.scrollHeight<maxH*.92 && el.scrollWidth<maxW*.96;
   while(i++<60 && roomy() && s<maxSize){ s+=0.5; set(s); if(el.scrollHeight>maxH||el.scrollWidth>maxW){ s-=0.5; set(s); break; } }
-  if(el.scrollHeight>maxH-2||s<=minSize) el.dataset.full='1'; else delete el.dataset.full;
 }
 
-/* أدوات النص */
-function adjText(id,dir){const el=document.getElementById(id); if(!el) return; const cur=parseFloat(getComputedStyle(el).fontSize)||15; const next=Math.max(12,Math.min(20,cur+(dir>0?1:-1))); el.style.fontSize=next+'px'; fitTextToBox(el);}
-function toggleBold(id){const el=document.getElementById(id); if(!el) return; el.style.fontWeight=(getComputedStyle(el).fontWeight>='600')?'400':'700'; fitTextToBox(el);}
-function installPlainPaste(el){el.addEventListener('paste',e=>{e.preventDefault();const t=(e.clipboardData||window.clipboardData).getData('text');document.execCommand('insertText',false,t);});}
-
-/* الصور والـPDF */
+/* إدراج صور الشواهد وتهيئتها */
 async function imageToDataURL(img,{maxSide=2000,quality=0.92}={}){await(img.decode?img.decode().catch(()=>{}):new Promise(r=>{if(img.complete&&img.naturalWidth>0)return r();img.addEventListener('load',r,{once:true});img.addEventListener('error',r,{once:true});}));const w=img.naturalWidth,h=img.naturalHeight,s=Math.min(1,maxSide/Math.max(w,h));const nw=Math.max(1,Math.floor(w*s)),nh=Math.max(1,Math.floor(h*s));const c=document.createElement('canvas');c.width=nw;c.height=nh;const x=c.getContext('2d',{alpha:false});x.imageSmoothingQuality='high';x.drawImage(img,0,0,nw,nh);return c.toDataURL('image/jpeg',quality);}
-function renderContainedPrettyFromFile(file,box){return new Promise((res,rej)=>{const url=URL.createObjectURL(file);const img=new Image();img.onload=async()=>{try{const tmp=new Image();tmp.src=await imageToDataURL(img,{maxSide:2000,quality:0.9});await(tmp.decode?tmp.decode().catch(()=>{}):Promise.resolve());const dpr=Math.min(window.devicePixelRatio||1,2.5);const bw=Math.max(1,Math.floor(box.clientWidth*dpr)),bh=Math.max(1,Math.floor(box.clientHeight*dpr));const c=document.createElement('canvas');c.width=bw;c.height=bh;const ctx=c.getContext('2d',{alpha:false});const cover=Math.max(bw/tmp.naturalWidth,bh/tmp.naturalHeight);const cw=Math.floor(tmp.naturalWidth*cover),ch=Math.floor(tmp.naturalHeight*cover);const cx=Math.floor((bw-cw)/2),cy=Math.floor((bh-ch)/2);ctx.filter='blur(18px) brightness(1.03)';ctx.drawImage(tmp,cx,cy,cw,ch);ctx.filter='none';ctx.fillStyle='rgba(255,255,255,0.08)';ctx.fillRect(0,0,bw,bh);const contain=Math.min(bw/tmp.naturalWidth,bh/tmp.naturalHeight);const dw=Math.floor(tmp.naturalWidth*contain),dh=Math.floor(tmp.naturalHeight*contain);const dx=Math.floor((bw-dw)/2),dy=Math.floor((bh-dh)/2);ctx.imageSmoothingQuality='high';ctx.drawImage(tmp,dx,dy,dw,dh);res(c.toDataURL('image/jpeg',0.92));}catch(e){rej(e);}URL.revokeObjectURL(url);};img.onerror=()=>{URL.revokeObjectURL(url);rej(new Error('تعذّر قراءة الصورة'));};img.src=url;});}
-async function handlePhoto(inputEl){const f=inputEl?.files?.[0]; if(!f) return; const box=inputEl.parentElement; box.querySelector('.hint')?.remove(); try{const dataUrl=await renderContainedPrettyFromFile(f,box);let img=box.querySelector('img');if(!img){img=document.createElement('img');box.appendChild(img);}img.src=dataUrl;saveState();}catch(e){console.error(e);toast('تعذّر معالجة الصورة');}}
-async function waitForImagesReady(){const imgs=Array.from(document.querySelectorAll('#sheet img')).filter(im=>im&&im.src);for(const im of imgs){if(!im.src.startsWith('data:image')){try{im.src=await imageToDataURL(im,{maxSide:2000,quality:0.92});}catch(e){}}}const waitOne=im=>(im.complete&&im.naturalWidth>0)?Promise.resolve():(im.decode?im.decode().catch(()=>Promise.resolve()):new Promise(r=>{im.addEventListener('load',r,{once:true});im.addEventListener('error',r,{once:true});}));await Promise.all(imgs.map(waitOne));await new Promise(r=>setTimeout(r,60));}
+function renderContainedPrettyFromFile(file,box){return new Promise((res,rej)=>{const url=URL.createObjectURL(file);const img=new Image();img.onload=async()=>{try{const tmp=new Image();tmp.src=await imageToDataURL(img,{maxSide:2000,quality:0.9});await(tmp.decode?tmp.decode().catch(()=>{}):Promise.resolve());const dpr=Math.min(window.devicePixelRatio||1,2.5);const bw=Math.max(1,Math.floor(box.clientWidth*dpr)),bh=Math.max(1,Math.floor(box.clientHeight*dpr));const c=document.createElement('canvas');c.width=bw;c.height=bh;const ctx=c.getContext('2d',{alpha:false});const cover=Math.max(bw/tmp.naturalWidth,bh/tmp.naturalHeight);const cw=Math.floor(tmp.naturalWidth*cover),ch=Math.floor(tmp.naturalHeight*cover);const cx=Math.floor((bw-cw)/2),cy=Math.floor((bh-ch)/2);ctx.filter='blur(18px) brightness(1.03)';ctx.drawImage(tmp,cx,cy,cw,ch);ctx.filter='none';ctx.fillStyle='rgba(255,255,255,0.08)';ctx.fillRect(0,0,bw,bh);const contain=Math.min(bw/tmp.naturalWidth,bh/tmp.naturalHeight);const dw=Math.floor(tmp.naturalWidth*contain),dh=Math.floor(tmp.naturalHeight*contain);const dx=Math.floor((bw-dw)/2),dy=Math.floor((bh-dh)/2);ctx.drawImage(tmp,dx,dy,dw,dh);res(c.toDataURL('image/jpeg',0.92));}catch(e){rej(e);}URL.revokeObjectURL(url);};img.onerror=()=>{URL.revokeObjectURL(url);rej(new Error('تعذّر قراءة الصورة'));};img.src=url;});}
+async function handlePhoto(inputEl){const f=inputEl?.files?.[0]; if(!f) return; const box=inputEl.parentElement; box.querySelector('.hint')?.remove(); try{const dataUrl=await renderContainedPrettyFromFile(f, box); let img=box.querySelector('img'); if(!img){ img=document.createElement('img'); box.appendChild(img);} img.src=dataUrl; saveState();}catch(e){console.error(e); toast('تعذّر معالجة الصورة');}}
 
-/* هيدر بديل */
+/* ضمان ظهور الهيدر في PDF */
+async function waitForImagesReady(){
+  const imgs=Array.from(document.querySelectorAll('#sheet img')).filter(im=>im && im.src);
+  for(const im of imgs){ if(!im.src.startsWith('data:image')){ try{ im.src=await imageToDataURL(im,{maxSide:2000,quality:0.92}); }catch(e){} } }
+  const waitOne=im=> (im.complete&&im.naturalWidth>0)?Promise.resolve():(im.decode?im.decode().catch(()=>Promise.resolve()):new Promise(res=>{im.addEventListener('load',res,{once:true});im.addEventListener('error',res,{once:true});}));
+  await Promise.all(imgs.map(waitOne)); await new Promise(r=>setTimeout(r,60));
+}
+
+/* بديل للهيدر */
 (function(){const img=document.getElementById('headerPic'),fb=document.getElementById('headerFallback');let done=false;const ok=()=>{if(!done){done=true;fb.style.display='none';}},fail=()=>{if(!done){done=true;fb.style.display='block';}};if(img.complete&&img.naturalWidth>0)ok();else{img.addEventListener('load',ok,{once:true});img.addEventListener('error',fail,{once:true});setTimeout(()=>{if(!done)fail();},1500);}})();
 
-/* تاريخ هجري افتراضي */
+/* التاريخ الهجري الافتراضي */
 (function(){try{const el=document.getElementById('hijriDate');if(el&&!el.textContent.trim()){const fmt=new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura',{day:'2-digit',month:'long',year:'numeric'});el.textContent=fmt.format(new Date());}}catch{}})();
 
 /* حفظ/استرجاع */
 function collectState(){const getHTML=id=>document.getElementById(id)?.innerHTML||'';const photos=Array.from(document.querySelectorAll('.gallery .photo')).map(p=>p.querySelector('img')?.src||'');const table=Array.from(document.querySelectorAll('.table th,.table td')).map(c=>c.innerHTML);return{title:getHTML('titlebar'),hijri:getHTML('hijriDate'),goals:getHTML('goalsText'),about:getHTML('aboutText'),sig1h:document.querySelector('.signatures .sig:nth-child(1) h4')?.innerHTML||'',sig1n:document.querySelector('.signatures .sig:nth-child(1) .name')?.innerHTML||'',sig2h:document.querySelector('.signatures .sig:nth-child(2) h4')?.innerHTML||'',sig2n:document.querySelector('.signatures .sig:nth-child(2) .name')?.innerHTML||'',photos,table};}
-function applyState(s){if(!s)return;const setHTML=(id,val)=>{const el=document.getElementById(id);if(el)el.innerHTML=val;};setHTML('titlebar',s.title);setHTML('hijriDate',s.hijri);setHTML('goalsText',s.goals);setHTML('aboutText',s.about);const s1h=document.querySelector('.signatures .sig:nth-child(1) h4');if(s1h)s1h.innerHTML=s.sig1h;const s1n=document.querySelector('.signatures .sig:nth-child(1) .name');if(s1n)s1n.innerHTML=s.sig1n;const s2h=document.querySelector('.signatures .sig:nth-child(2) h4');if(s2h)s2h.innerHTML=s.sig2h;const s2n=document.querySelector('.signatures .sig:nth-child(2) .name');if(s2n)s2n.innerHTML=s.sig2n;if(Array.isArray(s.table)){const cells=Array.from(document.querySelectorAll('.table th,.table td'));s.table.forEach((v,i)=>{if(cells[i])cells[i].innerHTML=v;});}if(Array.isArray(s.photos)){const boxes=Array.from(document.querySelectorAll('.gallery .photo'));s.photos.forEach((src,i)=>{if(!src)return;let img=boxes[i].querySelector('img');if(!img){img=document.createElement('img');boxes[i].appendChild(img);}img.src=src;boxes[i].querySelector('.hint')?.remove();});}refitAll();}
+function applyState(s){if(!s)return;const setHTML=(id,val)=>{const el=document.getElementById(id);if(el)el.innerHTML=val;};setHTML('titlebar',s.title);setHTML('hijriDate',s.hijri);setHTML('goalsText',s.goals);setHTML('aboutText',s.about);const s1h=document.querySelector('.signatures .sig:nth-child(1) h4');if(s1h)s1h.innerHTML=s.sig1h;const s1n=document.querySelector('.signatures .sig:nth-child(1) .name');if(s1n)s1n.innerHTML=s.sig1n;const s2h=document.querySelector('.signatures .sig:nth-child(2) h4');if(s2h)s2h.innerHTML=s.sig2h;const s2n=document.querySelector('.signatures .sig:nth-child(2) .name');if(s2n)s2n.innerHTML=s.sig2n;if(Array.isArray(s.table)){const cells=Array.from(document.querySelectorAll('.table th,.table td'));s.table.forEach((v,i)=>{if(cells[i])cells[i].innerHTML=v;});}if(Array.isArray(s.photos)){const boxes=Array.from(document.querySelectorAll('.gallery .photo'));s.photos.forEach((src,i)=>{if(!src)return;let img=boxes[i].querySelector('img');if(!img){img=document.createElement('img');boxes[i].appendChild(img);}img.src=src;boxes[i].querySelector('.hint')?.remove();});}fitTextToBox(document.getElementById('goalsText'));fitTextToBox(document.getElementById('aboutText'));}
 function saveState(){localStorage.setItem(STORAGE_KEY,JSON.stringify(collectState()));}
 function restoreState(){try{const s=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');applyState(s);}catch{}}
 
@@ -315,46 +278,19 @@ async function generateSinglePagePdf(){
   return {pdf,filename};
 }
 
-/* ملاءمة وتنبيهات */
-function checkFillWarnings(){const boxes=[document.getElementById('goalsText'),document.getElementById('aboutText')];const over=boxes.some(el=>el?.dataset?.full==='1');if(over)toast('تنبيه: النص ممتلئ — قلّل المحتوى أو حجم الخط');}
-function refitAll(){fitTextToBox(document.getElementById('goalsText'));fitTextToBox(document.getElementById('aboutText'));checkFillWarnings();}
-function bindUI(){
+/* إقلاع */
+document.addEventListener('DOMContentLoaded', ()=>{
+  restoreState();
   ['goalsText','aboutText'].forEach(id=>{
     const el=document.getElementById(id);
-    installPlainPaste(el);
-    const fitNow=()=>{fitTextToBox(el);checkFillWarnings();saveState();};
-    ['input','keyup','blur'].forEach(evt=> el.addEventListener(evt, fitNow));
-    const ro=new ResizeObserver(()=>{fitTextToBox(el);checkFillWarnings();}); ro.observe(el); ro.observe(el.parentElement);
+    ['input','keyup','blur'].forEach(evt=> el.addEventListener(evt, ()=>{fitTextToBox(el); saveState();}));
   });
-
-  const title=document.getElementById('titlebar');
-  function fitTitle(){
-    const wrap=title.parentElement; const maxW=wrap.clientWidth*.72; let s=18, min=14, max=22;
-    const set=x=>{ title.style.fontSize=x+'px'; title.style.lineHeight=1.25; };
-    set(s); let i=0; while(i++<60 && title.scrollWidth>maxW && s>min){ s-=0.5; set(s); }
-    i=0; while(i++<60 && title.scrollWidth<maxW*.9 && s<max){ s+=0.5; set(s); if(title.scrollWidth>maxW){ s-=0.5; set(s); break; } }
-  }
-  ['input','keyup'].forEach(evt=> title.addEventListener(evt, ()=>{ fitTitle(); saveState(); }));
-  const roT=new ResizeObserver(fitTitle); roT.observe(title); roT.observe(title.parentElement); fitTitle();
-
   document.getElementById('btnPdf')?.addEventListener('click', async ()=>{
     try{ setBusy(true); saveState(); const {pdf, filename}=await generateSinglePagePdf(); pdf.save(filename); toast('تم إنشاء PDF ✅'); }
     catch(e){ console.error(e); alert('تعذّر إنشاء PDF.'); }
     finally{ setBusy(false); }
   });
-
-  document.querySelectorAll('[contenteditable], .table th, .table td').forEach(el=>{
-    ['input','keyup','blur'].forEach(evt=> el.addEventListener(evt, saveState));
-  });
-}
-
-/* إقلاع */
-document.addEventListener('DOMContentLoaded', ()=>{
-  restoreState();
-  refitAll();
-  bindUI();
 });
-window.addEventListener('resize', ()=>{ clearTimeout(window.__ftR); window.__ftR=setTimeout(()=>{ refitAll(); }, 120); });
 </script>
 
 </body>
