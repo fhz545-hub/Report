@@ -27,7 +27,7 @@
 *{box-sizing:border-box;}
 body{
   margin:0;
-  background:#ffffff;
+  background:#f3f4f6;
   font-family:"Tajawal",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--ink);
 }
@@ -80,14 +80,21 @@ body{
   max-width:94%;
   overflow:hidden;
 }
+
 .main{width:100%;height:100%;}
+
+/* الكرت الأساسي */
 .card{
   width:100%;
-  height:100%;
+  min-height:100%;
   padding:2mm 4mm;
   display:flex;
   flex-direction:column;
+  justify-content:space-between;
   font-size:10px;
+  background:rgba(255,255,255,.96);
+  border-radius:18px;
+  box-shadow:0 8px 22px rgba(15,23,42,.16);
 }
 
 /* شريط علوي (رسالة فقط) */
@@ -254,7 +261,7 @@ body{
 .details-header,
 .details-row{
   display:grid;
-  grid-template-columns:1.6fr .8fr .6fr; /* مستوى عريض – نطاق وعدد أضيق */
+  grid-template-columns:1.5fr .9fr .6fr; /* تنسيق متناسق */
   align-items:center;
 }
 .details-header{
@@ -265,7 +272,7 @@ body{
 .details-row:nth-child(odd){background:#f3f4f6;}
 .level-badge{
   display:inline-block;
-  min-width:90px;
+  min-width:80px;
   text-align:center;
   padding:4px 10px;
   border-radius:999px;
@@ -371,7 +378,7 @@ body{
   padding:1px 1px 2px;
   text-align:center;
 }
-.donut-canvas{height:32px;}
+.donut-canvas{height:26px;} /* تصغير الدونات */
 .donut-label{
   font-size:8.5px;
   color:#4b5563;
@@ -419,7 +426,22 @@ body{
   border:1px solid #e5e7eb;
   padding:1px 2px;
 }
-.improv-table th{background:#f3f4f6;}
+.improv-table th{background:#f3f4f6;white-space:nowrap;}
+/* ضبط الأعمدة: اسم الطالب أصغر، الهوية أصغر، الإجراءات أكبر */
+.improv-table th.col-name{width:20%;}
+.improv-table th.col-id{width:12%;}
+.improv-table th.col-grade{width:8%;}
+.improv-table th.col-gap{width:8%;}
+.improv-table th.col-actions{width:38%;}
+.improv-table th.col-follow{width:14%;}
+
+.improv-table td.name-cell{
+  white-space:nowrap;
+}
+.improv-table td.id-cell{
+  white-space:nowrap;
+}
+
 .follow-cell{
   text-align:center;
   white-space:nowrap;
@@ -438,7 +460,7 @@ body{
 
 /* الفوتر */
 .footer{
-  margin-top:2px;
+  margin-top:4px;
   display:flex;
   justify-content:space-between;
   align-items:center;
@@ -448,31 +470,50 @@ body{
 .footer-line{margin:0;}
 .footer strong{color:#111827;}
 
-/* هواتف */
+/* هواتف وأجهزة صغيرة */
 @media (max-width:900px){
   .a4-page{
-    width:100vw;
+    width:100%;
     max-width:100%;
+    aspect-ratio:auto;
+    min-height:100vh;
+    padding:12px 0;
+    background-size:cover;
   }
   .content-box{
-    top:30mm;
-    bottom:8%;
+    position:relative;
+    top:auto;
+    bottom:auto;
     width:94%;
+    max-width:94%;
+    margin:80px auto 24px;
+  }
+  .card{
+    border-radius:14px;
+    box-shadow:0 4px 16px rgba(15,23,42,.18);
   }
 }
 
 /* طباعة */
 @media print{
   @page{size:A4 portrait;margin:0;}
-  body{margin:0;}
+  body{margin:0;background:#ffffff;}
   .a4-page{
     width:210mm;
     height:297mm;
+    padding:0;
   }
   .content-box{
+    position:absolute;
     top:34mm;
     bottom:12mm;
     width:186mm;
+    max-width:186mm;
+    margin:0;
+  }
+  .card{
+    box-shadow:none;
+    background:rgba(255,255,255,1);
   }
   .header-tools{display:none;}
   .lens-overlay{display:none !important;}
@@ -519,7 +560,7 @@ body{
                 <input id="subjectInput" type="text" placeholder="مثال: رياضيات" />
               </div>
               <div class="lens-field">
-                <label for="stageInput">الصف/المرحلة</label>
+                <label for="stageInput">الصف</label>
                 <input id="stageInput" type="text" placeholder="مثال: أول ثانوي" />
               </div>
               <div class="lens-field">
@@ -569,7 +610,7 @@ body{
 
           <div class="header-row">
             <div class="header-main-line">
-              المرحلة / الصف: <strong id="stageField">—</strong>
+              الصف: <strong id="stageField">—</strong>
               · المادة: <strong id="headerSubjectField">—</strong>
               · الفترة / الفصل: <strong id="termField">—</strong>
               · معلم المادة / المنسق: <strong id="headerTeacherField">—</strong>
@@ -691,7 +732,7 @@ body{
 
           <div class="charts-title" style="margin-top:3px;">رسم بياني (عدد الحالات لكل تقدير)</div>
           <div class="bar-wrapper">
-            <canvas id="barLevels" height="64"></canvas>
+            <canvas id="barLevels" height="52"></canvas> <!-- تصغير الرسم البياني -->
           </div>
         </div>
 
@@ -704,12 +745,12 @@ body{
           <table class="improv-table">
             <thead>
               <tr>
-                <th style="width:24%;">اسم الطالب</th>
-                <th style="width:16%;">رقم الهوية</th>
-                <th style="width:8%;">الدرجة</th>
-                <th style="width:8%;">فجوة التحصيل</th>
-                <th style="width:30%;">الإجراءات المقترحة</th>
-                <th style="width:14%;">متابعة التنفيذ<br/>نفِّذ / لم يُنفَّذ</th>
+                <th class="col-name">اسم الطالب</th>
+                <th class="col-id">رقم الهوية</th>
+                <th class="col-grade">الدرجة</th>
+                <th class="col-gap">فجوة التحصيل</th>
+                <th class="col-actions">الإجراءات المقترحة</th>
+                <th class="col-follow">متابعة التنفيذ<br/>نفِّذ / لم يُنفَّذ</th>
               </tr>
             </thead>
             <tbody id="improvBody">
@@ -737,9 +778,9 @@ let barChart = null;
 let selectedFile = null;
 let fullScoreAuto = null;
 let levelBoundaries = null;
-let hasSubjectSpecific = false; // هل نحلل مادة واحدة بأسماء الطلاب؟
+let hasSubjectSpecific = false;
 
-/* عناصر DOM أساسية */
+/* عناصر DOM */
 const lensOverlay = document.getElementById("lensOverlay");
 const toolsBtn    = document.getElementById("toolsBtn");
 const lensClose   = document.getElementById("lensClose");
@@ -1047,8 +1088,8 @@ function updateImprovementPlan(fullScore){
       const services = generateServices(percent, idx);
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td>${rec.student}</td>
-        <td>${rec.id}</td>
+        <td class="name-cell">${rec.student}</td>
+        <td class="id-cell">${rec.id}</td>
         <td style="text-align:center;">${rec.grade.toFixed(1)}</td>
         <td style="text-align:center;">${gap.toFixed(1)}</td>
         <td>${services}</td>
@@ -1258,7 +1299,6 @@ analyzeBtn.addEventListener("click", async ()=>{
   const subject = subjectInput.value.trim();
   hasSubjectSpecific = !!subject;
 
-  // التحقق من الحقول الأساسية
   let ok = true;
   const needForAll = [stageInput, termInput];
   const needForSubject = [periodInput, teacherInput, sectionInput];
@@ -1296,7 +1336,6 @@ analyzeBtn.addEventListener("click", async ()=>{
     const grades = records.map(r=>r.grade);
     const maxGrade = Math.max(...grades);
 
-    // استنتاج الدرجة الكاملة
     const candidates = [20,30,40,50,60,100];
     let inferred = maxGrade;
     let bestDiff = Infinity;
@@ -1314,7 +1353,6 @@ analyzeBtn.addEventListener("click", async ()=>{
 
     maxScoreFieldEl.textContent = fullScore.toFixed(1);
 
-    // تعبئة الرأس
     const stage   = stageInput.value.trim();
     const section = sectionInput.value.trim();
     const period  = periodInput.value.trim();
