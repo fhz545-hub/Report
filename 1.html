@@ -27,7 +27,7 @@
 *{box-sizing:border-box;}
 body{
   margin:0;
-  background:#f3f4f6;
+  background:radial-gradient(circle at top,#e0f7f8,#d1e4f0 45%,#e5e7eb 100%);
   font-family:"Tajawal",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--ink);
 }
@@ -59,22 +59,22 @@ body{
   gap:6px;
   padding:4px 14px;
   border-radius:999px;
-  border:1px solid rgba(255,255,255,.6);
-  background:rgba(11,126,136,.92);
+  border:1px solid rgba(255,255,255,.7);
+  background:linear-gradient(135deg,#0b7e88,#0b5f88);
   color:#ffffff;
   font-size:11px;
   cursor:pointer;
-  box-shadow:0 4px 12px rgba(15,23,42,.25);
+  box-shadow:0 4px 14px rgba(15,23,42,.3);
 }
 .tools-pill span.icon{font-size:13px;}
-.tools-pill:hover{background:#065f64;}
+.tools-pill:hover{background:linear-gradient(135deg,#065f64,#064f7a);}
 
 /* صندوق المحتوى */
 .content-box{
   position:absolute;
   left:50%;
   transform:translateX(-50%);
-  top:34mm;
+  top:30mm;      /* رفع الصفحة لأعلى قريب من الهيدر */
   bottom:12mm;
   width:186mm;
   max-width:94%;
@@ -92,9 +92,9 @@ body{
   flex-direction:column;
   justify-content:space-between;
   font-size:10px;
-  background:rgba(255,255,255,.96);
+  background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(245,249,250,.98));
   border-radius:18px;
-  box-shadow:0 8px 22px rgba(15,23,42,.16);
+  box-shadow:0 10px 26px rgba(15,23,42,.20);
 }
 
 /* شريط علوي (رسالة فقط) */
@@ -111,7 +111,7 @@ body{
 .lens-overlay{
   position:absolute;
   inset:0;
-  background:rgba(15,23,42,.12);
+  background:rgba(15,23,42,.16);
   display:none;
   align-items:flex-start;
   justify-content:center;
@@ -212,8 +212,9 @@ body{
   padding:3px 22px;
   font-size:12px;
   font-weight:700;
+  background:linear-gradient(90deg,#f0fdfa,#ecfeff);
 }
-.report-title span{font-weight:800;}
+.report-title span{font-weight:800;color:var(--moe);}
 
 /* صف واحد للبيانات */
 .header-row{
@@ -257,11 +258,12 @@ body{
   padding:4px 6px;
   font-size:10px;
   min-height:28mm;
+  background:#ffffff;
 }
 .details-header,
 .details-row{
   display:grid;
-  grid-template-columns:1.5fr .9fr .6fr; /* تنسيق متناسق */
+  grid-template-columns:1.5fr .9fr .6fr;
   align-items:center;
 }
 .details-header{
@@ -279,6 +281,7 @@ body{
   color:#fff;
   font-size:10.5px;
   font-weight:700;
+  box-shadow:0 2px 6px rgba(15,23,42,.18);
 }
 .l-ex{background:var(--good);}
 .l-vg{background:var(--vgood);}
@@ -292,6 +295,7 @@ body{
   border:1px solid #e5e7eb;
   padding:4px 6px;
   font-size:10px;
+  background:#ffffff;
 }
 .stats-grid{
   display:grid;
@@ -353,12 +357,13 @@ body{
 }
 .analysis-list li{margin-bottom:1px;}
 
-/* الرسوم (مصغّرة) */
+/* الرسوم البيانية */
 .charts-section{
   margin-top:3px;
   border-radius:14px;
   border:1px solid #e5e7eb;
   padding:3px 6px;
+  background:#ffffff;
 }
 .charts-title{
   font-size:10px;
@@ -377,14 +382,15 @@ body{
   border:1px solid #e5e7eb;
   padding:1px 1px 2px;
   text-align:center;
+  background:#f9fafb;
 }
-.donut-canvas{height:26px;} /* تصغير الدونات */
+.donut-canvas{height:22px;} /* تصغير رسم (نِسَب الحالات لكل تقدير) */
 .donut-label{
   font-size:8.5px;
   color:#4b5563;
 }
 .donut-value{
-  font-size:9px;
+  font-size:8.5px;
   font-weight:700;
 }
 .bar-wrapper{
@@ -401,6 +407,7 @@ body{
   border:1px solid #e5e7eb;
   padding:3px 6px 2px;
   font-size:9px;
+  background:#ffffff;
 }
 .improv-title{
   font-size:10px;
@@ -426,21 +433,19 @@ body{
   border:1px solid #e5e7eb;
   padding:1px 2px;
 }
-.improv-table th{background:#f3f4f6;white-space:nowrap;}
-/* ضبط الأعمدة: اسم الطالب أصغر، الهوية أصغر، الإجراءات أكبر */
+.improv-table th{
+  background:#f3f4f6;
+  white-space:nowrap;
+}
+/* ضبط الأعمدة */
 .improv-table th.col-name{width:20%;}
 .improv-table th.col-id{width:12%;}
 .improv-table th.col-grade{width:8%;}
 .improv-table th.col-gap{width:8%;}
 .improv-table th.col-actions{width:38%;}
 .improv-table th.col-follow{width:14%;}
-
-.improv-table td.name-cell{
-  white-space:nowrap;
-}
-.improv-table td.id-cell{
-  white-space:nowrap;
-}
+.improv-table td.name-cell{white-space:nowrap;}
+.improv-table td.id-cell{white-space:nowrap;}
 
 .follow-cell{
   text-align:center;
@@ -505,7 +510,7 @@ body{
   }
   .content-box{
     position:absolute;
-    top:34mm;
+    top:30mm;
     bottom:12mm;
     width:186mm;
     max-width:186mm;
@@ -513,7 +518,7 @@ body{
   }
   .card{
     box-shadow:none;
-    background:rgba(255,255,255,1);
+    background:#ffffff;
   }
   .header-tools{display:none;}
   .lens-overlay{display:none !important;}
@@ -732,7 +737,7 @@ body{
 
           <div class="charts-title" style="margin-top:3px;">رسم بياني (عدد الحالات لكل تقدير)</div>
           <div class="bar-wrapper">
-            <canvas id="barLevels" height="52"></canvas> <!-- تصغير الرسم البياني -->
+            <canvas id="barLevels" height="52"></canvas>
           </div>
         </div>
 
@@ -877,18 +882,60 @@ function extractBoundariesFromRows(rows){
   return null;
 }
 
+/* مكوّنات الرسم: إضافات النص داخل الدونات وفوق الأعمدة */
+const centerLabelPlugin = {
+  id:"centerLabel",
+  afterDraw(chart, args, opts){
+    const text = opts && opts.text;
+    if(!text) return;
+    const {ctx, chartArea:{left,right,top,bottom}} = chart;
+    const x = (left+right)/2;
+    const y = (top+bottom)/2;
+    ctx.save();
+    ctx.font = "bold 10px Tajawal, system-ui";
+    ctx.fillStyle = "#111827";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(text, x, y);
+    ctx.restore();
+  }
+};
+
+const barValuePlugin = {
+  id:"barValue",
+  afterDatasetsDraw(chart){
+    const {ctx} = chart;
+    const dataset = chart.data.datasets[0];
+    const meta = chart.getDatasetMeta(0);
+    ctx.save();
+    ctx.font = "bold 9px Tajawal, system-ui";
+    ctx.fillStyle = "#111827";
+    ctx.textAlign = "center";
+    dataset.data.forEach((value, index)=>{
+      const data = meta.data[index];
+      if(!data) return;
+      const pos = data.tooltipPosition();
+      const val = dataset.data[index];
+      ctx.fillText(val, pos.x, pos.y - 6);
+    });
+    ctx.restore();
+  }
+};
+
+Chart.register(centerLabelPlugin, barValuePlugin);
+
 /* إعداد الرسوم */
 function setupCharts(){
   const configs = [
-    {id:"donutWeak",      color:"#ef4444"},
-    {id:"donutAcceptable",color:"#f59e0b"},
-    {id:"donutGood",      color:"#3b82f6"},
-    {id:"donutVGood",     color:"#10b981"},
-    {id:"donutExcellent", color:"#22c55e"}
+    {id:"donutWeak",      color:"#ef4444", key:"weak"},
+    {id:"donutAcceptable",color:"#f59e0b", key:"acceptable"},
+    {id:"donutGood",      color:"#3b82f6", key:"good"},
+    {id:"donutVGood",     color:"#10b981", key:"vgood"},
+    {id:"donutExcellent", color:"#22c55e", key:"excellent"}
   ];
   configs.forEach(cfg=>{
     const ctx = document.getElementById(cfg.id).getContext("2d");
-    donutCharts[cfg.id] = new Chart(ctx,{
+    const chart = new Chart(ctx,{
       type:"doughnut",
       data:{
         labels:["النسبة","الباقي"],
@@ -899,11 +946,18 @@ function setupCharts(){
         }]
       },
       options:{
-        plugins:{legend:{display:false},tooltip:{enabled:false}},
+        plugins:{
+          legend:{display:false},
+          tooltip:{enabled:false},
+          centerLabel:{text:"0"}
+        },
         cutout:"78%"
       }
     });
+    chart._levelKey = cfg.key;
+    donutCharts[cfg.id] = chart;
   });
+
   const barCtx = document.getElementById("barLevels").getContext("2d");
   barChart = new Chart(barCtx,{
     type:"bar",
@@ -915,7 +969,10 @@ function setupCharts(){
       }]
     },
     options:{
-      plugins:{legend:{display:false}},
+      plugins:{
+        legend:{display:false},
+        barValue:{}
+      },
       scales:{
         x:{ticks:{font:{family:"Tajawal",size:9}}},
         y:{beginAtZero:true,precision:0,ticks:{stepSize:1}}
@@ -923,10 +980,14 @@ function setupCharts(){
     }
   });
 }
-function updateDonut(id,percent){
+
+function updateDonut(id, percent, count){
   const chart = donutCharts[id];
   if(!chart) return;
   chart.data.datasets[0].data = [percent,100-percent];
+  if(!chart.options.plugins) chart.options.plugins = {};
+  if(!chart.options.plugins.centerLabel) chart.options.plugins.centerLabel = {};
+  chart.options.plugins.centerLabel.text = String(count);
   chart.update();
 }
 
@@ -971,11 +1032,11 @@ function buildRecordsFromSheet(rows){
     }
   }
 
-  // إذا لم يوجد عمود "اسم الطالب" نفترض ملف مرحلة كاملة بدون بيانات فردية
+  // ملف مرحلة كاملة بدون أسماء
   if(headerIndex === -1){
     const grades = [];
-    for(let r=0; r<rows.length; r++){
-      const row = rows[r];
+    for(let r=0;r<rows.length;r++){
+      const row=rows[r];
       if(!row) continue;
       row.forEach(cell=>{
         if(isNumeric(cell)){
@@ -1222,11 +1283,11 @@ function updateStatsAndCharts(fullScore){
   percAcceptableEl.textContent = `${pAc.toFixed(1)}% (${cAc})`;
   percWeakEl.textContent       = `${pW.toFixed(1)}% (${cW})`;
 
-  updateDonut("donutExcellent",  pEx);
-  updateDonut("donutVGood",      pVG);
-  updateDonut("donutGood",       pG);
-  updateDonut("donutAcceptable", pAc);
-  updateDonut("donutWeak",       pW);
+  updateDonut("donutExcellent",  pEx, cEx);
+  updateDonut("donutVGood",      pVG, cVG);
+  updateDonut("donutGood",       pG,  cG);
+  updateDonut("donutAcceptable", pAc, cAc);
+  updateDonut("donutWeak",       pW,  cW);
 
   barChart.data.datasets[0].data = [cW,cAc,cG,cVG,cEx];
   barChart.update();
