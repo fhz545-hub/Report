@@ -76,7 +76,7 @@ body{
   left:50%;
   transform:translateX(-50%);
   top:30mm;
-  bottom:12mm;
+  bottom:10mm;
   width:186mm;
   max-width:94%;
   overflow:hidden;
@@ -277,43 +277,54 @@ body{
   color:var(--moe);
   margin-bottom:4px;
 }
+
+/* الإحصائيات التفصيلية – تحسين الوضوح والطول */
 .details-table{
   border-radius:14px;
   border:1px solid #e5e7eb;
-  padding:5px 8px;
+  padding:6px 8px;
   font-size:11px;
   background:#ffffff;
 }
 .details-header,
 .details-row{
   display:grid;
-  grid-template-columns:1.8fr .9fr .6fr;
+  grid-template-columns:2.4fr 1.1fr 0.9fr;
   align-items:center;
+  column-gap:6px;
 }
 .details-header{
   font-weight:700;
   margin-bottom:4px;
 }
-.details-row{padding:3px 0;}
-.details-row:nth-child(odd){background:#f3f4f6;}
+.details-row{
+  padding:4px 4px;
+  border-radius:10px;
+  margin-bottom:2px;
+}
+.details-row:nth-child(odd){
+  background:#f9fafb;
+}
 .details-header div:nth-child(2),
 .details-header div:nth-child(3),
 .details-row   div:nth-child(2),
 .details-row   div:nth-child(3){
   text-align:center;
 }
+
+/* مستطيلات المستويات – تطويل وتصفية الألوان */
 .level-badge{
-  display:inline-flex;
+  display:flex;
   align-items:center;
-  justify-content:center;
-  min-width:92px;
-  text-align:center;
-  padding:6px 14px;
+  justify-content:flex-start;
+  width:100%;
+  padding:6px 12px;
+  min-height:24px;
   border-radius:999px;
-  color:#fff;
-  font-size:12px;
+  color:#ffffff;
+  font-size:11px;
   font-weight:700;
-  box-shadow:0 2px 6px rgba(15,23,42,.18);
+  box-shadow:0 1px 4px rgba(15,23,42,.15);
 }
 .l-ex{background:var(--good);}
 .l-vg{background:var(--vgood);}
@@ -433,7 +444,7 @@ body{
 }
 .bar-wrapper canvas{
   width:100%;
-  height:80px; /* ارتفاع ثابت لضمان عدم تمدد الرسم */
+  height:80px; /* ثابت لضغط الرسم وعدم التمدد */
 }
 
 /* خطة التحسين */
@@ -510,7 +521,7 @@ body{
 .footer-line{margin:0;}
 .footer strong{color:#111827;}
 
-/* أجهزة صغيرة */
+/* تحسين العرض على الجوال */
 @media (max-width:900px){
   .a4-page{
     width:100%;
@@ -524,9 +535,9 @@ body{
     position:relative;
     top:auto;
     bottom:auto;
-    width:94%;
-    max-width:94%;
-    margin:80px auto 24px;
+    width:96%;
+    max-width:96%;
+    margin:72px auto 24px;
     overflow:visible;
     transform:none;
     left:auto;
@@ -538,7 +549,36 @@ body{
   }
 }
 
-/* طباعة: ضغط الصفحة في ورقة A4 واحدة بدون فراغات */
+/* مزيد من الضغط على الشاشات الصغيرة جداً */
+@media (max-width:600px){
+  .card{
+    font-size:10px;
+    padding:2mm 3mm;
+  }
+  .header-row{
+    font-size:10px;
+    padding:4px 8px;
+  }
+  .details-table{
+    font-size:10px;
+    padding:4px 6px;
+  }
+  .details-header,
+  .details-row{
+    grid-template-columns:2.2fr 1.1fr 0.9fr;
+  }
+  .donuts-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+  .bar-wrapper canvas{
+    height:70px;
+  }
+  .improv-table{
+    font-size:8px;
+  }
+}
+
+/* طباعة: صفحة واحدة مضغوطة بدون فراغات أو تداخل */
 @media print{
   @page{
     size:A4 portrait;
@@ -569,14 +609,14 @@ body{
     background-position:top center;
     position:relative;
     overflow:hidden;
-    transform:scale(0.94);          /* ضغط كامل الصفحة داخل A4 */
+    transform:scale(0.9);       /* ضغط أكبر حتى لا تنقسم الصفحة خاصة في الجوال */
     transform-origin:top center;
   }
 
   .content-box{
     position:absolute;
-    top:30mm;
-    bottom:10mm;
+    top:28mm;
+    bottom:8mm;
     left:50%;
     transform:translateX(-50%);
     width:186mm;
@@ -597,8 +637,14 @@ body{
     box-shadow:none;
     border-radius:0;
     background:transparent;
-    font-size:9.5px;       /* تصغير بسيط ليتناسب مع صفحة واحدة */
+    font-size:9.5px;
   }
+
+  /* إزالة تظليل الصفوف في الإحصائيات لتقليل تداخل الألوان في الطباعة */
+  .details-row:nth-child(odd){
+    background:#ffffff !important;
+  }
+
   .improv-section,
   .analysis-section,
   .charts-section,
@@ -1031,7 +1077,31 @@ const centerLabelPlugin = {
     ctx.restore();
   }
 };
-Chart.register(centerLabelPlugin);
+
+/* أرقام داخل الأعمدة في الرسم البياني */
+const barValuePlugin = {
+  id:"barValue",
+  afterDatasetsDraw(chart){
+    if(chart.config.type !== "bar") return;
+    const {ctx} = chart;
+    const dataset = chart.data.datasets[0];
+    const meta = chart.getDatasetMeta(0);
+    ctx.save();
+    ctx.font = "bold 10px Tajawal, system-ui";
+    ctx.fillStyle = "#111827";
+    ctx.textAlign = "center";
+    dataset.data.forEach((value, index)=>{
+      const bar = meta.data[index];
+      if(!bar) return;
+      const props = bar.getProps(['y','base','x'], true);
+      const centerY = (props.y + props.base) / 2;
+      ctx.fillText(value, props.x, centerY);
+    });
+    ctx.restore();
+  }
+};
+
+Chart.register(centerLabelPlugin, barValuePlugin);
 
 /* إعداد الرسوم */
 function setupCharts(){
@@ -1080,7 +1150,8 @@ function setupCharts(){
     },
     options:{
       plugins:{
-        legend:{display:false}
+        legend:{display:false},
+        barValue:{}
       },
       responsive:true,
       maintainAspectRatio:false,
