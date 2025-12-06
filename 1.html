@@ -46,11 +46,27 @@ body{
   overflow:hidden;
 }
 
+/* هيدر وزارة التعليم (جديد) */
+.moe-header{
+  position:absolute;
+  top:8mm;
+  left:50%;
+  transform:translateX(-50%);
+  text-align:center;
+  color:#ffffff;
+  font-weight:700;
+  line-height:1.6;
+  z-index:14;
+}
+.moe-header div{
+  font-size:14px;
+}
+
 /* زر العدسة داخل الهيدر */
 .header-tools{
   position:absolute;
   top:14mm;
-  right:10mm;
+  left:10mm;           /* نقل الزر للجهة الأخرى بدلاً من right */
   z-index:15;
 }
 .tools-pill{
@@ -486,7 +502,7 @@ body{
   white-space:nowrap;
 }
 .improv-table th.col-name{width:24%;}
-.improv-table th.col-id{width:14%;}
+improv-table th.col-id{width:14%;}
 .improv-table th.col-grade{width:18%;}
 .improv-table th.col-actions{width:36%;}
 .improv-table th.col-follow{width:14%;}
@@ -670,6 +686,13 @@ body{
 
 <div class="a4-page">
 
+  <!-- هيدر وزارة التعليم -->
+  <div class="moe-header">
+    <div contenteditable="true">الإدارة العامة للتعليم بـ …</div>
+    <div contenteditable="true">قطاع التعليم بـ …</div>
+    <div contenteditable="true">ثانوية اليعقوبي بالخبر</div>
+  </div>
+
   <!-- زر العدسة -->
   <div class="header-tools">
     <button type="button" class="tools-pill" id="toolsBtn">
@@ -723,7 +746,7 @@ body{
               </div>
               <div class="lens-field">
                 <label for="teacherInput">معلم المادة / المنسق (اختياري)</label>
-                <input id="teacherInput" type="text" placeholder="مثال: فهد حامد الزهراني" />
+                <input id="teacherInput" type="text" placeholder="مثال: فهد حامد " />
               </div>
               <div class="lens-field">
                 <label for="scaleMode">نطاق الدرجة</label>
@@ -918,7 +941,7 @@ body{
         <!-- الفوتر -->
         <div class="footer">
           <p class="footer-line">معلم المادة / <strong id="footerTeacher">—</strong></p>
-          <p class="footer-line">مدير المدرسة / <strong id="footerPrincipal">فهد حامد الزهراني</strong></p>
+          <p class="footer-line">مدير المدرسة / <strong id="footerPrincipal" contenteditable="true">فهد حامد </strong></p>
         </div>
 
       </section>
