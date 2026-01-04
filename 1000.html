@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-  <title>الاستعلام عن لجنة الاختبار | الفصل الدراسي الأول ١٤٤٧هـ</title>
+  <title>جدول الاختبارات والتنبيهات | الفصل الدراسي الأول ١٤٤٧هـ</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -11,7 +11,6 @@
       --moe:#1e8a79;--moe2:#0c594e;--ink:#0b2f2b;--muted:#6b7e7b;--bg:#f6fbfa;--card:#fff;
       --line:#e3f0ed;--shadow:0 18px 45px rgba(12,89,78,.10);--warn:#b45309;--err:#b91c1c;--ok:#15803d;
       --radius:22px;
-      --glass: rgba(255,255,255,.78);
     }
     *{box-sizing:border-box}
     body{margin:0;font-family:"Tajawal",system-ui,-apple-system,Segoe UI,Arial;background:
@@ -19,12 +18,17 @@
       radial-gradient(900px 500px at 95% 10%, rgba(12,89,78,.12), transparent 55%),
       var(--bg);color:var(--ink)}
     .wrap{max-width:1100px;margin:0 auto;padding:18px 14px 40px}
-    .hero{background:linear-gradient(135deg,var(--moe),#23b8a2);color:#fff;border-radius:28px;padding:18px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+
+    .hero{
+      background:linear-gradient(135deg,var(--moe),#23b8a2);
+      color:#fff;border-radius:28px;padding:18px;box-shadow:var(--shadow);
+      position:relative;overflow:hidden
+    }
     .hero:before{content:"";position:absolute;inset:-80px -120px auto auto;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.14);transform:rotate(10deg)}
     .hero h1{margin:0;font-size:20px}
     .hero .sub{margin:6px 0 0;opacity:.95;font-size:14px;line-height:1.7}
 
-    /* ====== عدّاد الاختبار (أجمل/جذّاب) ====== */
+    /* ====== عدّاد الاختبار (جذاب) ====== */
     .countWrap{margin-top:12px;display:grid;gap:10px}
     .countCard{
       background:rgba(255,255,255,.14);
@@ -33,12 +37,10 @@
       padding:12px;
       backdrop-filter: blur(10px);
       box-shadow: 0 10px 28px rgba(0,0,0,.08);
-      position:relative;
-      overflow:hidden;
+      position:relative;overflow:hidden
     }
     .countCard:after{
-      content:"";
-      position:absolute; inset:auto -80px -110px auto;
+      content:""; position:absolute; inset:auto -80px -110px auto;
       width:240px;height:240px;border-radius:50%;
       background: radial-gradient(circle at 35% 35%, rgba(255,255,255,.22), rgba(255,255,255,0) 62%);
       transform: rotate(12deg);
@@ -47,11 +49,11 @@
     .countTop{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
     .countTitle{font-weight:900}
     .countMeta{
-      font-size:12px; font-weight:900;
+      font-size:12px;font-weight:900;
       padding:6px 10px;border-radius:999px;
       background: rgba(255,255,255,.16);
       border:1px solid rgba(255,255,255,.18);
-      white-space:nowrap;
+      white-space:nowrap
     }
     .timerGrid{
       display:grid; grid-template-columns:repeat(4,minmax(0,1fr));
@@ -67,10 +69,10 @@
       transition:.16s transform ease;
     }
     .tBox:hover{transform:translateY(-1px)}
-    .tNum{font-size:22px; font-weight:900; line-height:1; color:#0b2f2b; font-variant-numeric:tabular-nums;}
+    .tNum{font-size:22px;font-weight:900;line-height:1;color:#0b2f2b;font-variant-numeric:tabular-nums}
     .tLbl{margin-top:6px;font-size:12px;font-weight:900;color:rgba(11,47,43,.65)}
     .bar{
-      height:10px; border-radius:999px; overflow:hidden;
+      height:10px;border-radius:999px;overflow:hidden;
       background: rgba(255,255,255,.20);
       border:1px solid rgba(255,255,255,.18);
       margin-top:10px;
@@ -91,40 +93,14 @@
     .title h2{margin:0;font-size:16px}
     .pill{font-size:12px;padding:6px 10px;border-radius:999px;background:#e9f6f3;border:1px solid #d8efe9;color:var(--moe2);white-space:nowrap}
 
-    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .input{flex:1;min-width:240px;background:#fbfefe;border:1px solid #d9ebe7;border-radius:16px;padding:12px;font-size:16px;outline:none}
-    .input:focus{border-color:rgba(30,138,121,.55);box-shadow:0 0 0 4px rgba(30,138,121,.10)}
-    .btn{border:0;border-radius:16px;padding:12px 14px;background:var(--moe2);color:#fff;font-weight:900;cursor:pointer;box-shadow:0 12px 24px rgba(12,89,78,.18)}
-    .btn2{border:1px solid #d9ebe7;background:#fff;color:var(--ink);border-radius:16px;padding:12px 14px;font-weight:900;cursor:pointer}
-
-    .msg{margin-top:12px;padding:12px;border-radius:16px;border:1px solid var(--line);background:#fbfefe;font-size:14px;display:none}
-    .msg.ok{border-color:rgba(21,128,61,.18);background:rgba(21,128,61,.06);color:var(--ok)}
-    .msg.err{border-color:rgba(185,28,28,.18);background:rgba(185,28,28,.06);color:var(--err)}
-    .msg.warn{border-color:rgba(180,83,9,.18);background:rgba(180,83,9,.06);color:var(--warn)}
-
-    .result{margin-top:12px;border-radius:18px;overflow:hidden;border:1px solid #dff0ec;display:none}
-    .resultHead{background:linear-gradient(135deg,#e9f6f3,#f6fffd);padding:12px;display:flex;justify-content:space-between;align-items:center;gap:10px}
-    .name{font-size:18px;font-weight:900}
-    .resultBody{padding:12px}
-    .kv{display:grid;grid-template-columns:140px 1fr;gap:10px 12px;align-items:start}
-    @media(max-width:520px){.kv{grid-template-columns:1fr}}
-    .k{color:var(--muted);font-weight:900}
-    .v{font-weight:900}
-
-    .list{margin-top:12px;border:1px solid #dff0ec;border-radius:18px;overflow:hidden;display:none}
-    .listHead{padding:10px 12px;background:#f6fffd;border-bottom:1px solid #e3f0ed;font-weight:900}
-    table{width:100%;border-collapse:collapse}
-    th,td{padding:10px 12px;border-bottom:1px solid #eef7f5;font-size:14px}
-    th{background:#fbfefe;text-align:right;color:var(--muted)}
-    tr:hover{background:#f6fffd}
-    .pick{cursor:pointer}
-
-    /* ======= قسم (تنبيهات | جدول اختبارات) ======= */
+    /* ======= قسم (تنبيهات | جدول) ======= */
     .twoCol{display:grid;grid-template-columns:1fr;gap:14px;margin-top:14px}
     @media(min-width:980px){ .twoCol{grid-template-columns:1fr 1.25fr} }
 
     .policy{border-radius:18px;padding:14px;background:#fff7ed;border:1px solid rgba(180,83,9,.22);color:#7c2d12;line-height:1.85}
     .policy b{color:#7c2d12}
+    .policy ul{margin:8px 0 0;padding:0 18px 0 0}
+    .policy li{margin:6px 0}
 
     .schedTop{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:10px}
     .tabs{display:flex;gap:8px;flex-wrap:wrap}
@@ -141,6 +117,7 @@
       line-height:1.8;font-weight:900
     }
     .banner small{display:block;color:var(--muted);font-weight:700;margin-top:4px}
+
     .meta{color:var(--muted);font-size:13px;line-height:1.7}
     .meta b{color:var(--ink)}
     .schedWrap{margin-top:10px;border:1px solid #dff0ec;border-radius:18px;overflow:hidden}
@@ -150,13 +127,16 @@
     .soon td{font-weight:900}
     .muted{color:var(--muted);font-weight:700}
 
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px 12px;border-bottom:1px solid #eef7f5;font-size:14px}
+    th{background:#fbfefe;text-align:right;color:var(--muted)}
+    tr:hover{background:#f6fffd}
+
     @media print{
       body{background:#fff}
-      .hero,.row .btn2,.tabs,.banner{display:none !important}
+      .hero,.tabs,.banner{display:none !important}
       .wrap{max-width:100%;padding:0}
       .card{box-shadow:none;border:0}
-      .result{border:1px solid #ddd}
-      .btn{display:none !important}
       .twoCol{grid-template-columns:1fr 1fr}
     }
   </style>
@@ -165,10 +145,10 @@
 <body>
   <div class="wrap">
     <div class="hero">
-      <h1>الاستعلام عن لجنة الاختبار وموقعها</h1>
-      <div class="sub">اكتب <b>الاسم الثلاثي/الرباعي</b> ليظهر: <b>اللجنة</b> + <b>موقعها</b>.</div>
+      <h1>جدول الاختبارات والتنبيهات</h1>
+      <div class="sub">يظهر <b>الاختبار القادم</b> تلقائياً، مع <b>عدّاد</b> حتى البداية أو حتى النهاية (وقت الاختبار: <b>٧:١٥</b> إلى <b>٩:٤٥</b>).</div>
 
-      <!-- عدّاد الاختبار (يحسب تلقائياً للاختبار القادم/اختبار اليوم) -->
+      <!-- عدّاد الاختبار -->
       <div class="countWrap">
         <div class="countCard" id="countCard">
           <div class="countTop">
@@ -190,57 +170,18 @@
     </div>
 
     <div class="grid">
-      <!-- ====== البحث ====== -->
       <div class="card">
         <div class="title">
-          <h2>بحث بالاسم فقط</h2>
-          <span class="pill" id="countPill">—</span>
+          <h2>تنبيهات الاختبارات + جدول المواد</h2>
+          <span class="pill">يلزم الالتزام</span>
         </div>
 
-        <div class="row" style="margin-top:10px">
-          <input id="qInput" class="input" autocomplete="off" placeholder="اكتب اسم الطالب الثلاثي/الرباعي..." />
-          <button id="btnSearch" class="btn">استعلام</button>
-          <button id="btnClear" class="btn2">مسح</button>
-        </div>
-
-        <div id="msg" class="msg"></div>
-
-        <div id="result" class="result">
-          <div class="resultHead">
-            <div class="name" id="rName">—</div>
-            <div class="pill">النتيجة</div>
-          </div>
-          <div class="resultBody">
-            <div class="kv">
-              <div class="k">اللجنة</div><div class="v" id="rCommittee">—</div>
-              <div class="k">موقع اللجنة</div><div class="v" id="rLocation">—</div>
-            </div>
-          </div>
-        </div>
-
-        <div id="list" class="list">
-          <div class="listHead">نتائج مطابقة — اختر اسم الطالب لعرض اللجنة</div>
-          <div style="overflow:auto">
-            <table>
-              <thead>
-                <tr>
-                  <th>الاسم</th>
-                  <th>اللجنة</th>
-                  <th>الموقع</th>
-                </tr>
-              </thead>
-              <tbody id="listBody"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- ====== تنبيهات + جدول اختبارات (عمودين) ====== -->
         <div class="twoCol">
-          <!-- التنبيهات (يمين) -->
+          <!-- التنبيهات + توصيات تربوية (بديل الملاحظات) -->
           <div class="card" style="padding:14px">
             <div class="title" style="margin-bottom:8px">
               <h2>تنبيهات الاختبارات</h2>
-              <span class="pill">يلزم الالتزام</span>
+              <span class="pill">تنظيم + انضباط</span>
             </div>
 
             <div class="policy">
@@ -258,12 +199,22 @@
               • اتباع تعليمات الملاحظ وإرشاداته.<br>
               • الغياب دون عذر طبي معتمد غير مقبول.<br><br>
 
-              <b>النتائج:</b><br>
-              • الاستعلام عبر النظام الإلكتروني (نتائجي) يوم <b>الخميس ١٤٤٧-٧-١٩هـ</b>.
+              <hr style="border:none;border-top:1px dashed rgba(124,45,18,.25);margin:12px 0">
+
+              <b>توصيات تربوية للمذاكرة الفعّالة (مختصرة ومؤثرة):</b>
+              <ul>
+                <li><b>ابدأ بخطة يومية:</b> حدد 3 مهام واضحة (مراجعة + حل أسئلة + تلخيص صفحة).</li>
+                <li><b>المذاكرة النشطة:</b> اقرأ ثم أغلق الكتاب و< b>استرجع</b> النقاط بصوتك/ورقة (أفضل من القراءة المتكررة).</li>
+                <li><b>التكرار المتباعد:</b> راجع نفس الدرس بعد (24 ساعة) ثم (3 أيام) ثم (أسبوع).</li>
+                <li><b>تدرب على الاختبار:</b> حل نماذج بأسلوب “وقت محدد” ثم راجع الأخطاء فوراً.</li>
+                <li><b>قاعدة 50/10:</b> 50 دقيقة تركيز + 10 دقائق راحة (بدون جوال) لتثبيت التعلم.</li>
+                <li><b>ليلة الاختبار:</b> نوم مبكر + تجهيز الأدوات + مراجعة خفيفة (عناوين/قوانين) فقط.</li>
+                <li><b>وقت الاختبار:</b> اقرأ الأسئلة أولاً، ابدأ بالأسهل، وخصص آخر 10 دقائق للمراجعة.</li>
+              </ul>
             </div>
           </div>
 
-          <!-- جدول الاختبارات (يسار) -->
+          <!-- جدول الاختبارات -->
           <div class="card" style="padding:14px">
             <div class="schedTop">
               <div>
@@ -271,9 +222,9 @@
                 <div class="meta">الفصل الدراسي الأول ١٤٤٧هـ — اختر المرحلة لعرض المواد</div>
               </div>
               <div class="tabs" role="tablist" aria-label="المراحل">
-                <button class="tab active" data-grade="g1" id="tabG1">الأول ثانوي</button>
-                <button class="tab" data-grade="g2" id="tabG2">الثاني ثانوي</button>
-                <button class="tab" data-grade="g3" id="tabG3">الثالث ثانوي</button>
+                <button class="tab active" data-grade="g1">الأول ثانوي</button>
+                <button class="tab" data-grade="g2">الثاني ثانوي</button>
+                <button class="tab" data-grade="g3">الثالث ثانوي</button>
               </div>
             </div>
 
@@ -300,7 +251,7 @@
             </div>
 
             <div class="meta" style="margin-top:10px">
-              <span class="muted">ملاحظة:</span> إذا لم تظهر مادة في فترة معينة فهذا يعني أنها غير مدرجة لتلك الفترة في الجدول.
+              <span class="muted">تنبيه:</span> إذا لم تظهر مادة في فترة معينة فهذا يعني أنها غير مدرجة لتلك الفترة في الجدول.
             </div>
           </div>
         </div><!-- /twoCol -->
@@ -309,43 +260,6 @@
   </div>
 
 <script>
-  /* ================== 1) بيانات الطلاب ==================
-     أنت أرسلت جزء فقط وفيه تعليق "... بقية البيانات كما هي عندك ..."
-     لا أقدر أخترع أسماء غير موجودة عندي.
-     الحل: الصق (كل) الأسماء داخل هذه المصفوفة مكان التعليق حتى تصبح "كاملة 100%".
-  */
-  const STUDENTS = [
-    {"name":"احمد نصر الدين محمد عثمان","committee":"الساحة مربع 3","location":"الساحة","n":"احمد نصر الدين محمد عثمان"},
-    {"name":"اسيد زكي حميد البدري","committee":"الساحة مربع 3","location":"الساحة","n":"اسيد زكي حميد البدري"},
-    {"name":"احمد عبدالله احمد باسليمان","committee":"الساحة مربع 3","location":"الساحة","n":"احمد عبدالله احمد باسليمان"},
-    {"name":"أحمد فائز - علاو","committee":"الساحة مربع 3","location":"الساحة","n":"احمد فايز - علاو"},
-    {"name":"أبوبكر بن محمد بن ابوبكر بالحارث","committee":"الساحة مربع 3","location":"الساحة","n":"ابوبكر بن محمد بن ابوبكر بالحارث"},
-    {"name":"أحمد الباقر عبدالقادر الباقر","committee":"العاشرة","location":"اول 6","n":"احمد الباقر عبدالقادر الباقر"},
-    {"name":"الليث تميم محمد الاصنج","committee":"العاشرة","location":"اول 6","n":"الليث تميم محمد الاصنج"},
-    {"name":"ايمن العوض عمر احمد","committee":"العاشرة","location":"اول 6","n":"ايمن العوض عمر احمد"},
-    {"name":"احمد رامي - التلا","committee":"السادسة","location":"اول 2","n":"احمد رامي - التلا"},
-    {"name":"انس محمد بشار - شروف","committee":"السادسة","location":"اول 2","n":"انس محمد بشار - شروف"},
-    {"name":"أشرف الصادق قسم السيد فضل المولى","committee":"السادسة","location":"اول 2","n":"اشرف الصادق قسم السيد فضل المولي"},
-    {"name":"أحمد بن خالد بن أحمد المجدوعي الشهري","committee":"السادسة","location":"اول 2","n":"احمد بن خالد بن احمد المجدوعي الشهري"},
-    {"name":"أحمد بن عادل بن أحمد المجدوعي الشهري","committee":"السادسة","location":"اول 2","n":"احمد بن عادل بن احمد المجدوعي الشهري"},
-    {"name":"بدر يوسف ناصر الجبري","committee":"الساحة مربع 2","location":"الساحة","n":"بدر يوسف ناصر الجبري"},
-    {"name":"احمد ياسر محمد بستاني","committee":"الساحة مربع 2","location":"الساحة","n":"احمد ياسر محمد بستاني"},
-    {"name":"احمد محمد احمد صالح","committee":"الساحة مربع 2","location":"الساحة","n":"احمد محمد احمد صالح"},
-    {"name":"أحمد بن وليد بن أحمد الأصمخ","committee":"الساحة مربع 2","location":"الساحة","n":"احمد بن وليد بن احمد الاصمخ"},
-    {"name":"أحمد حسن أحمد البريكي","committee":"الساحة مربع 2","location":"الساحة","n":"احمد حسن احمد البريكي"},
-    {"name":"احمد صالح محمد محسن","committee":"الساحة مربع 2","location":"الساحة","n":"احمد صالح محمد محسن"},
-    {"name":"أسامة سليم راتب شري","committee":"الساحة مربع 2","location":"الساحة","n":"اسامة سليم راتب شري"},
-    {"name":"احمد بهاء الدين احمد هريدى","committee":"الساحة مربع 2","location":"الساحة","n":"احمد بهاء الدين احمد هريدي"},
-    {"name":"احمد عبدالله احمد علي","committee":"الساحة مربع 2","location":"الساحة","n":"احمد عبدالله احمد علي"},
-    {"name":"احمد عمار احمد","committee":"الساحة مربع 2","location":"الساحة","n":"احمد عمار احمد"},
-    {"name":"احمد مصطفى عطا الجبور","committee":"الساحة مربع 2","location":"الساحة","n":"احمد مصطفي عطا الجبور"},
-    {"name":"احمد نور الاسلام عبدالمنصف حماد","committee":"الساحة مربع 2","location":"الساحة","n":"احمد نور الاسلام عبدالمنصف حماد"},
-    {"name":"اكرم معاذ أحمد زيد","committee":"الساحة مربع 2","location":"الساحة","n":"اكرم معاذ احمد زيد"},
-    {"name":"اكرم صادق علي قاسم","committee":"الثامنة","location":"اول4","n":"اكرم صادق علي قاسم"}
-
-    /* ⬅️ الصق بقية الأسماء هنا حرفياً حتى آخر طالب */
-  ];
-
   // ====== جدول الاختبارات (كما في كودك) ======
   const EXAMS = [
     { dayAr:"الأحد",   hijri:"١٤٤٧-٧-١٥هـ", greg:"2026-01-04",
@@ -378,127 +292,10 @@
   // ====== ثابت الوقت: بداية 07:15 ونهاية بعد ساعتين ونصف ======
   const EXAM_START_HOUR = 7, EXAM_START_MIN = 15;
   const EXAM_DURATION_MIN = 150; // 2.5 hours
-  const EXAM_END_HOUR = 9, EXAM_END_MIN = 45; // 07:15 + 150
-
-  // ====== واجهة البحث ======
-  document.getElementById("countPill").textContent = "عدد الأسماء: " + STUDENTS.length;
 
   const $ = (id)=>document.getElementById(id);
-  const msg = $("msg");
-  const result = $("result");
-  const list = $("list");
-  const listBody = $("listBody");
 
-  function showMsg(text,type){
-    msg.style.display="block";
-    msg.className="msg "+(type||"warn");
-    msg.textContent=text;
-  }
-  function hideMsg(){ msg.style.display="none"; msg.textContent=""; }
-  function hideResult(){ result.style.display="none"; }
-  function hideList(){ list.style.display="none"; listBody.innerHTML=""; }
-
-  function normName(s){
-    s = String(s||"").trim();
-    s = s.replace(/[\u064B-\u065F\u0670\u0640]/g,"");
-    s = s.replace(/[إأآ]/g,"ا").replace(/ى/g,"ي").replace(/ؤ/g,"و").replace(/ئ/g,"ي");
-    s = s.replace(/\s+/g," ").trim();
-    return s;
-  }
-
-  function escapeHtml(s){
-    return String(s||"")
-      .replaceAll("&","&amp;").replaceAll("<","&lt;")
-      .replaceAll(">","&gt;").replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-  }
-
-  function renderStudent(s){
-    $("rName").textContent = s.name || "—";
-    $("rCommittee").textContent = s.committee || "—";
-    $("rLocation").textContent = s.location || "—";
-    result.style.display="block";
-  }
-
-  function search(){
-    hideMsg(); hideResult(); hideList();
-    const raw = $("qInput").value.trim();
-    if(!raw){ showMsg("فضلاً اكتب اسم الطالب.", "warn"); return; }
-
-    const qNorm = normName(raw);
-    const stop = new Set(["بن","ابن","بنت","ال"]);
-    const qTokens = qNorm.split(" ").filter(t => t && !stop.has(t));
-    if(qTokens.length === 0){ showMsg("فضلاً اكتب اسمًا واضحًا للبحث.", "warn"); return; }
-
-    function scoreStudent(s){
-      const n = s.n || normName(s.name);
-      const nameTokens = n.split(" ").filter(t => t && !stop.has(t));
-
-      let matched = 0;
-      for(const qt of qTokens){
-        const ok = nameTokens.some(nt => nt.includes(qt) || qt.includes(nt));
-        if(ok) matched++;
-      }
-      if(matched === 0) return -1;
-
-      let bonus = 0;
-      if(matched === qTokens.length) bonus += 50;
-      if(n.startsWith(qTokens[0])) bonus += 10;
-      bonus += matched * 5;
-
-      const lenPenalty = Math.max(0, nameTokens.length - qTokens.length) * 1.2;
-      return bonus - lenPenalty;
-    }
-
-    const scored = [];
-    for(const s of STUDENTS){
-      const sc = scoreStudent(s);
-      if(sc >= 0) scored.push([sc, s]);
-    }
-
-    if(!scored.length){ showMsg("لا توجد نتيجة مطابقة بهذا الاسم.", "err"); return; }
-
-    scored.sort((a,b)=> b[0]-a[0]);
-    const hits = scored.map(x=>x[1]);
-
-    if(hits.length === 1){ renderStudent(hits[0]); return; }
-
-    if(scored.length >= 2 && (scored[0][0] - scored[1][0]) >= 25){
-      renderStudent(hits[0]);
-      showMsg("تم عرض أقرب مطابقة للاسم.", "ok");
-      return;
-    }
-
-    listBody.innerHTML = hits.slice(0,80).map(s => `
-      <tr class="pick" data-n="${escapeHtml(s.n || normName(s.name))}">
-        <td>${escapeHtml(s.name||"")}</td>
-        <td>${escapeHtml(s.committee||"")}</td>
-        <td>${escapeHtml(s.location||"")}</td>
-      </tr>
-    `).join("");
-
-    list.style.display="block";
-    showMsg("تم العثور على "+hits.length+" نتيجة. اختر الاسم الصحيح من القائمة.", "ok");
-  }
-
-  $("btnSearch").addEventListener("click", search);
-  $("qInput").addEventListener("keydown", (e)=>{ if(e.key==="Enter") search(); });
-  $("btnClear").addEventListener("click", ()=>{
-    $("qInput").value="";
-    hideMsg(); hideResult(); hideList();
-    $("qInput").focus();
-  });
-
-  list.addEventListener("click", (e)=>{
-    const tr = e.target.closest("tr[data-n]");
-    if(!tr) return;
-    const key = tr.getAttribute("data-n");
-    const s = STUDENTS.find(x => (x.n || normName(x.name)) === key);
-    hideList(); hideMsg();
-    if(s) renderStudent(s);
-  });
-
-  // ====== جدول الاختبارات: عرض حسب المرحلة + "غداً الاختبار" ======
+  // ====== جدول الاختبارات: عرض حسب المرحلة + "غداً/القادم" ======
   let activeGrade = "g1";
 
   function fmtGreg(iso){
@@ -530,6 +327,7 @@
     const today = new Date();
     const tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate()+1);
     const tKey = toDateKey(tomorrow);
+
     const rows = [...tbody.querySelectorAll("tr")];
     rows.forEach(tr=>tr.classList.remove("soon"));
 
@@ -561,16 +359,17 @@
     activeGrade = g;
     document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active", b.dataset.grade === g));
     renderSchedule();
+    updateCountdown(); // حتى يتوافق العداد مع أقرب اختبار (إن رغبت لاحقاً ربطه بالمرحلة)
   }
+
   document.querySelectorAll(".tab").forEach(btn=>{
     btn.addEventListener("click", ()=> setActiveGrade(btn.dataset.grade));
   });
 
   renderSchedule();
 
-  // ====== 2) العدّاد الذكي: قبل البداية (يحسب للبداية) / أثناء الاختبار (يحسب للنهاية) / بعده (ينتقل للاختبار التالي) ======
+  // ====== العدّاد الذكي: قبل البداية/أثناء/بعد ======
   function parseGregToLocalDate(greg){
-    // greg = "YYYY-MM-DD"
     const [y,m,d] = greg.split("-").map(Number);
     return new Date(y, m-1, d);
   }
@@ -580,7 +379,6 @@
   function pad2(n){ return String(n).padStart(2,"0"); }
 
   function getNextExamWindow(now){
-    // يرجع: {row, start, end} لأقرب اختبار "اليوم إن كان داخل نافذته" وإلا "أقرب قادم"
     const windows = EXAMS.map(r=>{
       const base = parseGregToLocalDate(r.greg);
       const start = new Date(base.getFullYear(), base.getMonth(), base.getDate(), EXAM_START_HOUR, EXAM_START_MIN, 0, 0);
@@ -588,20 +386,16 @@
       return {row:r, start, end};
     }).sort((a,b)=> a.start - b.start);
 
-    // 1) إذا الآن داخل نافذة أي اختبار
     const inNow = windows.find(w => now >= w.start && now < w.end);
     if(inNow) return inNow;
 
-    // 2) أول اختبار قادم
     const upcoming = windows.find(w => now < w.start);
     if(upcoming) return upcoming;
 
-    // 3) إذا انتهت كلها: خذ آخر واحد (للإظهار فقط)
     return windows[windows.length-1] || null;
   }
 
   function setTimerUI(title, note, diffMs, totalMs, mode){
-    // mode: "toStart" | "toEnd" | "done"
     const tDays = $("tDays"), tHours = $("tHours"), tMins = $("tMins"), tSecs = $("tSecs");
     const bar = $("tBar");
     const countTitle = $("countTitle");
@@ -627,13 +421,11 @@
     tMins.textContent  = pad2(mins);
     tSecs.textContent  = pad2(secs);
 
-    // تقدم: قبل البداية = اقتراب من 0 خلال 24 ساعة، أثناء الاختبار = تقدم مدة الاختبار
     let pct = 0;
     if(mode === "toEnd"){
       pct = Math.max(0, Math.min(100, Math.round(((totalMs - diffMs) / totalMs) * 100)));
     }else{
-      // نافذة 24 ساعة
-      const win = 24*60*60000;
+      const win = 24*60*60000; // نافذة 24 ساعة
       const clamped = Math.max(0, Math.min(win, diffMs));
       pct = 100 - Math.round((clamped / win) * 100);
       pct = Math.max(0, Math.min(100, pct));
@@ -660,12 +452,11 @@
 
     if(now >= start && now < end){
       const diff = end - now;
-      const total = end - start; // 150 دقيقة
-      setTimerUI("⏱️ الاختبار جارٍ الآن — متبقي على النهاية", `ينتهي الاختبار اليوم عند 09:45 ص (مدة ساعتين ونصف)`, diff, total, "toEnd");
+      const total = end - start;
+      setTimerUI("⏱️ الاختبار جارٍ الآن — متبقي على النهاية", "ينتهي الاختبار اليوم عند 09:45 ص (مدة ساعتين ونصف)", diff, total, "toEnd");
       return;
     }
 
-    // بعد نهاية اختبار اليوم: ننتقل لأقرب اختبار قادم (إن وجد)
     const upcoming = EXAMS
       .map(r=>{
         const base = parseGregToLocalDate(r.greg);
