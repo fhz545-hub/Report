@@ -28,7 +28,7 @@
     .hero h1{margin:0;font-size:20px}
     .hero .sub{margin:6px 0 0;opacity:.95;font-size:14px;line-height:1.7}
 
-    /* ====== عدّاد الاختبار (جذاب) ====== */
+    /* ====== عدّاد الاختبار ====== */
     .countWrap{margin-top:12px;display:grid;gap:10px}
     .countCard{
       background:rgba(255,255,255,.14);
@@ -148,7 +148,6 @@
       <h1>جدول الاختبارات والتنبيهات</h1>
       <div class="sub">يظهر <b>الاختبار القادم</b> تلقائياً، مع <b>عدّاد</b> حتى البداية أو حتى النهاية (وقت الاختبار: <b>٧:١٥</b> إلى <b>٩:٤٥</b>).</div>
 
-      <!-- عدّاد الاختبار -->
       <div class="countWrap">
         <div class="countCard" id="countCard">
           <div class="countTop">
@@ -177,7 +176,7 @@
         </div>
 
         <div class="twoCol">
-          <!-- التنبيهات + توصيات تربوية (بديل الملاحظات) -->
+          <!-- التنبيهات (فقط) -->
           <div class="card" style="padding:14px">
             <div class="title" style="margin-bottom:8px">
               <h2>تنبيهات الاختبارات</h2>
@@ -198,23 +197,10 @@
               <b>التعليمات:</b><br>
               • اتباع تعليمات الملاحظ وإرشاداته.<br>
               • الغياب دون عذر طبي معتمد غير مقبول.<br><br>
-
-              <hr style="border:none;border-top:1px dashed rgba(124,45,18,.25);margin:12px 0">
-
-              <b>توصيات تربوية للمذاكرة الفعّالة (مختصرة ومؤثرة):</b>
-              <ul>
-                <li><b>ابدأ بخطة يومية:</b> حدد 3 مهام واضحة (مراجعة + حل أسئلة + تلخيص صفحة).</li>
-                <li><b>المذاكرة النشطة:</b> اقرأ ثم أغلق الكتاب و< b>استرجع</b> النقاط بصوتك/ورقة (أفضل من القراءة المتكررة).</li>
-                <li><b>التكرار المتباعد:</b> راجع نفس الدرس بعد (24 ساعة) ثم (3 أيام) ثم (أسبوع).</li>
-                <li><b>تدرب على الاختبار:</b> حل نماذج بأسلوب “وقت محدد” ثم راجع الأخطاء فوراً.</li>
-                <li><b>قاعدة 50/10:</b> 50 دقيقة تركيز + 10 دقائق راحة (بدون جوال) لتثبيت التعلم.</li>
-                <li><b>ليلة الاختبار:</b> نوم مبكر + تجهيز الأدوات + مراجعة خفيفة (عناوين/قوانين) فقط.</li>
-                <li><b>وقت الاختبار:</b> اقرأ الأسئلة أولاً، ابدأ بالأسهل، وخصص آخر 10 دقائق للمراجعة.</li>
-              </ul>
             </div>
           </div>
 
-          <!-- جدول الاختبارات -->
+          <!-- جدول الاختبارات + توصيات (بدل سطر التنبيه) -->
           <div class="card" style="padding:14px">
             <div class="schedTop">
               <div>
@@ -250,8 +236,16 @@
               </div>
             </div>
 
+            <!-- تم استبدال التنبيه السابق بالتوصيات المطلوبة -->
             <div class="meta" style="margin-top:10px">
-              <span class="muted">تنبيه:</span> إذا لم تظهر مادة في فترة معينة فهذا يعني أنها غير مدرجة لتلك الفترة في الجدول.
+              <b>توصيات تربوية للمذاكرة الفعّالة (مختصرة ومؤثرة):</b><br>
+              • ابدأ بخطة يومية: حدد 3 مهام واضحة (مراجعة + حل أسئلة + تلخيص صفحة).<br>
+              • المذاكرة النشطة: اقرأ ثم أغلق الكتاب و<b>استرجع النقاط</b> بصوتك/ورقة (أفضل من القراءة المتكررة).<br>
+              • التكرار المتباعد: راجع نفس الدرس بعد (24 ساعة) ثم (3 أيام) ثم (أسبوع).<br>
+              • تدرب على الاختبار: حل نماذج بأسلوب “وقت محدد” ثم راجع الأخطاء فوراً.<br>
+              • قاعدة 50/10: 50 دقيقة تركيز + 10 دقائق راحة (بدون جوال) لتثبيت التعلم.<br>
+              • ليلة الاختبار: نوم مبكر + تجهيز الأدوات + مراجعة خفيفة (عناوين/قوانين) فقط.<br>
+              • وقت الاختبار: اقرأ الأسئلة أولاً، ابدأ بالأسهل، وخصص آخر 10 دقائق للمراجعة.
             </div>
           </div>
         </div><!-- /twoCol -->
@@ -260,7 +254,6 @@
   </div>
 
 <script>
-  // ====== جدول الاختبارات (كما في كودك) ======
   const EXAMS = [
     { dayAr:"الأحد",   hijri:"١٤٤٧-٧-١٥هـ", greg:"2026-01-04",
       g1:{p1:"الرياضيات",           p2:"الكفايات اللغوية"},
@@ -289,13 +282,13 @@
     }
   ];
 
-  // ====== ثابت الوقت: بداية 07:15 ونهاية بعد ساعتين ونصف ======
+  // وقت الاختبار
   const EXAM_START_HOUR = 7, EXAM_START_MIN = 15;
-  const EXAM_DURATION_MIN = 150; // 2.5 hours
+  const EXAM_DURATION_MIN = 150;
 
   const $ = (id)=>document.getElementById(id);
 
-  // ====== جدول الاختبارات: عرض حسب المرحلة + "غداً/القادم" ======
+  // ====== جدول الاختبارات ======
   let activeGrade = "g1";
 
   function fmtGreg(iso){
@@ -324,6 +317,7 @@
       `;
     }).join("");
 
+    // تمييز الغد/القادم
     const today = new Date();
     const tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate()+1);
     const tKey = toDateKey(tomorrow);
@@ -359,7 +353,7 @@
     activeGrade = g;
     document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active", b.dataset.grade === g));
     renderSchedule();
-    updateCountdown(); // حتى يتوافق العداد مع أقرب اختبار (إن رغبت لاحقاً ربطه بالمرحلة)
+    updateCountdown();
   }
 
   document.querySelectorAll(".tab").forEach(btn=>{
@@ -368,14 +362,12 @@
 
   renderSchedule();
 
-  // ====== العدّاد الذكي: قبل البداية/أثناء/بعد ======
+  // ====== العدّاد ======
   function parseGregToLocalDate(greg){
     const [y,m,d] = greg.split("-").map(Number);
     return new Date(y, m-1, d);
   }
-  function addMinutes(dt, mins){
-    return new Date(dt.getTime() + mins*60000);
-  }
+  function addMinutes(dt, mins){ return new Date(dt.getTime() + mins*60000); }
   function pad2(n){ return String(n).padStart(2,"0"); }
 
   function getNextExamWindow(now){
@@ -396,17 +388,12 @@
   }
 
   function setTimerUI(title, note, diffMs, totalMs, mode){
-    const tDays = $("tDays"), tHours = $("tHours"), tMins = $("tMins"), tSecs = $("tSecs");
-    const bar = $("tBar");
-    const countTitle = $("countTitle");
-    const countNote = $("countNote");
-
-    countTitle.textContent = title;
-    countNote.textContent = note;
+    $("countTitle").textContent = title;
+    $("countNote").textContent = note;
 
     if(diffMs <= 0){
-      tDays.textContent="00"; tHours.textContent="00"; tMins.textContent="00"; tSecs.textContent="00";
-      bar.style.width = "100%";
+      $("tDays").textContent="00"; $("tHours").textContent="00"; $("tMins").textContent="00"; $("tSecs").textContent="00";
+      $("tBar").style.width = "100%";
       return;
     }
 
@@ -416,21 +403,21 @@
     const mins  = Math.floor((totalSec % 3600) / 60);
     const secs  = totalSec % 60;
 
-    tDays.textContent  = pad2(days);
-    tHours.textContent = pad2(hours);
-    tMins.textContent  = pad2(mins);
-    tSecs.textContent  = pad2(secs);
+    $("tDays").textContent  = pad2(days);
+    $("tHours").textContent = pad2(hours);
+    $("tMins").textContent  = pad2(mins);
+    $("tSecs").textContent  = pad2(secs);
 
     let pct = 0;
     if(mode === "toEnd"){
       pct = Math.max(0, Math.min(100, Math.round(((totalMs - diffMs) / totalMs) * 100)));
     }else{
-      const win = 24*60*60000; // نافذة 24 ساعة
+      const win = 24*60*60000;
       const clamped = Math.max(0, Math.min(win, diffMs));
       pct = 100 - Math.round((clamped / win) * 100);
       pct = Math.max(0, Math.min(100, pct));
     }
-    bar.style.width = pct + "%";
+    $("tBar").style.width = pct + "%";
   }
 
   function updateCountdown(){
@@ -445,15 +432,12 @@
     const dayLabel = row.dayAr + " — " + row.hijri + " — " + fmtGreg(row.greg);
 
     if(now < start){
-      const diff = start - now;
-      setTimerUI("⏳ متبقي على بداية الاختبار", `موعد الاختبار: ${dayLabel} (07:15 ص)`, diff, 1, "toStart");
+      setTimerUI("⏳ متبقي على بداية الاختبار", `موعد الاختبار: ${dayLabel} (07:15 ص)`, (start-now), 1, "toStart");
       return;
     }
 
     if(now >= start && now < end){
-      const diff = end - now;
-      const total = end - start;
-      setTimerUI("⏱️ الاختبار جارٍ الآن — متبقي على النهاية", "ينتهي الاختبار اليوم عند 09:45 ص (مدة ساعتين ونصف)", diff, total, "toEnd");
+      setTimerUI("⏱️ الاختبار جارٍ الآن — متبقي على النهاية", "ينتهي الاختبار اليوم عند 09:45 ص (مدة ساعتين ونصف)", (end-now), (end-start), "toEnd");
       return;
     }
 
@@ -467,9 +451,8 @@
       .sort((a,b)=>a.start-b.start)[0];
 
     if(upcoming){
-      const diff = upcoming.start - now;
       const dLabel = upcoming.row.dayAr + " — " + upcoming.row.hijri + " — " + fmtGreg(upcoming.row.greg);
-      setTimerUI("✅ انتهى اختبار اليوم — التالي قريباً", `الاختبار القادم: ${dLabel} (07:15 ص)`, diff, 1, "toStart");
+      setTimerUI("✅ انتهى اختبار اليوم — التالي قريباً", `الاختبار القادم: ${dLabel} (07:15 ص)`, (upcoming.start-now), 1, "toStart");
     }else{
       setTimerUI("✅ انتهت فترة الاختبارات", "لا توجد اختبارات قادمة في الجدول الحالي.", 0, 1, "done");
     }
