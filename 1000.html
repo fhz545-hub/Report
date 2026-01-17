@@ -523,7 +523,9 @@ const TERM2_START = new Date("2026-01-18T07:15:00"); // عدّل عند الحا
 const START_HOUR = 7, START_MIN = 15;
 const PERIOD_MIN = 50;
 const BREAK_AFTER = 3, BREAK_MIN = 25;   // الفسحة بعد الثالثة
-const PRAYER_AFTER = 6, PRAYER_MIN = 15; // الصلاة بعد السادسة (للثاني/الثالث)
+const PRAYER_MIN = 15;
+// الصلاة: الأول بعد الخامسة، الثاني والثالث بعد السادسة
+const PRAYER_AFTER_BY_GRADE = { g1: 5, g2: 6, g3: 6 };
 
 /* ============================================
    (B) بيانات الجداول (مستخرجة كاملة من ملف Excel)
@@ -603,11 +605,12 @@ function buildTicker(elRun, items){
    (E) بناء “حصص اليوم” (تتضمن الفسحة/الصلاة كحصة)
    ============================================ */
 function slotLabels(grade){
-  // 7 حصص + فسحة بعد 3 + صلاة بعد 6 (للثاني/الثالث)
-  if(grade==="g2" || grade==="g3"){
-    return ["الحصة 1","الحصة 2","الحصة 3","الفسحة","الحصة 4","الحصة 5","الحصة 6","الصلاة","الحصة 7"];
+  // 7 حصص + فسحة بعد 3 + صلاة حسب المرحلة
+  // g1: صلاة بعد 5 (بين 5 و6) | g2/g3: صلاة بعد 6 (بين 6 و7)
+  if(grade==="g1"){
+    return ["الحصة 1","الحصة 2","الحصة 3","الفسحة","الحصة 4","الحصة 5","الصلاة","الحصة 6","الحصة 7"];
   }
-  return ["الحصة 1","الحصة 2","الحصة 3","الفسحة","الحصة 4","الحصة 5","الحصة 6","الحصة 7"];
+  return ["الحصة 1","الحصة 2","الحصة 3","الفسحة","الحصة 4","الحصة 5","الحصة 6","الصلاة","الحصة 7"];
 }
 
 function buildTimeline(grade){
@@ -615,38 +618,38 @@ function buildTimeline(grade){
   let t = new Date();
   t.setHours(START_HOUR, START_MIN, 0, 0);
 
+  const prayerAfter = PRAYER_AFTER_BY_GRADE[grade]; // 5 للأول، 6 للثاني/الثالث
+
   // 1-3
   for(let i=1;i<=3;i++){
     const s = new Date(t);
     t = new Date(t.getTime() + PERIOD_MIN*60000);
     slots.push({type:"class", period:i, label:`الحصة ${i}`, start:s, end:new Date(t)});
   }
-  // break
+  // فسحة
   {
     const s = new Date(t);
     t = new Date(t.getTime() + BREAK_MIN*60000);
     slots.push({type:"break", label:"الفسحة", start:s, end:new Date(t)});
   }
-  // 4-6
-  for(let i=4;i<=6;i++){
+
+  // 4 .. 7 مع إدراج الصلاة بعد (prayerAfter)
+  for(let p=4; p<=7; p++){
+    // إذا حان وقت الصلاة قبل هذه الحصة
+    if(p === prayerAfter + 1){
+      const s = new Date(t);
+      t = new Date(t.getTime() + PRAYER_MIN*60000);
+      slots.push({type:"pray", label:"الصلاة", start:s, end:new Date(t)});
+    }
+
     const s = new Date(t);
     t = new Date(t.getTime() + PERIOD_MIN*60000);
-    slots.push({type:"class", period:i, label:`الحصة ${i}`, start:s, end:new Date(t)});
+    slots.push({type:"class", period:p, label:`الحصة ${p}`, start:s, end:new Date(t)});
   }
-  // prayer for g2/g3
-  if(grade==="g2" || grade==="g3"){
-    const s = new Date(t);
-    t = new Date(t.getTime() + PRAYER_MIN*60000);
-    slots.push({type:"pray", label:"الصلاة", start:s, end:new Date(t)});
-  }
-  // 7
-  {
-    const s = new Date(t);
-    t = new Date(t.getTime() + PERIOD_MIN*60000);
-    slots.push({type:"class", period:7, label:"الحصة 7", start:s, end:new Date(t)});
-  }
+
   return slots;
 }
+
 
 function currentSlot(grade, now=new Date()){
   if(!isSchoolDay(now)) return {type:"off", label:"لا توجد حصص اليوم"};
@@ -719,16 +722,18 @@ function buildWeekGrid(grade, section){
     // break slot
     slots.push("فسحة");
 
-    // 4-6
-    slots.push(periods7[3], periods7[4], periods7[5]);
+   // 4-7 مع الصلاة حسب المرحلة
+// بعد الفسحة: 4,5
+slots.push(periods7[3], periods7[4]);
 
-    // prayer for g2/g3
-    if(grade==="g2" || grade==="g3"){
-      slots.push("صلاة");
-    }
+if(grade==="g1"){
+  // صلاة بعد الخامسة ثم 6 ثم 7
+  slots.push("صلاة", periods7[5], periods7[6]);
+} else {
+  // 6 ثم صلاة بعد السادسة ثم 7
+  slots.push(periods7[5], "صلاة", periods7[6]);
+}
 
-    // 7
-    slots.push(periods7[6]);
 
     const tr = document.createElement("tr");
     tr.innerHTML = `
