@@ -3,43 +3,129 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-  <title>جدول الاختبارات والتنبيهات | الفصل الدراسي الأول ١٤٤٧هـ</title>
+  <title>الجاهزية للفصل الثاني | الجدول الذكي — ثانوية اليعقوبي</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;800&display=swap" rel="stylesheet">
+
   <style>
     :root{
       --moe:#1e8a79;--moe2:#0c594e;--ink:#0b2f2b;--muted:#6b7e7b;--bg:#f6fbfa;--card:#fff;
       --line:#e3f0ed;--shadow:0 18px 45px rgba(12,89,78,.10);--warn:#b45309;--err:#b91c1c;--ok:#15803d;
       --radius:22px;
 
-      /* ألوان بطاقات التوصيات */
-      --c1:#0ea5e9;  /* أزرق */
-      --c2:#22c55e;  /* أخضر */
-      --c3:#f59e0b;  /* كهرماني */
-      --c4:#8b5cf6;  /* بنفسجي */
-      --c5:#ef4444;  /* أحمر */
-      --c6:#14b8a6;  /* تركواز */
-      --c7:#f97316;  /* برتقالي */
+      --gridLine:#9fd6ce;
+      --gridBg:#ffffff;
+      --gridHead:#f2fffc;
+
+      --tickBg:#073a34;
+      --tickBg2:#0a5a50;
+      --tickInk:#ffffff;
+
+      --c1:#0ea5e9; --c2:#22c55e; --c3:#f59e0b; --c4:#8b5cf6; --c5:#ef4444; --c6:#14b8a6; --c7:#f97316;
     }
     *{box-sizing:border-box}
-    body{margin:0;font-family:"Tajawal",system-ui,-apple-system,Segoe UI,Arial;background:
-      radial-gradient(1200px 600px at 15% 0%, rgba(30,138,121,.10), transparent 60%),
-      radial-gradient(900px 500px at 95% 10%, rgba(12,89,78,.12), transparent 55%),
-      var(--bg);color:var(--ink)}
-    .wrap{max-width:1100px;margin:0 auto;padding:18px 14px 40px}
+    body{
+      margin:0;
+      font-family:"Tajawal",system-ui,-apple-system,Segoe UI,Arial;
+      background:
+        radial-gradient(1400px 700px at 15% 0%, rgba(30,138,121,.10), transparent 60%),
+        radial-gradient(1000px 650px at 95% 10%, rgba(12,89,78,.12), transparent 55%),
+        var(--bg);
+      color:var(--ink);
+      padding-top:46px; /* مساحة شريط الأعلى */
+      padding-bottom:54px; /* مساحة شريط الأسفل */
+    }
+
+    /* ===== شريط متحرك (أعلى/أسفل) ===== */
+    .ticker{
+      position:fixed; left:0; right:0;
+      height:46px; display:flex; align-items:center;
+      z-index:1200;
+      background:linear-gradient(135deg,var(--tickBg),var(--tickBg2));
+      border-bottom:1px solid rgba(255,255,255,.18);
+      box-shadow:0 16px 40px rgba(0,0,0,.18);
+      overflow:hidden;
+      direction:rtl;
+    }
+    .ticker.bottom{
+      top:auto; bottom:0;
+      border-bottom:none;
+      border-top:1px solid rgba(255,255,255,.18);
+      box-shadow:0 -16px 40px rgba(0,0,0,.18);
+    }
+    .tickBadge{
+      flex:0 0 auto;
+      margin:0 10px;
+      padding:7px 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.18);
+      color:var(--tickInk);
+      font-weight:900;
+      font-size:12px;
+      white-space:nowrap;
+    }
+    .tickTrack{
+      position:relative;
+      flex:1 1 auto;
+      height:100%;
+      overflow:hidden;
+    }
+    .tickRun{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      gap:18px;
+      padding-inline:14px;
+      white-space:nowrap;
+      will-change:transform;
+      animation: tickMove 42s linear infinite;
+    }
+    .ticker.bottom .tickRun{ animation-duration: 50s; }
+    .tickItem{
+      color:var(--tickInk);
+      font-weight:900;
+      font-size:13px;
+      opacity:.98;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+    }
+    .tickDot{
+      width:8px;height:8px;border-radius:999px;
+      background:rgba(255,255,255,.75);
+      box-shadow:0 0 0 5px rgba(255,255,255,.12);
+      flex:0 0 auto;
+    }
+    @keyframes tickMove{
+      0%{ transform:translateX(10%); }
+      100%{ transform:translateX(-110%); }
+    }
+    @media(max-width:520px){
+      .tickItem{font-size:12px}
+      .ticker{height:44px}
+      body{padding-top:44px;padding-bottom:52px}
+    }
+
+    /* ===== الصفحة ===== */
+    .wrap{max-width:1360px;margin:0 auto;padding:18px 18px 40px}
 
     .hero{
       background:linear-gradient(135deg,var(--moe),#23b8a2);
-      color:#fff;border-radius:28px;padding:18px;box-shadow:var(--shadow);
+      color:#fff;border-radius:30px;padding:20px;box-shadow:var(--shadow);
       position:relative;overflow:hidden
     }
-    .hero:before{content:"";position:absolute;inset:-80px -120px auto auto;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.14);transform:rotate(10deg)}
-    .hero h1{margin:0;font-size:20px}
-    .hero .sub{margin:6px 0 0;opacity:.95;font-size:14px;line-height:1.7}
+    .hero:before{
+      content:"";position:absolute;inset:-90px -140px auto auto;width:360px;height:360px;border-radius:50%;
+      background:rgba(255,255,255,.14);transform:rotate(10deg)
+    }
+    .hero h1{margin:0;font-size:22px}
+    .hero .sub{margin:8px 0 0;opacity:.97;font-size:14px;line-height:1.9}
+    .heroRow{display:grid;gap:14px;margin-top:14px}
+    @media(min-width:980px){ .heroRow{grid-template-columns:1.05fr .95fr;} }
 
-    /* ====== عدّاد الاختبار ====== */
-    .countWrap{margin-top:12px;display:grid;gap:10px}
-    .countCard{
+    .glass{
       background:rgba(255,255,255,.14);
       border:1px solid rgba(255,255,255,.18);
       border-radius:22px;
@@ -48,9 +134,9 @@
       box-shadow: 0 10px 28px rgba(0,0,0,.08);
       position:relative;overflow:hidden
     }
-    .countCard:after{
-      content:""; position:absolute; inset:auto -80px -110px auto;
-      width:240px;height:240px;border-radius:50%;
+    .glass:after{
+      content:""; position:absolute; inset:auto -80px -120px auto;
+      width:260px;height:260px;border-radius:50%;
       background: radial-gradient(circle at 35% 35%, rgba(255,255,255,.22), rgba(255,255,255,0) 62%);
       transform: rotate(12deg);
       pointer-events:none;
@@ -64,10 +150,8 @@
       border:1px solid rgba(255,255,255,.18);
       white-space:nowrap
     }
-    .timerGrid{
-      display:grid; grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:8px; margin-top:10px;
-    }
+    .timerGrid{display:grid; grid-template-columns:repeat(4,minmax(0,1fr));gap:8px; margin-top:10px;}
+    @media(max-width:520px){ .timerGrid{grid-template-columns:repeat(2,minmax(0,1fr));} }
     .tBox{
       background: rgba(255,255,255,.92);
       border:1px solid rgba(255,255,255,.18);
@@ -93,23 +177,35 @@
       transition: width .35s ease;
     }
     .countNote{margin-top:8px;font-size:12px;opacity:.92;line-height:1.7}
-    @media(max-width:520px){ .timerGrid{grid-template-columns:repeat(2,minmax(0,1fr));} }
 
     .grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:14px}
     .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
-
     .title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
     .title h2{margin:0;font-size:16px}
     .pill{font-size:12px;padding:6px 10px;border-radius:999px;background:#e9f6f3;border:1px solid #d8efe9;color:var(--moe2);white-space:nowrap}
 
-    /* ======= قسم (تنبيهات | جدول) ======= */
-    .twoCol{display:grid;grid-template-columns:1fr;gap:14px;margin-top:14px}
+    .twoCol{display:grid;grid-template-columns:1fr;gap:14px}
     @media(min-width:980px){ .twoCol{grid-template-columns:1fr 1.25fr} }
 
-    .policy{border-radius:18px;padding:14px;background:#fff7ed;border:1px solid rgba(180,83,9,.22);color:#7c2d12;line-height:1.85}
-    .policy b{color:#7c2d12}
+    .controls{
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;
+      padding:12px;border:1px solid #dff0ec;border-radius:18px;background:linear-gradient(135deg, rgba(30,138,121,.06), rgba(255,255,255,1));
+    }
+    .leftCtl{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .field{display:flex;gap:8px;align-items:center}
+    select,button{
+      font-family:inherit;
+      border:1px solid #d9ebe7;background:#fff;color:var(--ink);
+      border-radius:14px;padding:10px 12px;font-weight:900;
+      box-shadow:0 10px 24px rgba(12,89,78,.06);
+      outline:none;
+    }
+    select:focus,button:focus{box-shadow:0 0 0 4px rgba(30,138,121,.12)}
+    button{cursor:pointer;transition:.14s transform ease,.14s background ease}
+    button:hover{transform:translateY(-1px);background:#fbfefe}
+    .btnPrimary{background:#e9f6f3;border-color:#cfece6;color:var(--moe2)}
+    .btnDanger{background:#fff1f2;border-color:#fecdd3;color:#9f1239}
 
-    .schedTop{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:10px}
     .tabs{display:flex;gap:8px;flex-wrap:wrap}
     .tab{
       border:1px solid #d9ebe7;background:#fff;color:var(--ink);
@@ -118,147 +214,197 @@
     }
     .tab:hover{transform:translateY(-1px);background:#fbfefe}
     .tab.active{background:#e9f6f3;border-color:#cfece6;color:var(--moe2)}
+
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .chipBtn{
+      border:1px solid #e3f0ed;background:#fbfefe;color:rgba(11,47,43,.85);
+      border-radius:999px;padding:8px 10px;font-weight:900;cursor:pointer;
+    }
+    .chipBtn.active{background:#e9f6f3;border-color:#cfece6;color:var(--moe2)}
+
     .banner{
-      display:none;margin:10px 0 0;border-radius:16px;padding:12px;
+      display:block;margin:10px 0 0;border-radius:16px;padding:12px;
       border:1px solid rgba(30,138,121,.22);background:rgba(30,138,121,.06);color:var(--moe2);
-      line-height:1.8;font-weight:900
+      line-height:1.95;font-weight:900
     }
     .banner small{display:block;color:var(--muted);font-weight:700;margin-top:4px}
 
-    .meta{color:var(--muted);font-size:13px;line-height:1.7}
-    .schedWrap{margin-top:10px;border:1px solid #dff0ec;border-radius:18px;overflow:hidden}
-    .schedHead{padding:10px 12px;background:#f6fffd;border-bottom:1px solid #e3f0ed;font-weight:900;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
-    .tinyPill{font-size:12px;padding:6px 10px;border-radius:999px;background:#fbfefe;border:1px solid #e3f0ed;color:var(--muted)}
-    .soon{background:rgba(180,83,9,.08)!important}
-    .soon td{font-weight:900}
-
-    table{width:100%;border-collapse:collapse}
-    th,td{padding:10px 12px;border-bottom:1px solid #eef7f5;font-size:14px}
-    th{background:#fbfefe;text-align:right;color:var(--muted)}
-    tr:hover{background:#f6fffd}
-
-    /* ====== توصيات المذاكرة (تصميم ممتع) ====== */
-    .studyWrap{
-      margin-top:12px;
-      border:1px solid #dff0ec;
-      border-radius:18px;
-      overflow:hidden;
-      background: linear-gradient(135deg, rgba(30,138,121,.06), rgba(255,255,255,1));
+    /* ===== جدول شبكي (ضمن الصفحة) ===== */
+    .gridTableWrap{margin-top:10px;border-radius:18px;border:1px solid #dff0ec;background:#fff;overflow:hidden}
+    .gridTable{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      table-layout:fixed;
+      background:var(--gridBg);
     }
-    .studyHead{
-      padding:12px 12px;
-      display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
-      background: linear-gradient(135deg, rgba(30,138,121,.12), rgba(12,89,78,.06));
-      border-bottom:1px solid rgba(227,240,237,1);
-    }
-    .studyTitle{
-      display:flex;gap:10px;align-items:center;
-      font-weight:900;color:var(--ink);font-size:15px;
-    }
-    .spark{
-      width:34px;height:34px;border-radius:12px;
-      display:grid;place-items:center;
-      background: linear-gradient(135deg, rgba(30,138,121,.22), rgba(35,184,162,.10));
-      border:1px solid rgba(30,138,121,.18);
-    }
-    .studyBadge{
-      font-size:12px;font-weight:900;
-      padding:6px 10px;border-radius:999px;
-      background:#fff;border:1px solid rgba(30,138,121,.18);color:var(--moe2);
-      white-space:nowrap
-    }
-    .studyGrid{
-      padding:12px;
-      display:grid;
-      grid-template-columns:1fr;
-      gap:10px;
-    }
-    @media(min-width:760px){
-      .studyGrid{grid-template-columns:1fr 1fr;}
-    }
-    .tip{
-      border-radius:18px;
-      padding:12px;
-      border:1px solid rgba(227,240,237,1);
+    .gridTable th,.gridTable td{
+      border-left:2px dotted var(--gridLine);
+      border-top:2px dotted var(--gridLine);
+      padding:8px 6px;
+      font-size:12px;
+      line-height:1.35;
+      vertical-align:top;
+      word-break:break-word;
+      overflow-wrap:anywhere;
       background:#fff;
-      box-shadow: 0 12px 28px rgba(12,89,78,.08);
-      position:relative;
-      overflow:hidden;
-      transition:.16s transform ease;
     }
-    .tip:hover{transform:translateY(-1px)}
-    .tip:before{
-      content:""; position:absolute; inset:0 auto 0 0; width:6px;
-      background: var(--c1);
-      border-radius:18px 0 0 18px;
+    .gridTable th{
+      background:var(--gridHead);
+      font-weight:900;
+      color:rgba(11,47,43,.80);
+      text-align:center;
+      font-size:12px;
     }
-    .tip[data-c="2"]:before{background:var(--c2)}
-    .tip[data-c="3"]:before{background:var(--c3)}
-    .tip[data-c="4"]:before{background:var(--c4)}
-    .tip[data-c="5"]:before{background:var(--c5)}
-    .tip[data-c="6"]:before{background:var(--c6)}
-    .tip[data-c="7"]:before{background:var(--c7)}
+    .gridTable tr:first-child th{border-top:none}
+    .gridTable td:first-child,.gridTable th:first-child{border-left:none}
+    .gridTable .dayCell{
+      font-weight:900;
+      text-align:center;
+      background:#fbfffe;
+      color:rgba(11,47,43,.92);
+      white-space:nowrap;
+    }
+    .cellLabel{display:block;font-weight:900;color:rgba(11,47,43,.92)}
+    .cellSub{display:block;margin-top:4px;font-weight:700;color:rgba(11,47,43,.70)}
+    .cellMeta{
+      display:inline-flex;gap:6px;align-items:center;
+      margin-top:6px;font-size:11px;font-weight:900;
+      padding:4px 8px;border-radius:999px;
+      border:1px solid #e3f0ed;background:#fbfefe;color:rgba(11,47,43,.70);
+      white-space:nowrap;
+    }
+    .cellMeta.break{background:rgba(180,83,9,.08);border-color:rgba(180,83,9,.18);color:var(--warn)}
+    .cellMeta.pray{background:rgba(21,128,61,.08);border-color:rgba(21,128,61,.18);color:var(--ok)}
+    .cellMeta.live{background:rgba(30,138,121,.10);border-color:rgba(30,138,121,.22);color:var(--moe2)}
+    .cellMeta.off{background:rgba(185,28,28,.06);border-color:rgba(185,28,28,.16);color:var(--err)}
 
-    .tipTop{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
-    .tipH{
-      display:flex;align-items:center;gap:8px;
-      font-weight:900;color:var(--ink);
+    @media(max-width:720px){
+      .gridTable th,.gridTable td{font-size:11px;padding:7px 5px}
+      .hero .sub{font-size:13px}
+      .wrap{padding:16px 12px 38px}
     }
-    .dot{
-      width:10px;height:10px;border-radius:999px;background:var(--c1);
-      box-shadow:0 0 0 5px rgba(14,165,233,.12);
-    }
-    .tip[data-c="2"] .dot{background:var(--c2); box-shadow:0 0 0 5px rgba(34,197,94,.12)}
-    .tip[data-c="3"] .dot{background:var(--c3); box-shadow:0 0 0 5px rgba(245,158,11,.14)}
-    .tip[data-c="4"] .dot{background:var(--c4); box-shadow:0 0 0 5px rgba(139,92,246,.14)}
-    .tip[data-c="5"] .dot{background:var(--c5); box-shadow:0 0 0 5px rgba(239,68,68,.14)}
-    .tip[data-c="6"] .dot{background:var(--c6); box-shadow:0 0 0 5px rgba(20,184,166,.14)}
-    .tip[data-c="7"] .dot{background:var(--c7); box-shadow:0 0 0 5px rgba(249,115,22,.14)}
 
-    .chip{
-      font-size:12px;font-weight:900;
-      padding:6px 10px;border-radius:999px;
-      border:1px solid rgba(227,240,237,1);
-      background:#fbfefe;
-      color:rgba(11,47,43,.75);
-      white-space:nowrap
+    /* ===== الحصة المباشرة الآن (جميع الشعب) ===== */
+    .liveWrap{margin-top:10px;border:1px solid rgba(255,255,255,.18);border-radius:22px;background:rgba(255,255,255,.12);padding:12px}
+    .liveHead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+    .liveTitle{font-weight:900}
+    .liveMeta{font-size:12px;font-weight:900;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.18)}
+    .liveGrid{margin-top:10px;display:grid;grid-template-columns:1fr;gap:8px}
+    @media(min-width:760px){ .liveGrid{grid-template-columns:repeat(2,1fr);} }
+    @media(min-width:1180px){ .liveGrid{grid-template-columns:repeat(3,1fr);} }
+    .liveCard{
+      background:rgba(255,255,255,.92);
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:18px;
+      padding:10px 10px;
+      box-shadow:0 10px 24px rgba(0,0,0,.10);
     }
-    .tipP{margin-top:8px;color:#244b46;line-height:1.9;font-weight:700}
-    .tipP b{color:var(--moe2)}
-    .wide{grid-column:1/-1}
+    .liveTop{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+    .liveCls{font-weight:900;color:rgba(11,47,43,.95)}
+    .liveSlot{font-size:12px;font-weight:900;padding:6px 10px;border-radius:999px;border:1px solid #e3f0ed;background:#fbfefe;color:rgba(11,47,43,.70)}
+    .liveSlot.break{background:rgba(180,83,9,.08);border-color:rgba(180,83,9,.18);color:var(--warn)}
+    .liveSlot.pray{background:rgba(21,128,61,.08);border-color:rgba(21,128,61,.18);color:var(--ok)}
+    .liveSlot.off{background:rgba(185,28,28,.06);border-color:rgba(185,28,28,.16);color:var(--err)}
+    .liveSubj{margin-top:8px;font-weight:900;color:rgba(11,47,43,.92);line-height:1.45}
+    .liveTime{margin-top:6px;color:rgba(11,47,43,.70);font-weight:700;font-size:12px}
+
+    /* ===== Modal ===== */
+    .overlay{
+      position:fixed;inset:0;background:rgba(0,0,0,.35);
+      display:none;align-items:center;justify-content:center;padding:14px;z-index:1400
+    }
+    .modal{
+      width:min(1060px,100%);background:#fff;border-radius:22px;border:1px solid #e3f0ed;
+      box-shadow:0 24px 70px rgba(0,0,0,.25);overflow:hidden
+    }
+    .mHead{
+      padding:12px 14px;background:linear-gradient(135deg, rgba(30,138,121,.12), rgba(12,89,78,.06));
+      border-bottom:1px solid #e3f0ed;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap
+    }
+    .mHead b{font-size:15px}
+    .mBody{padding:12px 14px}
+    .mFoot{padding:12px 14px;border-top:1px solid #e3f0ed;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+    .kbd{font-size:12px;font-weight:900;padding:6px 10px;border-radius:999px;border:1px solid #e3f0ed;background:#fbfefe;color:rgba(11,47,43,.75)}
+    .show{display:flex}
 
     @media print{
-      body{background:#fff}
-      .hero,.tabs,.banner{display:none !important}
+      body{background:#fff;padding:0}
+      .ticker,.hero .glass:nth-child(2) .liveWrap,.overlay,.chips,.controls{display:none !important}
       .wrap{max-width:100%;padding:0}
       .card{box-shadow:none;border:0}
-      .twoCol{grid-template-columns:1fr 1fr}
+      .twoCol{grid-template-columns:1fr}
     }
   </style>
 </head>
 
 <body>
+
+  <!-- شريط أعلى -->
+  <div class="ticker top" aria-label="شريط تنبيهات متحرك أعلى الصفحة">
+    <span class="tickBadge" id="topBadge">تنبيهات سريعة</span>
+    <div class="tickTrack">
+      <div class="tickRun" id="topRun"></div>
+    </div>
+  </div>
+
+  <!-- شريط أسفل -->
+  <div class="ticker bottom" aria-label="شريط توصيات متحرك أسفل الصفحة">
+    <span class="tickBadge" id="bottomBadge">توصيات للانطلاقة</span>
+    <div class="tickTrack">
+      <div class="tickRun" id="bottomRun"></div>
+    </div>
+  </div>
+
   <div class="wrap">
     <div class="hero">
-      <h1>جدول الاختبارات والتنبيهات</h1>
-      <div class="sub">يظهر <b>الاختبار القادم</b> تلقائياً، مع <b>عدّاد</b> حتى البداية أو حتى النهاية (وقت الاختبار: <b>٧:١٥</b> إلى <b>٩:٤٥</b>).</div>
+      <h1>الجاهزية للفصل الدراسي الثاني — الجدول الذكي</h1>
+      <div class="sub">
+        جداول <b>شبكية (متبعة)</b> لكل شعبة من <b>الأحد إلى الخميس</b> ضمن محتوى الصفحة (بدون امتداد).
+        <br>
+        بداية الحصة الأولى <b>07:15 ص</b> • زمن الحصة <b>50 دقيقة</b> •
+        <b>حصة للفسحة</b> بعد الثالثة (<b>25 دقيقة</b>) •
+        <b>حصة للصلاة</b> بعد السادسة (<b>15 دقيقة</b>) لصفّي <b>الثاني</b> و<b>الثالث</b>.
+      </div>
 
-      <div class="countWrap">
-        <div class="countCard" id="countCard">
+      <div class="heroRow">
+        <div class="glass" id="termCard">
           <div class="countTop">
-            <div class="countTitle" id="countTitle">⏳ العدّاد</div>
-            <div class="countMeta" id="countMeta">بداية 07:15 ص • نهاية 09:45 ص</div>
+            <div class="countTitle" id="termTitle">⏳ العدّاد لبداية الفصل الثاني</div>
+            <div class="countMeta" id="termMeta">يُحدّث تلقائياً</div>
           </div>
-
           <div class="timerGrid" aria-live="polite">
             <div class="tBox"><div class="tNum" id="tDays">00</div><div class="tLbl">يوم</div></div>
             <div class="tBox"><div class="tNum" id="tHours">00</div><div class="tLbl">ساعة</div></div>
             <div class="tBox"><div class="tNum" id="tMins">00</div><div class="tLbl">دقيقة</div></div>
             <div class="tBox"><div class="tNum" id="tSecs">00</div><div class="tLbl">ثانية</div></div>
           </div>
-
           <div class="bar"><span id="tBar"></span></div>
-          <div class="countNote" id="countNote">يتم التحديث تلقائياً حسب أقرب يوم اختبار في الجدول.</div>
+          <div class="countNote" id="termNote">يمكن تعديل تاريخ بداية الفصل الثاني من المتغير <b>TERM2_START</b> داخل البرمجة.</div>
+        </div>
+
+        <div class="glass">
+          <div class="countTop">
+            <div class="countTitle">📌 تشغيل سريع</div>
+            <div class="countMeta" id="todayHijriPill">—</div>
+          </div>
+          <div class="countNote" style="margin-top:8px">
+            • اختر <b>المرحلة</b> ثم <b>الشعبة</b>.<br>
+            • اضغط <b>جدول اليوم</b> لعرض جدول اليوم الشبكي بالتوقيت والتنبيهات.<br>
+            • أسفل ذلك: <b>الحصة المباشرة الآن</b> لجميع الشعب تلقائياً حسب اليوم والوقت.
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
+            <button class="btnPrimary" id="openTodayBtn">📅 جدول اليوم</button>
+            <button id="copyTodayBtn">📋 نسخ جدول اليوم</button>
+          </div>
+
+          <div class="liveWrap" id="liveWrap">
+            <div class="liveHead">
+              <div class="liveTitle" id="liveTitle">🔴 الحصة المباشرة الآن (جميع الشعب)</div>
+              <div class="liveMeta" id="liveMeta">—</div>
+            </div>
+            <div class="liveGrid" id="liveGrid"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -266,356 +412,684 @@
     <div class="grid">
       <div class="card">
         <div class="title">
-          <h2>تنبيهات الاختبارات + جدول المواد</h2>
-          <span class="pill">يلزم الالتزام</span>
+          <h2>الجدول الذكي حسب الشعبة</h2>
+          <span class="pill">الفصل الثاني ١٤٤٧هـ</span>
         </div>
 
         <div class="twoCol">
-          <!-- التنبيهات -->
+          <!-- (يسار) ملخص سريع -->
           <div class="card" style="padding:14px">
             <div class="title" style="margin-bottom:8px">
-              <h2>تنبيهات الاختبارات</h2>
-              <span class="pill">تنظيم + انضباط</span>
+              <h2>ملخص اليوم</h2>
+              <span class="pill" id="summaryPill">—</span>
             </div>
 
-            <div class="policy">
-              <b>الوقت:</b><br>
-              • الحضور الساعة <b>٦:٤٥ صباحاً</b>، وبداية الاختبار الساعة <b>٧:١٥</b> تماماً، وينتهي <b>٩:٤٥</b> صباحاً (مدة <b>ساعتين ونصف</b>).<br><br>
+            <div class="banner" id="smartBanner">—</div>
+            <div class="banner" style="margin-top:10px">
+              <b>ملاحظة تنظيمية:</b>
+              <small>الفسحة ضمن الجدول كـ “حصة” بعد الثالثة. الصلاة لصفّي الثاني والثالث بعد السادسة.</small>
+            </div>
 
-              <b>ممنوع منعاً باتاً:</b><br>
-              • الجوال أو أي أجهزة إلكترونية.<br>
-              • ساعة أبل أو أي ساعة ذكية.<br><br>
-
-              <b>أدوات الإجابة:</b><br>
-              • استخدام <b>قلم أزرق جاف</b> فقط، وعدم استخدام المزيل.<br><br>
-
-              <b>التعليمات:</b><br>
-              • اتباع تعليمات الملاحظ وإرشاداته.<br>
-              • الغياب دون عذر طبي معتمد غير مقبول.<br><br>
+            <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btnPrimary" id="todayBtn">📅 جدول اليوم للشعبة المختارة</button>
+              <button id="printBtn">🖨️ طباعة</button>
             </div>
           </div>
 
-          <!-- جدول الاختبارات + التوصيات -->
+          <!-- (يمين) الجداول -->
           <div class="card" style="padding:14px">
-            <div class="schedTop">
-              <div>
-                <div style="font-weight:900;font-size:16px">جدول الاختبارات النهائية</div>
-                <div class="meta">الفصل الدراسي الأول ١٤٤٧هـ — اختر المرحلة لعرض المواد</div>
+            <div class="controls">
+              <div class="leftCtl">
+                <div class="field">
+                  <span class="cellMeta">المرحلة</span>
+                  <div class="tabs" role="tablist" aria-label="المراحل">
+                    <button class="tab active" data-grade="g1">الأول ثانوي</button>
+                    <button class="tab" data-grade="g2">الثاني ثانوي</button>
+                    <button class="tab" data-grade="g3">الثالث ثانوي</button>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <span class="cellMeta">الشعبة</span>
+                  <select id="sectionSelect" aria-label="اختيار الشعبة"></select>
+                </div>
               </div>
-              <div class="tabs" role="tablist" aria-label="المراحل">
-                <button class="tab active" data-grade="g1">الأول ثانوي</button>
-                <button class="tab" data-grade="g2">الثاني ثانوي</button>
-                <button class="tab" data-grade="g3">الثالث ثانوي</button>
+
+              <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+                <button class="btnPrimary" id="refreshBtn">↻ تحديث</button>
               </div>
             </div>
 
-            <div id="banner" class="banner"></div>
+            <div id="sectionChips" class="chips" aria-label="اختيار سريع للشعب"></div>
 
-            <div class="schedWrap">
-              <div class="schedHead">
-                <div>📅 مواعيد ومواد الاختبار</div>
-                <div class="tinyPill">07:15 ص → 09:45 ص (ساعتين ونصف)</div>
-              </div>
+            <!-- جدول الأسبوع الشبكي -->
+            <div class="gridTableWrap">
               <div style="overflow:auto">
-                <table>
-                  <thead>
-                    <tr>
-                      <th style="min-width:110px">اليوم</th>
-                      <th style="min-width:170px">التاريخ</th>
-                      <th style="min-width:220px">الفترة الأولى</th>
-                      <th style="min-width:220px">الفترة الثانية</th>
-                    </tr>
-                  </thead>
-                  <tbody id="schedBody"></tbody>
+                <table class="gridTable" id="weekGridTable" aria-label="جدول الأسبوع">
+                  <colgroup id="weekColGroup"></colgroup>
+                  <thead id="weekHead"></thead>
+                  <tbody id="weekBody"></tbody>
                 </table>
               </div>
             </div>
 
-            <!-- توصيات بشكل ممتع -->
-            <div class="studyWrap">
-              <div class="studyHead">
-                <div class="studyTitle">
-                  <span class="spark">✨</span>
-                  <span>توصيات تربوية للمذاكرة الفعّالة</span>
-                </div>
-                <span class="studyBadge">مختصرة • مؤثرة • عملية</span>
-              </div>
-
-              <div class="studyGrid">
-                <div class="tip" data-c="1">
-                  <div class="tipTop">
-                    <div class="tipH"><span class="dot"></span>ابدأ بخطة يومية</div>
-                    <span class="chip">3 مهام واضحة</span>
-                  </div>
-                  <div class="tipP">حدد يوميًا: <b>مراجعة</b> + <b>حل أسئلة</b> + <b>تلخيص صفحة</b>… وستلاحظ الفرق بسرعة.</div>
-                </div>
-
-                <div class="tip" data-c="2">
-                  <div class="tipTop">
-                    <div class="tipH"><span class="dot"></span>المذاكرة النشطة</div>
-                    <span class="chip">أفضل من التكرار</span>
-                  </div>
-                  <div class="tipP">اقرأ ثم أغلق الكتاب… و<b>استرجع النقاط</b> بصوتك/ورقة؛ هذا يثبت المعلومة أكثر من القراءة المتكررة.</div>
-                </div>
-
-                <div class="tip" data-c="3">
-                  <div class="tipTop">
-                    <div class="tipH"><span class="dot"></span>التكرار المتباعد</div>
-                    <span class="chip">24س → 3أيام → أسبوع</span>
-                  </div>
-                  <div class="tipP">راجع نفس الدرس بعد <b>(24 ساعة)</b> ثم <b>(3 أيام)</b> ثم <b>(أسبوع)</b>… وستحفظ لفترة أطول.</div>
-                </div>
-
-                <div class="tip" data-c="4">
-                  <div class="tipTop">
-                    <div class="tipH"><span class="dot"></span>تدرّب على الاختبار</div>
-                    <span class="chip">وقت محدد</span>
-                  </div>
-                  <div class="tipP">حل نماذج بأسلوب <b>“وقت محدد”</b> ثم راجع الأخطاء فورًا… الأخطاء هي أسرع طريق للتحسن.</div>
-                </div>
-
-                <div class="tip" data-c="6">
-                  <div class="tipTop">
-                    <div class="tipH"><span class="dot"></span>قاعدة 50/10</div>
-                    <span class="chip">بدون جوال</span>
-                  </div>
-                  <div class="tipP"><b>50 دقيقة تركيز</b> + <b>10 دقائق راحة</b> (بدون جوال) لتثبيت التعلم وتقليل التشتت.</div>
-                </div>
-
-                <div class="tip" data-c="7">
-                  <div class="tipTop">
-                    <div class="tipH"><span class="dot"></span>ليلة الاختبار</div>
-                    <span class="chip">خفيفة + ذكية</span>
-                  </div>
-                  <div class="tipP"><b>نوم مبكر</b> + تجهيز الأدوات + مراجعة خفيفة (عناوين/قوانين)… لا ترهق نفسك بالمطوّل.</div>
-                </div>
-
-                <div class="tip wide" data-c="5">
-                  <div class="tipTop">
-                    <div class="tipH"><span class="dot"></span>وقت الاختبار</div>
-                    <span class="chip">آخر 10 دقائق للمراجعة</span>
-                  </div>
-                  <div class="tipP">
-                    اقرأ الأسئلة بهدوء أولًا، وابدأ بالأسهل لتعزيز ثقتك، ثم انتقل للأصعب بتركيز.
-                    خصّص آخر <b>10 دقائق</b> للمراجعة الدقيقة، وانتبه للتعليمات، وراجع إجاباتك من جميع صفحات الورقة <b>(الوجه والخلف)</b>.
-                    <b>ولا تترك أي سؤال دون إجابة</b>… فالتركيز والدقة طريقك للتميز.
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div><!-- /twoCol -->
       </div><!-- /card -->
     </div><!-- /grid -->
   </div>
 
+  <!-- Modal: جدول اليوم -->
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-label="جدول اليوم">
+    <div class="modal">
+      <div class="mHead">
+        <div>
+          <b id="mTitle">📅 جدول اليوم</b>
+          <div class="cellSub" id="mSub" style="color:rgba(11,47,43,.70)">—</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <span class="kbd" id="mMeta">—</span>
+          <button class="btnDanger" id="closeModalBtn">إغلاق ✕</button>
+        </div>
+      </div>
+
+      <div class="mBody">
+        <div id="mBanner" class="banner" style="margin-top:0">—</div>
+
+        <div class="gridTableWrap" style="margin-top:10px">
+          <div style="overflow:auto">
+            <table class="gridTable" aria-label="جدول اليوم بالتوقيت" id="dayGridTable">
+              <colgroup id="dayColGroup"></colgroup>
+              <thead id="dayHead"></thead>
+              <tbody id="dayBodyRows"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="mFoot">
+        <button id="mCopyBtn">📋 نسخ جدول اليوم</button>
+        <button class="btnPrimary" id="mPrintBtn">🖨️ طباعة</button>
+      </div>
+    </div>
+  </div>
+
 <script>
-  const EXAMS = [
-    { dayAr:"الأحد",   hijri:"١٤٤٧-٧-١٥هـ", greg:"2026-01-04",
-      g1:{p1:"الرياضيات",           p2:"الكفايات اللغوية"},
-      g2:{p1:"الرياضيات",           p2:"الكفايات اللغوية"},
-      g3:{p1:"الرياضيات",           p2:"علوم الأرض والفضاء"}
-    },
-    { dayAr:"الاثنين", hijri:"١٤٤٧-٧-١٦هـ", greg:"2026-01-05",
-      g1:{p1:"اللغة الإنجليزية",     p2:"—"},
-      g2:{p1:"اللغة الإنجليزية",     p2:"—"},
-      g3:{p1:"اللغة الإنجليزية",     p2:"—"}
-    },
-    { dayAr:"الثلاثاء",hijri:"١٤٤٧-٧-١٧هـ", greg:"2026-01-06",
-      g1:{p1:"الكيمياء",             p2:"—"},
-      g2:{p1:"الكيمياء",             p2:"—"},
-      g3:{p1:"الكيمياء",             p2:"—"}
-    },
-    { dayAr:"الأربعاء",hijri:"١٤٤٧-٧-١٨هـ", greg:"2026-01-07",
-      g1:{p1:"الأحياء",              p2:"—"},
-      g2:{p1:"الأحياء",              p2:"—"},
-      g3:{p1:"الفيزياء",             p2:"—"}
-    },
-    { dayAr:"الخميس",  hijri:"١٤٤٧-٧-١٩هـ", greg:"2026-01-08",
-      g1:{p1:"الفيزياء",             p2:"—"},
-      g2:{p1:"الفيزياء",             p2:"—"},
-      g3:{p1:"—",                   p2:"—"}
+/* ============================================
+   (A) إعدادات الوقت
+   ============================================ */
+const TERM2_START = new Date("2026-01-18T07:15:00"); // عدّل عند الحاجة
+
+const START_HOUR = 7, START_MIN = 15;
+const PERIOD_MIN = 50;
+const BREAK_AFTER = 3, BREAK_MIN = 25;   // الفسحة بعد الثالثة
+const PRAYER_AFTER = 6, PRAYER_MIN = 15; // الصلاة بعد السادسة (للثاني/الثالث)
+
+/* ============================================
+   (B) بيانات الجداول (مستخرجة كاملة من ملف Excel)
+   ============================================ */
+const TIMETABLES = {"g1": {"اول اول": {"الأحد": ["الرياضيات \nابراهيم الميمني", "الفيزياء \nجميل العلي", "علم البيئة\nحسن العبدالله", "التقنية الرقمية \nناصر الراشد", "المعرفة المالية\nعماد الزهراني", "الكفايات اللغوية \nمحمد التويجري", "الإنجليزية\nاحمد ابوعصيده"], "الاثنين": ["التقنية الرقمية \nناصر الراشد", "علم البيئة\nحسن العبدالله", "الإنجليزية\nاحمد ابوعصيده", "الكفايات اللغوية \nمحمد التويجري", "الرياضيات \nابراهيم الميمني", "الفيزياء \nجميل العلي", "الدراسات الاجتماعية\nعبدالمجيد آل حبشان"], "الثلاثاء": ["الإنجليزية\nاحمد ابوعصيده", "المعرفة المالية\nعماد الزهراني", "التربية المهنية\nحسين المدن", "التربية البدنية\nنبيل القلاف", "الرياضيات \nابراهيم الميمني", "الدراسات الاجتماعية\nعبدالمجيد آل حبشان"], "الأربعاء": ["الرياضيات \nابراهيم الميمني", "التربية المهنية\nحسين المدن", "الدراسات الاجتماعية\nعبدالمجيد آل حبشان", "الحديث\nابراهيم العجلان", "الإنجليزية\nاحمد ابوعصيده", "التربية البدنية\nنبيل القلاف"], "الخميس": ["التقنية الرقمية \nناصر الراشد", "الفيزياء \nجميل العلي", "الكفايات اللغوية \nمحمد التويجري", "الحديث\nابراهيم العجلان", "الرياضيات \nابراهيم الميمني", "الإنجليزية\nاحمد ابوعصيده"]}, "اول ثاني": {"الأحد": ["الإنجليزية\nاحمد ابوعصيده", "المعرفة المالية\nعماد الزهراني", "التقنية الرقمية \nناصر الراشد", "الحديث\nابراهيم العجلان", "الدراسات الاجتماعية\nعبدالمجيد آل حبشان", "الرياضيات \nابراهيم الميمني", "الفيزياء \nجميل العلي"], "الاثنين": ["التربية المهنية\nحسين المدن", "الرياضيات \nابراهيم الميمني", "التقنية الرقمية \nناصر الراشد", "الإنجليزية\nاحمد ابوعصيده", "الحديث\nابراهيم العجلان", "الكفايات اللغوية \nمحمد التويجري", "علم البيئة\nحسن العبدالله"], "الثلاثاء": ["التقنية الرقمية \nناصر الراشد", "الكفايات اللغوية \nمحمد التويجري", "الدراسات الاجتماعية\nعبدالمجيد آل حبشان", "الرياضيات \nابراهيم الميمني", "الفيزياء \nجميل العلي", "الإنجليزية\nاحمد ابوعصيده"], "الأربعاء": ["الإنجليزية\nاحمد ابوعصيده", "الرياضيات \nابراهيم الميمني", "علم البيئة\nحسن العبدالله", "التربية البدنية\nنبيل القلاف", "الدراسات الاجتماعية\nعبدالمجيد آل حبشان", "الكفايات اللغوية \nمحمد التويجري"], "الخميس": ["المعرفة المالية\nعماد الزهراني", "الرياضيات \nابراهيم الميمني", "الإنجليزية\nاحمد ابوعصيده", "التربية المهنية\nحسين المدن", "الفيزياء \nجميل العلي", "التربية البدنية\nنبيل القلاف"]}, "اول ثالث": {"الأحد": ["الحديث\nابراهيم العجلان", "علم البيئة\nحسن العبدالله", "الرياضيات \nابراهيم الميمني", "الدراسات الاجتماعية\nعبدالمجيد آل حبشان", "التربية المهنية\nحسين المدن", "الإنجليزية\nاحمد ابوعصيده", "التربية البدنية\nنبيل القلاف"], "الاثنين": ["الإنجليزية\nاحمد ابوعصيده", "الدراسات الاجتماعية\nعبدالمجيد آل حبشان", "الفيزياء \nجميل العلي", "التقنية الرقمية \nناصر الراشد", "الكفايات اللغوية \nمحمد التويجري", "التربية المهنية\nحسين المدن", "الرياضيات \nابراهيم الميمني"], "الثلاثاء": ["الفيزياء \nجميل العلي", "الرياضيات \nابراهيم الميمني", "المعرفة المالية\nعماد الزهراني", "الإنجليزية\nاحمد ابوعصيده", "التقنية الرقمية \nناصر الراشد", "علم البيئة\nحسن العبدالله"], "الأربعاء": ["الكفايات اللغوية \nمحمد التويجري", "الإنجليزية\nاحمد ابوعصيده", "التقنية الرقمية \nناصر الراشد", "الفيزياء \nجميل العلي", "الرياضيات \nابراهيم الميمني", "الحديث\nابراهيم العجلان"], "الخميس": ["الكفايات اللغوية \nمحمد التويجري", "التربية البدنية\nنبيل القلاف", "الرياضيات \nابراهيم الميمني", "الإنجليزية\nاحمد ابوعصيده", "الدراسات الاجتماعية\nعبدالمجيد آل حبشان", "المعرفة المالية\nعماد الزهراني"]}, "اول رابع": {"الأحد": ["الدراسات الاجتماعية\nعبدالمجيد آل حبشان", "التقنية الرقمية \nناصر الراشد", "الفيزياء \nجميل العلي", "الرياضيات \nابراهيم الميمني", "الإنجليزية\nاحمد ابوعصيده", "التربية المهنية\nحسين المدن", "الحديث\nابراهيم العجلان"], "الاثنين": ["التربية البدنية\nنبيل القلاف", "الإنجليزية\nاحمد ابوعصيده", "الرياضيات \nابراهيم الميمني", "علم البيئة\nحسن العبدالله", "الدراسات الاجتماعية\nعبدالمجيد آل حبشان", "الكفايات اللغوية \nحسين الأحمد", "التربية المهنية\nحسين المدن"], "الثلاثاء": ["الحديث\nابراهيم العجلان", "الإنجليزية\nاحمد ابوعصيده", "الرياضيات \nابراهيم الميمني", "الدراسات الاجتماعية\nعبدالمجيد آل حبشان", "الكفايات اللغوية \nحسين الأحمد", "التقنية الرقمية \nناصر الراشد"], "الأربعاء": ["الفيزياء \nجميل العلي", "علم البيئة\nحسن العبدالله", "التربية البدنية\nنبيل القلاف", "الرياضيات \nابراهيم الميمني", "المعرفة المالية\nعماد الزهراني", "الإنجليزية\nاحمد ابوعصيده"], "الخميس": ["الإنجليزية\nاحمد ابوعصيده", "المعرفة المالية\nعماد الزهراني", "التقنية الرقمية \nناصر الراشد", "الفيزياء \nجميل العلي", "الكفايات اللغوية \nحسين الأحمد", "الرياضيات \nابراهيم الميمني"]}, "اول خامس": {"الأحد": ["الكفايات اللغوية \nحسين الأحمد", "الدراسات الاجتماعية\nعبدالمجيد آل حبشان", "الحديث\nابراهيم العجلان", "الرياضيات \nفيصل الزهراني", "الفيزياء \nجميل العلي", "التربية البدنية\nنبيل القلاف", "الإنجليزية\nمنذر زميع"], "الاثنين": ["الرياضيات \nفيصل الزهراني", "الفيزياء \nجميل العلي", "الكفايات اللغوية \nحسين الأحمد", "التربية البدنية\nنبيل القلاف", "الإنجليزية\nمنذر زميع", "الدراسات الاجتماعية\nعبدالمجيد آل حبشان", "التقنية الرقمية \nناصر الراشد"], "الثلاثاء": ["الإنجليزية\nمنذر زميع", "التربية المهنية\nحسين المدن", "التقنية الرقمية \nناصر الراشد", "علم البيئة\nحسن العبدالله", "الرياضيات \nفيصل الزهراني", "المعرفة المالية\nعماد الزهراني"], "الأربعاء": ["المعرفة المالية\nعماد الزهراني", "الفيزياء \nجميل العلي", "الإنجليزية\nمنذر زميع", "الرياضيات \nفيصل الزهراني", "التربية المهنية\nحسين المدن", "علم البيئة\nحسن العبدالله"], "الخميس": ["الحديث\nابراهيم العجلان", "الرياضيات \nفيصل الزهراني", "الكفايات اللغوية \nحسين الأحمد", "الدراسات الاجتماعية\nعبدالمجيد آل حبشان", "التقنية الرقمية \nناصر الراشد", "الإنجليزية\nمنذر زميع"]}, "اول سادس": {"الأحد": ["التقنية الرقمية \nناصر الراشد", "الرياضيات \nفيصل الزهراني", "التربية المهنية\nحسين المدن", "المعرفة المالية\nعماد الزهراني", "علم البيئة\nحسن العبدالله", "الإنجليزية\nمنذر زميع", "الدراسات الاجتماعية\nيحيى القحطاني"], "الاثنين": ["الكفايات اللغوية \nحسين الأحمد", "الدراسات الاجتماعية\nيحيى القحطاني", "الرياضيات \nفيصل الزهراني", "الإنجليزية\nمنذر زميع", "المعرفة المالية\nعماد الزهراني", "التقنية الرقمية \nناصر الراشد", "الفيزياء \nعبدالرحمن العتيبي"], "الثلاثاء": ["الرياضيات \nفيصل الزهراني", "الحديث\nابراهيم العجلان", "الدراسات الاجتماعية\nيحيى القحطاني", "الفيزياء \nعبدالرحمن العتيبي", "الإنجليزية\nمنذر زميع", "الكفايات اللغوية \nحسين الأحمد"], "الأربعاء": ["الرياضيات \nفيصل الزهراني", "التربية البدنية\nنبيل القلاف", "الكفايات اللغوية \nحسين الأحمد", "التربية المهنية\nحسين المدن", "الإنجليزية\nمنذر زميع", "التقنية الرقمية \nناصر الراشد"], "الخميس": ["الرياضيات \nفيصل الزهراني", "علم البيئة\nحسن العبدالله", "الإنجليزية\nمنذر زميع", "التربية البدنية\nنبيل القلاف", "الحديث\nابراهيم العجلان", "الفيزياء \nعبدالرحمن العتيبي"]}, "اول سابع": {"الأحد": ["الرياضيات \nفيصل الزهراني", "الكفايات اللغوية \nحسين الأحمد", "الفيزياء \nعبدالرحمن العتيبي", "الإنجليزية\nمنذر زميع", "التربية البدنية\nنبيل القلاف", "الحديث\nابراهيم العجلان", "علم البيئة\nحسين القحطاني"], "الاثنين": ["الدراسات الاجتماعية\nيحيى القحطاني", "الإنجليزية\nمنذر زميع", "المعرفة المالية\nعماد الزهراني", "الرياضيات \nفيصل الزهراني", "علم البيئة\nحسين القحطاني", "الحديث\nابراهيم العجلان", "الكفايات اللغوية \nحسين الأحمد"], "الثلاثاء": ["التربية البدنية\nنبيل القلاف", "التقنية الرقمية \nناصر الراشد", "الرياضيات \nفيصل الزهراني", "الإنجليزية\nمنذر زميع", "الفيزياء \nعبدالرحمن العتيبي", "التربية المهنية\nحسين المدن"], "الأربعاء": ["الإنجليزية\nمنذر زميع", "الرياضيات \nفيصل الزهراني", "الفيزياء \nعبدالرحمن العتيبي", "الدراسات الاجتماعية\nيحيى القحطاني", "الكفايات اللغوية \nحسين الأحمد", "التقنية الرقمية \nناصر الراشد"], "الخميس": ["الرياضيات \nفيصل الزهراني", "علم البيئة\nحسين القحطاني", "الإنجليزية\nمنذر زميع", "التربية المهنية\nحسين المدن", "الحديث\nابراهيم العجلان", "الفيزياء \nعبدالرحمن العتيبي"]}}, "g2": {"ثاني اول": {"الأحد": ["الاستثمار\nياسر الصقري", "العربية\nعبدالعزيز الكناني", "الأحياء\nمحمد الشهري", "الانجليزي\nمحمد الزهراني", "الكيمياء\nعادل القاسمي", "التقنية الرقمية\nصالح فقيهي", "الرياضيات\nيوسف الحمد"], "الاثنين": ["الرياضيات\nيوسف الحمد", "الكيمياء\nعادل القاسمي", "الانجليزي\nمحمد الزهراني", "العربية\nعبدالعزيز الكناني", "التقنية الرقمية\nصالح فقيهي", "الاستثمار\nياسر الصقري", "الأحياء\nمحمد الشهري"], "الثلاثاء": ["التقنية الرقمية\nصالح فقيهي", "الرياضيات\nيوسف الحمد", "العربية\nعبدالعزيز الكناني", "الأحياء\nمحمد الشهري", "الكيمياء\nعادل القاسمي", "الانجليزي\nمحمد الزهراني"], "الأربعاء": ["الرياضيات\nيوسف الحمد", "الانجليزي\nمحمد الزهراني", "الاستثمار\nياسر الصقري", "الأحياء\nمحمد الشهري", "العربية\nعبدالعزيز الكناني", "الكيمياء\nعادل القاسمي"], "الخميس": ["الانجليزي\nمحمد الزهراني", "التقنية الرقمية\nصالح فقيهي", "الاستثمار\nياسر الصقري", "الكيمياء\nعادل القاسمي", "الأحياء\nمحمد الشهري", "العربية\nعبدالعزيز الكناني"]}, "ثاني ثاني": {"الأحد": ["التقنية الرقمية\nصالح فقيهي", "الرياضيات\nمحمد داغستاني", "الانجليزي\nمحمد الزهراني", "الاستثمار\nياسر الصقري", "العربية\nعبدالعزيز الكناني", "الأحياء\nمحمد الشهري", "الكيمياء\nعادل القاسمي"], "الاثنين": ["الكيمياء\nعادل القاسمي", "الانجليزي\nمحمد الزهراني", "الاستثمار\nياسر الصقري", "العربية\nعبدالعزيز الكناني", "الأحياء\nمحمد الشهري", "الرياضيات\nمحمد داغستاني", "التقنية الرقمية\nصالح فقيهي"], "الثلاثاء": ["العربية\nعبدالعزيز الكناني", "الأحياء\nمحمد الشهري", "الكيمياء\nعادل القاسمي", "الانجليزي\nمحمد الزهراني", "التقنية الرقمية\nصالح فقيهي", "الرياضيات\nمحمد داغستاني"], "الأربعاء": ["الاستثمار\nياسر الصقري", "التقنية الرقمية\nصالح فقيهي", "الرياضيات\nمحمد داغستاني", "العربية\nعبدالعزيز الكناني", "الأحياء\nمحمد الشهري", "الكيمياء\nعادل القاسمي"], "الخميس": ["الرياضيات\nمحمد داغستاني", "العربية\nعبدالعزيز الكناني", "الانجليزي\nمحمد الزهراني", "التقنية الرقمية\nصالح فقيهي", "الأحياء\nمحمد الشهري", "الكيمياء\nعادل القاسمي"]}, "ثاني ثالث": {"الأحد": ["الأحياء\nمحمد الشهري", "العربية\nعبدالعزيز الكناني", "الاستثمار\nياسر الصقري", "التقنية الرقمية\nصالح فقيهي", "الرياضيات\nمحمد داغستاني", "الكيمياء\nعادل القاسمي", "الانجليزي\nمحمد الزهراني"], "الاثنين": ["الانجليزي\nمحمد الزهراني", "الرياضيات\nمحمد داغستاني", "الأحياء\nمحمد الشهري", "العربية\nعبدالعزيز الكناني", "الكيمياء\nعادل القاسمي", "التقنية الرقمية\nصالح فقيهي", "الاستثمار\nياسر الصقري"], "الثلاثاء": ["الكيمياء\nعادل القاسمي", "الانجليزي\nمحمد الزهراني", "الرياضيات\nمحمد داغستاني", "الأحياء\nمحمد الشهري", "العربية\nعبدالعزيز الكناني", "الاستثمار\nياسر الصقري"], "الأربعاء": ["التقنية الرقمية\nصالح فقيهي", "الكيمياء\nعادل القاسمي", "الانجليزي\nمحمد الزهراني", "الاستثمار\nياسر الصقري", "العربية\nعبدالعزيز الكناني", "الأحياء\nمحمد الشهري"], "الخميس": ["العربية\nعبدالعزيز الكناني", "الأحياء\nمحمد الشهري", "الكيمياء\nعادل القاسمي", "الرياضيات\nمحمد داغستاني", "التقنية الرقمية\nصالح فقيهي", "الانجليزي\nمحمد الزهراني"]}, "ثاني رابع": {"الأحد": ["الانجليزي\nمحمد الزهراني", "الاستثمار\nياسر الصقري", "التقنية الرقمية\nصالح فقيهي", "الرياضيات\nيوسف الحمد", "العربية\nعبدالعزيز الكناني", "الأحياء\nمحمد الشهري", "الكيمياء\nعادل القاسمي"], "الاثنين": ["الكيمياء\nعادل القاسمي", "الانجليزي\nمحمد الزهراني", "الرياضيات\nيوسف الحمد", "الأحياء\nمحمد الشهري", "العربية\nعبدالعزيز الكناني", "الاستثمار\nياسر الصقري", "التقنية الرقمية\nصالح فقيهي"], "الثلاثاء": ["العربية\nعبدالعزيز الكناني", "الأحياء\nمحمد الشهري", "الكيمياء\nعادل القاسمي", "الرياضيات\nيوسف الحمد", "التقنية الرقمية\nصالح فقيهي", "الانجليزي\nمحمد الزهراني"], "الأربعاء": ["الاستثمار\nياسر الصقري", "التقنية الرقمية\nصالح فقيهي", "الانجليزي\nمحمد الزهراني", "العربية\nعبدالعزيز الكناني", "الكيمياء\nعادل القاسمي", "الأحياء\nمحمد الشهري"], "الخميس": ["التقنية الرقمية\nصالح فقيهي", "الرياضيات\nيوسف الحمد", "العربية\nعبدالعزيز الكناني", "الانجليزي\nمحمد الزهراني", "الأحياء\nمحمد الشهري", "الكيمياء\nعادل القاسمي"]}, "ثاني خامس": {"الأحد": ["العربية\nعبدالعزيز الكناني", "الأحياء\nمحمد الشهري", "الانجليزي\nمحمد الزهراني", "الاستثمار\nياسر الصقري", "التقنية الرقمية\nصالح فقيهي", "الرياضيات\nيوسف الحمد", "الكيمياء\nعادل القاسمي"], "الاثنين": ["الرياضيات\nيوسف الحمد", "الكيمياء\nعادل القاسمي", "العربية\nعبدالعزيز الكناني", "الأحياء\nمحمد الشهري", "الانجليزي\nمحمد الزهراني", "الاستثمار\nياسر الصقري", "التقنية الرقمية\nصالح فقيهي"], "الثلاثاء": ["التقنية الرقمية\nصالح فقيهي", "الاستثمار\nياسر الصقري", "الرياضيات\nيوسف الحمد", "الكيمياء\nعادل القاسمي", "العربية\nعبدالعزيز الكناني", "الانجليزي\nمحمد الزهراني"], "الأربعاء": ["الكيمياء\nعادل القاسمي", "الانجليزي\nمحمد الزهراني", "الاستثمار\nياسر الصقري", "التقنية الرقمية\nصالح فقيهي", "الأحياء\nمحمد الشهري", "العربية\nعبدالعزيز الكناني"], "الخميس": ["الانجليزي\nمحمد الزهرani", "التقنية الرقمية\nصالح فقيهي", "الاستثمار\nياسر الصقري", "الرياضيات\nيوسف الحمد", "الأحياء\nمحمد الشهري", "الكيمياء\nعادل القاسمي"]}}, "g3": {"ثالث اول": {"الأحد": ["الدراسات الأدبية\nيوسف العيد", "الرقمية\nخالد  المرضي", "الأرض والفضاء\nعلي الاحمري", "التطبيقات \nيوسف العريفي", "رياضيات\nعبدالله الادريسي", "فيزياء\nموسى عسيري", "انجليزي\nابراهيم الربيع"], "الاثنين": ["فيزياء\nموسى عسيري", "التطبيقات \nيوسف العريفي", "الدراسات الأدبية\nيوسف العيد", "الأرض والفضاء\nعلي الاحمري", "انجليزي\nابراهيم الربيع", "رياضيات\nعبدالله الادريسي", "الرقمية\nخالد  المرضي"], "الثلاثاء": ["الرقمية\nخالد  المرضي", "فيزياء\nموسى عسيري", "التطبيقات \nيوسف العريفي", "الدراسات الأدبية\nيوسف العيد", "رياضيات\nعبدالله الادريسي", "انجليزي\nابراهيم الربيع"], "الأربعاء": ["التطبيقات \nيوسف العريفي", "الدراسات الأدبية\nيوسف العيد", "الرقمية\nخالد  المرضي", "انجليزي\nابراهيم الربيع", "الأرض والفضاء\nعلي الاحمري", "فيزياء\nموسى عسيري"], "الخميس": ["فيزياء\nموسى عسيري", "الرقمية\nخالد  المرضي", "الأرض والفضاء\nعلي الاحmri", "رياضيات\nعبدالله الادريسي", "الدراسات الأدبية\nيوسف العيد", "انجليزي\nابراهيم الربيع"]}, "ثالث ثاني": {"الأحد": ["فيزياء\nموسى عسيري", "انجليزي\nابراهيم الربيع", "الرقمية\nخالد  المرضي", "الدراسات الأدبية\nيوسف العيد", "الأرض والفضاء\nعلي الاحmri", "رياضيات\nعبدالله الادريسي", "التطبيقات \nيوسف العريفي"], "الاثنين": ["الدراسات الأدبية\nيوسف العيد", "التطبيقات \nيوسف العريفي", "فيزياء\nموسى عسيري", "الرقمية\nخالد  المرضي", "انجليزي\nابراهيم الربيع", "الأرض والفضاء\nعلي الاحmri", "رياضيات\nعبدالله الادريسي"], "الثلاثاء": ["رياضيات\nعبدالله الادريسي", "الدراسات الأدبية\nيوسف العيد", "فيزياء\nموسى عسيري", "التطبيقات \nيوسف العريفي", "الرقمية\nخالد  المرضي", "انجليزي\nابراهيم الربيع"], "الأربعاء": ["انجليزي\nابراهيم الربيع", "الأرض والفضاء\nعلي الاحmri", "رياضيات\nعبدالله الادriسي", "الدراسات الأدبية\nيوسف العid", "التطبيقات \nيوسف العريفي", "فيزياء\nموسى عسiri"], "الخميس": ["التطبيقات \nيوسف العريفي", "فيزياء\nموسى عسiri", "الرقمية\nخالد  المرضي", "الأرض والفضاء\nعلي الاحmri", "الدراسات الأدبية\nيوسف العid", "انجليزي\nابراهيم الربيع"]}, "ثالث ثالث": {"الأحد": ["الرقمية\nخالد  المرضي", "الأرض والفضاء\nعلي الاحmri", "فيزياء\nموسى عسiri", "انجليزي\nابراهيم الربيع", "الدراسات الأدبية\nيوسف العid", "رياضيات\nعبدالله الادriسي", "التطبيقات \nيوسف العريفي"], "الاثنين": ["التطبيقات \nيوسف العريفي", "فيزياء\nموسى عسiri", "رياضيات\nعبدالله الادriسي", "الرقمية\nخالد  المرضي", "الأرض والفضاء\nعلي الاحmri", "الدراسات الأدبية\nيوسف العid", "انجليزي\nابراهيم الربيع"], "الثلاثاء": ["فيزياء\nموسى عسiri", "التطبيقات \nيوسف العريفي", "الدراسات الأدبية\nيوسف العid", "الرقمية\nخالد  المرضي", "انجليزي\nابراهيم الربيع", "رياضيات\nعبدالله الادriسي"], "الأربعاء": ["الدراسات الأدبية\nيوسف العid", "رياضيات\nعبدالله الادriسي", "الأرض والفضاء\nعلي الاحmri", "التطبيقات \nيوسف العريفي", "فيزياء\nموسى عسiri", "انجليزي\nابراهيم الربيع"], "الخميس": ["انجليزي\nابراهيم الربيع", "الرقمية\nخالد  المرضي", "التطبيقات \nيوسف العريفي", "الأرض والفضاء\nعلي الاحmri", "الدراسات الأدبية\nيوسف العid", "فيزياء\nموسى عسiri"]}, "ثالث رابع": {"الأحد": ["انجليزي\nابراهيم الربيع", "الرقمية\nخالد  المرضي", "الدراسات الأدبية\nيوسف العid", "التطبيقات \nيوسف العريفي", "فيزياء\nموسى عسiri", "الأرض والفضاء\nعلي الاحmri", "رياضيات\nعبدالله الادriسي"], "الاثنين": ["فيزياء\nموسى عسiri", "الأرض والفضاء\nعلي الاحmri", "انجليزي\nابراهيم الربيع", "الدراسات الأدبية\nيوسف العid", "رياضيات\nعبدالله الادriسي", "التطبيقات \nيوسف العريفي", "الرقمية\nخالد  المرضي"], "الثلاثاء": ["التطبيقات \nيوسف العريفي", "الرقمية\nخالد  المرضي", "فيزياء\nموسى عسiri", "الأرض والفضاء\nعلي الاحmri", "انجليزي\nابراهيم الربيع", "رياضيات\nعبدالله الادriسي"], "الأربعاء": ["الرقمية\nخالد  المرضي", "التطبيقات \nيوسف العريفي", "الدراسات الأدبية\nيوسف العid", "فيزياء\nموسى عسiri", "الأرض والفضاء\nعلي الاحmri", "انجليزي\nابراهيم الربيع"], "الخميس": ["فيزياء\nموسى عسiri", "الرقمية\nخالد  المرضي", "الأرض والفضاء\nعلي الاحmri", "رياضيات\nعبدالله الادriسي", "الدراسات الأدبية\nيوسف العid", "انجليزي\nابراهيم الربيع"]}, "ثالث خامس": {"الأحد": ["الدراسات الأدبية\nيوسف العid", "الرقمية\nخالد  المرضي", "الأرض والفضاء\nعلي الاحmri", "التطبيقات \nيوسف العريفي", "رياضيات\nعبدالله الادriسي", "فيزياء\nموسى عسiri", "انجليزي\nابراهيم الربيع"], "الاثنين": ["فيزياء\nموسى عسiri", "التطبيقات \nيوسف العريفي", "الدراسات الأدبية\nيوسف العid", "الأرض والفضاء\nعلي الاحmri", "انجليزي\nابراهيم الربيع", "رياضيات\nعبدالله الادriسي", "الرقمية\nخالد  المرضي"], "الثلاثاء": ["الرقمية\nخالد  المرضي", "فيزياء\nموسى عسiri", "التطبيقات \nيوسف العريفي", "الدراسات الأدبية\nيوسف العid", "رياضيات\nعبدالله الادriسي", "انجليزي\nابراهيم الربيع"], "الأربعاء": ["التطبيقات \nيوسف العريفي", "الدراسات الأدبية\nيوسف العid", "الرقمية\nخالد  المرضي", "انجليزي\nابراهيم الربيع", "الأرض والفضاء\nعلي الاحmri", "فيزياء\nموسى عسiri"], "الخميس": ["فيزياء\nموسى عسiri", "الرقمية\nخالد  المرضي", "الأرض والفضاء\nعلي الاحmri", "رياضيات\nعبدالله الادriسي", "الدراسات الأدبية\nيوسف العid", "انجليزي\nابراهيم الربيع"]}}};
+
+/* ============================================
+   (C) أدوات مساعدة
+   ============================================ */
+const DAYS = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس"];
+const GRADE_NAME = {g1:"الأول ثانوي", g2:"الثاني ثانوي", g3:"الثالث ثانوي"};
+
+const $ = (id)=>document.getElementById(id);
+
+function norm(t){
+  if(t===null || t===undefined || t==="") return "—";
+  return String(t).replace(/\s+/g," ").trim();
+}
+
+function isSchoolDay(d){
+  // 0 الأحد ... 6 السبت
+  const wd = d.getDay();
+  return (wd>=0 && wd<=4); // الأحد-الخميس
+}
+
+function dayNameAr(d){
+  const map = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+  return map[d.getDay()];
+}
+
+function fmtTime(date){
+  const h = date.getHours();
+  const m = String(date.getMinutes()).padStart(2,"0");
+  const am = (h<12) ? "ص" : "م";
+  const hh = ((h+11)%12+1);
+  return `${hh}:${m} ${am}`;
+}
+
+function hijriToday(){
+  try{
+    const f = new Intl.DateTimeFormat("ar-SA-u-ca-islamic-umalqura",{day:"2-digit",month:"long",year:"numeric"});
+    return f.format(new Date());
+  }catch(e){
+    return "—";
+  }
+}
+
+/* ============================================
+   (D) شريطين متحركين (أعلى/أسفل)
+   ============================================ */
+const TOP_TICKS = [
+  "الانضباط يبدأ من الحضور المبكر والاستعداد للحصة الأولى 07:15 ص",
+  "إحضار الكتب والأدوات كاملة يرفع التركيز ويقلل التأخر داخل الحصة",
+  "الهدوء في الممرات والفصول جزء من بيئة تعلم إيجابية للجميع",
+  "الفسحة وقت منظم: التزام بالنظافة والعودة فور انتهاء الوقت",
+  "الصلاة (للثاني/الثالث بعد السادسة): التزام بالوقت والعودة مباشرة",
+  "تجنب استخدام الجوال داخل الحصة يرفع التحصيل ويزيد جودة المشاركة"
+];
+
+const BOTTOM_TICKS = [
+  "هدف يومي: متابعة شرح + حل واجب + مراجعة سريعة",
+  "جهّز حقيبتك ليلةً لتبدأ يومك بثقة وبدون توتر",
+  "لا تؤجل واجب اليوم: أنجزه وسجل نقاط عدم الفهم للسؤال عنها",
+  "ابدأ بالأهم ثم المهم: إدارة وقتك مهارة نجاح",
+  "النوم المبكر يرفع الانتباه ويقلل التأخر الصباحي",
+  "التركيز داخل الحصة أهم من طول المذاكرة بعد المدرسة"
+];
+
+function buildTicker(elRun, items){
+  const twice = items.concat(items); // تكرار لنعومة الحركة
+  elRun.innerHTML = twice.map(t=>`
+    <span class="tickItem"><span class="tickDot"></span>${t}</span>
+  `).join("");
+}
+
+/* ============================================
+   (E) بناء “حصص اليوم” (تتضمن الفسحة/الصلاة كحصة)
+   ============================================ */
+function slotLabels(grade){
+  // 7 حصص + فسحة بعد 3 + صلاة بعد 6 (للثاني/الثالث)
+  if(grade==="g2" || grade==="g3"){
+    return ["الحصة 1","الحصة 2","الحصة 3","الفسحة","الحصة 4","الحصة 5","الحصة 6","الصلاة","الحصة 7"];
+  }
+  return ["الحصة 1","الحصة 2","الحصة 3","الفسحة","الحصة 4","الحصة 5","الحصة 6","الحصة 7"];
+}
+
+function buildTimeline(grade){
+  const slots = [];
+  let t = new Date();
+  t.setHours(START_HOUR, START_MIN, 0, 0);
+
+  // 1-3
+  for(let i=1;i<=3;i++){
+    const s = new Date(t);
+    t = new Date(t.getTime() + PERIOD_MIN*60000);
+    slots.push({type:"class", period:i, label:`الحصة ${i}`, start:s, end:new Date(t)});
+  }
+  // break
+  {
+    const s = new Date(t);
+    t = new Date(t.getTime() + BREAK_MIN*60000);
+    slots.push({type:"break", label:"الفسحة", start:s, end:new Date(t)});
+  }
+  // 4-6
+  for(let i=4;i<=6;i++){
+    const s = new Date(t);
+    t = new Date(t.getTime() + PERIOD_MIN*60000);
+    slots.push({type:"class", period:i, label:`الحصة ${i}`, start:s, end:new Date(t)});
+  }
+  // prayer for g2/g3
+  if(grade==="g2" || grade==="g3"){
+    const s = new Date(t);
+    t = new Date(t.getTime() + PRAYER_MIN*60000);
+    slots.push({type:"pray", label:"الصلاة", start:s, end:new Date(t)});
+  }
+  // 7
+  {
+    const s = new Date(t);
+    t = new Date(t.getTime() + PERIOD_MIN*60000);
+    slots.push({type:"class", period:7, label:"الحصة 7", start:s, end:new Date(t)});
+  }
+  return slots;
+}
+
+function currentSlot(grade, now=new Date()){
+  if(!isSchoolDay(now)) return {type:"off", label:"لا توجد حصص اليوم"};
+  const dn = dayNameAr(now);
+  if(!DAYS.includes(dn)) return {type:"off", label:"لا توجد حصص اليوم"};
+
+  const slots = buildTimeline(grade);
+  // اضبط تواريخ slots لليوم الحالي
+  for(const s of slots){
+    const start = new Date(now); start.setHours(s.start.getHours(), s.start.getMinutes(), 0, 0);
+    const end = new Date(now); end.setHours(s.end.getHours(), s.end.getMinutes(), 0, 0);
+    s.start = start; s.end = end;
+  }
+  for(const s of slots){
+    if(now>=s.start && now<s.end) return s;
+  }
+  // قبل بداية اليوم
+  const first = slots[0];
+  if(now < first.start) return {type:"pre", label:"قبل بداية الحصة الأولى", start:first.start};
+  // بعد نهاية اليوم
+  return {type:"off", label:"انتهت الحصص اليوم"};
+}
+
+/* ============================================
+   (F) بناء جدول أسبوع شبكي (ضمن الصفحة)
+   ============================================ */
+function padTo7(arr){
+  const out = Array.isArray(arr)? arr.slice(0) : [];
+  while(out.length<7) out.push("—");
+  return out.slice(0,7);
+}
+
+function buildWeekGrid(grade, section){
+  const tbl = $("weekGridTable");
+  const colG = $("weekColGroup");
+  const thead = $("weekHead");
+  const tbody = $("weekBody");
+
+  const labels = slotLabels(grade);
+
+  // colgroup
+  colG.innerHTML = "";
+  const dayW = document.createElement("col");
+  dayW.style.width = "92px";
+  colG.appendChild(dayW);
+  for(let i=0;i<labels.length;i++){
+    const c = document.createElement("col");
+    c.style.width = `${Math.floor((1000)/labels.length)}px`;
+    colG.appendChild(c);
+  }
+
+  // head
+  thead.innerHTML = `
+    <tr>
+      <th style="min-width:92px">اليوم</th>
+      ${labels.map(l=>`<th>${l}</th>`).join("")}
+    </tr>
+  `;
+
+  const data = (TIMETABLES[grade] && TIMETABLES[grade][section]) ? TIMETABLES[grade][section] : null;
+  tbody.innerHTML = "";
+
+  for(const day of DAYS){
+    const periods7 = padTo7(data && data[day] ? data[day].map(norm) : []);
+    const slots = [];
+
+    // 1-3
+    slots.push(periods7[0], periods7[1], periods7[2]);
+
+    // break slot
+    slots.push("فسحة");
+
+    // 4-6
+    slots.push(periods7[3], periods7[4], periods7[5]);
+
+    // prayer for g2/g3
+    if(grade==="g2" || grade==="g3"){
+      slots.push("صلاة");
     }
-  ];
 
-  // وقت الاختبار
-  const EXAM_START_HOUR = 7, EXAM_START_MIN = 15;
-  const EXAM_DURATION_MIN = 150;
+    // 7
+    slots.push(periods7[6]);
 
-  const $ = (id)=>document.getElementById(id);
-
-  // ====== جدول الاختبارات ======
-  let activeGrade = "g1";
-
-  function fmtGreg(iso){
-    const d = new Date(iso+"T00:00:00");
-    const y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,"0"), dd = String(d.getDate()).padStart(2,"0");
-    return `${y}-${m}-${dd}`;
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td class="dayCell">${day}</td>
+      ${slots.map((v,idx)=>{
+        if(v==="فسحة"){
+          return `<td><span class="cellLabel">الفسحة</span><span class="cellMeta break">25 دقيقة</span></td>`;
+        }
+        if(v==="صلاة"){
+          return `<td><span class="cellLabel">الصلاة</span><span class="cellMeta pray">15 دقيقة</span></td>`;
+        }
+        const clean = norm(v);
+        const isEmpty = (clean==="—");
+        return `
+          <td>
+            <span class="cellLabel">${isEmpty?"—":clean}</span>
+            <span class="cellSub">${isEmpty?"":""}</span>
+          </td>
+        `;
+      }).join("")}
+    `;
+    tbody.appendChild(tr);
   }
-  function toDateKey(d){
-    const y = d.getFullYear();
-    const m = String(d.getMonth()+1).padStart(2,"0");
-    const dd = String(d.getDate()).padStart(2,"0");
-    return `${y}-${m}-${dd}`;
-  }
+}
 
-  function renderSchedule(){
-    const tbody = $("schedBody");
-    tbody.innerHTML = EXAMS.map(r=>{
-      const g = r[activeGrade] || {p1:"—",p2:"—"};
-      return `
-        <tr data-greg="${r.greg}">
-          <td>${r.dayAr}</td>
-          <td><div><b>${r.hijri}</b></div><div class="muted">${fmtGreg(r.greg)}</div></td>
-          <td>${g.p1 || "—"}</td>
-          <td>${g.p2 || "—"}</td>
-        </tr>
-      `;
-    }).join("");
+/* ============================================
+   (G) جدول اليوم في نافذة (مع التوقيت)
+   ============================================ */
+function subjectForPeriod(grade, section, day, period){
+  const data = TIMETABLES[grade]?.[section]?.[day];
+  if(!data) return "—";
+  const p7 = padTo7(data.map(norm));
+  return p7[period-1] || "—";
+}
 
-    // تمييز الغد/القادم
-    const today = new Date();
-    const tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate()+1);
-    const tKey = toDateKey(tomorrow);
+function buildDayGrid(grade, section){
+  const colG = $("dayColGroup");
+  const thead = $("dayHead");
+  const tbody = $("dayBodyRows");
 
-    const rows = [...tbody.querySelectorAll("tr")];
-    rows.forEach(tr=>tr.classList.remove("soon"));
+  const labels = slotLabels(grade);
 
-    let target = rows.find(tr => tr.getAttribute("data-greg") === tKey);
-    if(!target){
-      const nowKey = toDateKey(today);
-      target = rows.find(tr => tr.getAttribute("data-greg") >= nowKey) || rows[0];
-    }
-
-    if(target){
-      target.classList.add("soon");
-      const greg = target.getAttribute("data-greg");
-      const day = target.children[0].textContent.trim();
-      const hijri = target.querySelector("td:nth-child(2) b")?.textContent?.trim() || "";
-      const p1 = target.children[2].textContent.trim();
-      const p2 = target.children[3].textContent.trim();
-
-      const banner = $("banner");
-      const isTomorrow = (greg === tKey);
-      const head = isTomorrow ? "غداً الاختبار" : "الاختبار القادم";
-      const subjects = [p1, p2].filter(x => x && x !== "—").join(" + ") || "—";
-      banner.style.display = "block";
-      banner.innerHTML = `${head}: <b>${subjects}</b>
-        <small>${day} — ${hijri} — ${fmtGreg(greg)} (07:15 ص → 09:45 ص)</small>`;
-    }
-  }
-
-  function setActiveGrade(g){
-    activeGrade = g;
-    document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active", b.dataset.grade === g));
-    renderSchedule();
-    updateCountdown();
-  }
-
-  document.querySelectorAll(".tab").forEach(btn=>{
-    btn.addEventListener("click", ()=> setActiveGrade(btn.dataset.grade));
+  colG.innerHTML = "";
+  ["110px","160px","auto","170px"].forEach(w=>{
+    const c=document.createElement("col"); c.style.width=w; colG.appendChild(c);
   });
 
-  renderSchedule();
+  thead.innerHTML = `
+    <tr>
+      <th>الحصة</th>
+      <th>الوقت</th>
+      <th>المادة • المعلم</th>
+      <th>تنبيه</th>
+    </tr>
+  `;
 
-  // ====== العدّاد ======
-  function parseGregToLocalDate(greg){
-    const [y,m,d] = greg.split("-").map(Number);
-    return new Date(y, m-1, d);
-  }
-  function addMinutes(dt, mins){ return new Date(dt.getTime() + mins*60000); }
-  function pad2(n){ return String(n).padStart(2,"0"); }
+  const now = new Date();
+  const day = dayNameAr(now);
+  const isWork = DAYS.includes(day);
 
-  function getNextExamWindow(now){
-    const windows = EXAMS.map(r=>{
-      const base = parseGregToLocalDate(r.greg);
-      const start = new Date(base.getFullYear(), base.getMonth(), base.getDate(), EXAM_START_HOUR, EXAM_START_MIN, 0, 0);
-      const end = addMinutes(start, EXAM_DURATION_MIN);
-      return {row:r, start, end};
-    }).sort((a,b)=> a.start - b.start);
+  const slots = buildTimeline(grade);
+  // اضبط تواريخ slots لليوم الحالي (للوقت فقط)
+  slots.forEach(s=>{
+    const ss = new Date(now); ss.setHours(s.start.getHours(), s.start.getMinutes(), 0, 0);
+    const ee = new Date(now); ee.setHours(s.end.getHours(), s.end.getMinutes(), 0, 0);
+    s.start=ss; s.end=ee;
+  });
 
-    const inNow = windows.find(w => now >= w.start && now < w.end);
-    if(inNow) return inNow;
+  tbody.innerHTML = "";
 
-    const upcoming = windows.find(w => now < w.start);
-    if(upcoming) return upcoming;
+  for(const s of slots){
+    let subj = "—";
+    let note = "—";
+    let pillClass = "";
 
-    return windows[windows.length-1] || null;
-  }
-
-  function setTimerUI(title, note, diffMs, totalMs, mode){
-    $("countTitle").textContent = title;
-    $("countNote").textContent = note;
-
-    if(diffMs <= 0){
-      $("tDays").textContent="00"; $("tHours").textContent="00"; $("tMins").textContent="00"; $("tSecs").textContent="00";
-      $("tBar").style.width = "100%";
-      return;
+    if(s.type==="break"){
+      subj = "فسحة";
+      note = "التزام بالنظام والعودة مباشرة";
+      pillClass = "break";
+    }else if(s.type==="pray"){
+      subj = "صلاة";
+      note = "الالتزام بالوقت ثم العودة للفصل";
+      pillClass = "pray";
+    }else if(s.type==="class"){
+      subj = isWork ? subjectForPeriod(grade, section, day, s.period) : "—";
+      note = (subj==="—") ? "لا توجد مادة مسجلة" : "استعداد مبكر ودفتر جاهز";
+      pillClass = "live";
     }
 
-    const totalSec = Math.floor(diffMs/1000);
-    const days = Math.floor(totalSec / 86400);
-    const hours = Math.floor((totalSec % 86400) / 3600);
-    const mins  = Math.floor((totalSec % 3600) / 60);
-    const secs  = totalSec % 60;
-
-    $("tDays").textContent  = pad2(days);
-    $("tHours").textContent = pad2(hours);
-    $("tMins").textContent  = pad2(mins);
-    $("tSecs").textContent  = pad2(secs);
-
-    let pct = 0;
-    if(mode === "toEnd"){
-      pct = Math.max(0, Math.min(100, Math.round(((totalMs - diffMs) / totalMs) * 100)));
-    }else{
-      const win = 24*60*60000;
-      const clamped = Math.max(0, Math.min(win, diffMs));
-      pct = 100 - Math.round((clamped / win) * 100);
-      pct = Math.max(0, Math.min(100, pct));
-    }
-    $("tBar").style.width = pct + "%";
+    tbody.innerHTML += `
+      <tr>
+        <td class="dayCell">${s.label}</td>
+        <td><span class="cellLabel">${fmtTime(s.start)} - ${fmtTime(s.end)}</span></td>
+        <td><span class="cellLabel">${norm(subj)}</span></td>
+        <td><span class="cellMeta ${pillClass}">${note}</span></td>
+      </tr>
+    `;
   }
 
-  function updateCountdown(){
+  return {day, slots};
+}
+
+/* ============================================
+   (H) الحصة المباشرة الآن (جميع الشعب)
+   ============================================ */
+function liveAll(){
+  const grid = $("liveGrid");
+  const meta = $("liveMeta");
+  const now = new Date();
+  const day = dayNameAr(now);
+
+  meta.textContent = `${day} • ${fmtTime(now)} • ${hijriToday()}`;
+
+  const cards = [];
+  for(const grade of Object.keys(TIMETABLES)){
+    const sections = Object.keys(TIMETABLES[grade]||{});
+    for(const sec of sections){
+      const cs = currentSlot(grade, now);
+
+      let slotLabel = cs.label;
+      let slotClass = "";
+      let subj = "—";
+      let timeTxt = "";
+
+      if(cs.type==="class"){
+        subj = subjectForPeriod(grade, sec, day, cs.period);
+        timeTxt = `${fmtTime(cs.start)} - ${fmtTime(cs.end)}`;
+        slotClass = "live";
+      }else if(cs.type==="break"){
+        subj = "فسحة";
+        timeTxt = `${fmtTime(cs.start)} - ${fmtTime(cs.end)}`;
+        slotClass = "break";
+      }else if(cs.type==="pray"){
+        subj = "صلاة";
+        timeTxt = `${fmtTime(cs.start)} - ${fmtTime(cs.end)}`;
+        slotClass = "pray";
+      }else if(cs.type==="pre"){
+        subj = "استعداد";
+        timeTxt = `بداية الحصة الأولى: ${fmtTime(cs.start)}`;
+        slotClass = "";
+      }else{
+        subj = "—";
+        timeTxt = "—";
+        slotClass = "off";
+        slotLabel = "خارج وقت الحصص";
+      }
+
+      cards.push(`
+        <div class="liveCard">
+          <div class="liveTop">
+            <div class="liveCls">${GRADE_NAME[grade]} • ${sec}</div>
+            <div class="liveSlot ${slotClass}">${slotLabel}</div>
+          </div>
+          <div class="liveSubj">${norm(subj)}</div>
+          <div class="liveTime">${timeTxt}</div>
+        </div>
+      `);
+    }
+  }
+  grid.innerHTML = cards.join("");
+}
+
+/* ============================================
+   (I) العدّاد
+   ============================================ */
+function startCountdown(){
+  const bar = $("tBar");
+  function tick(){
     const now = new Date();
-    const w = getNextExamWindow(now);
-    if(!w){
-      setTimerUI("⏳ العدّاد", "لا يوجد جدول اختبارات لعرضه.", 0, 1, "done");
-      return;
-    }
+    const diff = TERM2_START - now;
 
-    const {row, start, end} = w;
-    const dayLabel = row.dayAr + " — " + row.hijri + " — " + fmtGreg(row.greg);
+    const total = Math.max(0, diff);
+    const sec = Math.floor(total/1000)%60;
+    const min = Math.floor(total/60000)%60;
+    const hr  = Math.floor(total/3600000)%24;
+    const day = Math.floor(total/86400000);
 
-    if(now < start){
-      setTimerUI("⏳ متبقي على بداية الاختبار", `موعد الاختبار: ${dayLabel} (07:15 ص)`, (start-now), 1, "toStart");
-      return;
-    }
+    $("tDays").textContent = String(day).padStart(2,"0");
+    $("tHours").textContent = String(hr).padStart(2,"0");
+    $("tMins").textContent = String(min).padStart(2,"0");
+    $("tSecs").textContent = String(sec).padStart(2,"0");
 
-    if(now >= start && now < end){
-      setTimerUI("⏱️ الاختبار جارٍ الآن — متبقي على النهاية", "ينتهي الاختبار اليوم عند 09:45 ص (مدة ساعتين ونصف)", (end-now), (end-start), "toEnd");
-      return;
-    }
+    // شريط تقديري (آخر 30 يوم)
+    const spanDays = 30;
+    const pct = Math.min(100, Math.max(0, 100 - (day/spanDays)*100));
+    bar.style.width = pct.toFixed(1)+"%";
 
-    const upcoming = EXAMS
-      .map(r=>{
-        const base = parseGregToLocalDate(r.greg);
-        const s = new Date(base.getFullYear(), base.getMonth(), base.getDate(), EXAM_START_HOUR, EXAM_START_MIN, 0, 0);
-        return {row:r, start:s};
-      })
-      .filter(x => x.start > now)
-      .sort((a,b)=>a.start-b.start)[0];
+    $("todayHijriPill").textContent = hijriToday();
+  }
+  tick();
+  setInterval(tick, 1000);
+}
 
-    if(upcoming){
-      const dLabel = upcoming.row.dayAr + " — " + upcoming.row.hijri + " — " + fmtGreg(upcoming.row.greg);
-      setTimerUI("✅ انتهى اختبار اليوم — التالي قريباً", `الاختبار القادم: ${dLabel} (07:15 ص)`, (upcoming.start-now), 1, "toStart");
-    }else{
-      setTimerUI("✅ انتهت فترة الاختبارات", "لا توجد اختبارات قادمة في الجدول الحالي.", 0, 1, "done");
-    }
+/* ============================================
+   (J) التحكم (مرحلة/شعبة)
+   ============================================ */
+let activeGrade = "g1";
+let activeSection = "";
+
+function fillSections(){
+  const sel = $("sectionSelect");
+  const chips = $("sectionChips");
+  const secs = Object.keys(TIMETABLES[activeGrade]||{});
+
+  sel.innerHTML = secs.map(s=>`<option value="${s}">${s}</option>`).join("");
+  activeSection = secs[0] || "";
+  sel.value = activeSection;
+
+  chips.innerHTML = secs.map((s,i)=>`
+    <button class="chipBtn ${i===0?'active':''}" data-sec="${s}">${s}</button>
+  `).join("");
+
+  chips.querySelectorAll(".chipBtn").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      chips.querySelectorAll(".chipBtn").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      activeSection = btn.dataset.sec;
+      sel.value = activeSection;
+      refreshAll();
+    });
+  });
+
+  sel.addEventListener("change", ()=>{
+    activeSection = sel.value;
+    chips.querySelectorAll(".chipBtn").forEach(b=>b.classList.toggle("active", b.dataset.sec===activeSection));
+    refreshAll();
+  });
+}
+
+function refreshBanner(){
+  const now = new Date();
+  const dn = dayNameAr(now);
+  const hij = hijriToday();
+  const isWork = DAYS.includes(dn);
+
+  $("summaryPill").textContent = `${dn} • ${hij}`;
+  $("smartBanner").innerHTML = `
+    ${GRADE_NAME[activeGrade]} • <b>${activeSection}</b><br>
+    <small>${isWork ? `اليوم: ${dn} — اختر “جدول اليوم” لعرض التوقيت والحصص.` : `اليوم: ${dn} — لا توجد حصص.`}</small>
+  `;
+}
+
+function refreshAll(){
+  if(!activeSection) return;
+  buildWeekGrid(activeGrade, activeSection);
+  refreshBanner();
+}
+
+function bindTabs(){
+  document.querySelectorAll(".tab").forEach(tab=>{
+    tab.addEventListener("click", ()=>{
+      document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+      tab.classList.add("active");
+      activeGrade = tab.dataset.grade;
+      fillSections();
+      refreshAll();
+    });
+  });
+}
+
+/* ============================================
+   (K) نافذة جدول اليوم + نسخ/طباعة
+   ============================================ */
+function openModal(){
+  $("overlay").classList.add("show");
+  const now = new Date();
+  const dn = dayNameAr(now);
+  $("mTitle").textContent = `📅 جدول اليوم — ${GRADE_NAME[activeGrade]} • ${activeSection}`;
+  $("mSub").textContent = `${dn} • ${hijriToday()}`;
+  $("mMeta").textContent = `يُحدّث حسب الوقت`;
+
+  $("mBanner").innerHTML = `عرض الحصص بالتوقيت (الفسحة بعد الثالثة، والصلاة بعد السادسة للثاني/الثالث).`;
+
+  buildDayGrid(activeGrade, activeSection);
+}
+
+function closeModal(){
+  $("overlay").classList.remove("show");
+}
+
+function copyTodayText(){
+  const now = new Date();
+  const dn = dayNameAr(now);
+  const isWork = DAYS.includes(dn);
+
+  const slots = buildTimeline(activeGrade);
+  slots.forEach(s=>{
+    const ss = new Date(now); ss.setHours(s.start.getHours(), s.start.getMinutes(), 0, 0);
+    const ee = new Date(now); ee.setHours(s.end.getHours(), s.end.getMinutes(), 0, 0);
+    s.start=ss; s.end=ee;
+  });
+
+  let lines = [];
+  lines.push(`جدول اليوم — ${GRADE_NAME[activeGrade]} • ${activeSection}`);
+  lines.push(`${dn} • ${hijriToday()}`);
+  lines.push("—");
+
+  for(const s of slots){
+    let subj = "—";
+    if(s.type==="break") subj="فسحة";
+    else if(s.type==="pray") subj="صلاة";
+    else if(s.type==="class") subj = isWork ? subjectForPeriod(activeGrade, activeSection, dn, s.period) : "—";
+
+    lines.push(`${s.label} | ${fmtTime(s.start)}-${fmtTime(s.end)} | ${norm(subj)}`);
   }
 
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
+  const text = lines.join("\n");
+  navigator.clipboard?.writeText(text).then(()=>{
+    $("termMeta").textContent = "تم النسخ ✅";
+    setTimeout(()=>$("termMeta").textContent="يُحدّث تلقائياً", 1200);
+  }).catch(()=>{
+    alert(text);
+  });
+}
+
+/* ============================================
+   (L) تشغيل
+   ============================================ */
+function init(){
+  // tickers
+  buildTicker($("topRun"), TOP_TICKS);
+  buildTicker($("bottomRun"), BOTTOM_TICKS);
+
+  // hijri
+  $("todayHijriPill").textContent = hijriToday();
+
+  // countdown
+  startCountdown();
+
+  // tabs + sections
+  bindTabs();
+  fillSections();
+  refreshAll();
+
+  // live (all)
+  liveAll();
+  setInterval(liveAll, 15000);
+
+  // buttons
+  $("refreshBtn").addEventListener("click", ()=>{
+    refreshAll();
+    liveAll();
+  });
+  $("openTodayBtn").addEventListener("click", openModal);
+  $("todayBtn").addEventListener("click", openModal);
+  $("closeModalBtn").addEventListener("click", closeModal);
+  $("overlay").addEventListener("click", (e)=>{ if(e.target.id==="overlay") closeModal(); });
+
+  $("copyTodayBtn").addEventListener("click", copyTodayText);
+  $("mCopyBtn").addEventListener("click", copyTodayText);
+
+  $("printBtn").addEventListener("click", ()=>window.print());
+  $("mPrintBtn").addEventListener("click", ()=>window.print());
+
+  // Esc
+  document.addEventListener("keydown", (e)=>{
+    if(e.key==="Escape") closeModal();
+  });
+}
+
+init();
 </script>
 </body>
 </html>
