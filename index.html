@@ -288,19 +288,19 @@ html,body{
     <!-- الشواهد (4 صور) -->
     <div class="gallery" id="gallery">
       <div class="photo">
-        <input type="file" accept="image/*">
+        <input type="file" accept="*/*">
         <div class="hint" data-nopdf="true">تنبيه: يُفضّل استخدام صور بصيغة JPG للحصول على أفضل جودة في التقرير</div>
       </div>
       <div class="photo">
-        <input type="file" accept="image/*">
+        <input type="file" accept="*/*">
         <div class="hint" data-nopdf="true">تنبيه: يُفضّل استخدام صور بصيغة JPG للحصول على أفضل جودة في التقرير</div>
       </div>
       <div class="photo">
-        <input type="file" accept="image/*">
+        <input type="file" accept="*/*">
         <div class="hint" data-nopdf="true">تنبيه: يُفضّل استخدام صور بصيغة JPG للحصول على أفضل جودة في التقرير</div>
       </div>
       <div class="photo">
-        <input type="file" accept="image/*">
+        <input type="file" accept="*/*">
         <div class="hint" data-nopdf="true">تنبيه: يُفضّل استخدام صور بصيغة JPG للحصول على أفضل جودة في التقرير</div>
       </div>
     </div>
@@ -323,6 +323,32 @@ html,body{
 
 <script>
 const STORAGE_KEY='report_v15_headerPDF_chip';
+const LARGE_IMAGE_WARN_BYTES = 500 * 1024 * 1024; // 500MB
+
+function isImageLikeFile(file){
+  if(!file) return false;
+
+  // فحص نوع MIME إذا كان المتصفح يرسله
+  const type = (file.type || '').toLowerCase();
+  if(type.startsWith('image/')) return true;
+
+  // فحص الامتداد كحل احتياطي (HEIC/HEIF وغيرها قد لا يظهر type أحيانًا)
+  const name = (file.name || '').toLowerCase();
+  return /\.(jpg|jpeg|png|gif|webp|bmp|svg|avif|heic|heif|tif|tiff|ico|jfif|pjpeg|pjp|apng)$/i.test(name);
+}
+
+function warnIfLargeImage(file){
+  if(!file) return false;
+  if(file.size > LARGE_IMAGE_WARN_BYTES){
+    const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
+    return confirm(
+      `تنبيه: حجم الصورة كبير جدًا (${sizeMB} MB).\n` +
+      `يُفضّل ضغط الصورة قبل الإضافة لتسريع المعالجة وتجنّب التعليق أو الفشل.\n\n` +
+      `هل تريد المتابعة رغم ذلك؟`
+    );
+  }
+  return true;
+}
 function setBusy(b){const el=document.getElementById('btnPdf'); if(el) el.disabled=!!b;}
 function fitBox(id){
   const el=document.getElementById(id); if(!el) return;
@@ -375,23 +401,82 @@ async function renderFillNoDistortion(file,box){
   });
 }
 function bindPhotoBox(box){
-  const input=box.querySelector('input[type=file]'); const hint=box.querySelector('.hint');
-  const setImage=(src)=>{ let img=box.querySelector('img'); if(!img){img=document.createElement('img'); box.appendChild(img);} img.src=src; hint?.remove(); save(); };
-  input.addEventListener('change', async e=>{
-    const f=e.target.files?.[0]; if(!f) return;
-    try{ setImage(await renderFillNoDistortion(f, box)); }catch{ alert('تعذّر معالجة الصورة'); }
+  const input = box.querySelector('input[type=file]');
+  const hint  = box.querySelector('.hint');
+
+  const setImage = (src) => {
+    let img = box.querySelector('img');
+    if(!img){
+      img = document.createElement('img');
+      box.appendChild(img);
+    }
+    img.src = src;
+    hint?.remove();
+    save();
+  };
+
+  const handlePickedFile = async (f) => {
+    if(!f) return;
+
+    // تحقق أنه ملف صورة (حتى لو لم يُعرّفه المتصفح كـ image/*)
+    if(!isImageLikeFile(f)){
+      alert('الملف المختار ليس صورة.');
+      if(input) input.value = '';
+      return;
+    }
+
+    // تنبيه إذا الحجم أكبر من 500MB
+    if(!warnIfLargeImage(f)){
+      if(input) input.value = '';
+      return;
+    }
+
+    try{
+      setImage(await renderFillNoDistortion(f, box));
+    }catch{
+      alert('تعذّر معالجة الصورة. قد تكون الصيغة غير مدعومة في هذا المتصفح. يُفضّل تحويلها إلى JPG أو PNG.');
+    }finally{
+      // يسمح بإعادة اختيار نفس الملف مرة أخرى إن لزم
+      if(input) input.value = '';
+    }
+  };
+
+  input.addEventListener('change', async (e) => {
+    const f = e.target.files?.[0];
+    await handlePickedFile(f);
   });
-  box.addEventListener('click', ()=> input.click());
-  ['dragover','dragenter'].forEach(ev=> box.addEventListener(ev, e=>{e.preventDefault(); box.style.outline='2px dashed #2f7f79';}));
-  ['dragleave','drop'].forEach(ev=> box.addEventListener(ev, e=>{e.preventDefault(); box.style.outline='none';}));
-  box.addEventListener('drop', async e=>{
-    const f=e.dataTransfer?.files?.[0]; if(!f) return;
-    try{ setImage(await renderFillNoDistortion(f, box)); }catch{ alert('تعذّر معالجة الصورة'); }
+
+  box.addEventListener('click', (e) => {
+    // حتى لا يكرر فتح نافذة الاختيار لو الضغط على input نفسه
+    if(e.target === input) return;
+    input.click();
   });
-  box.addEventListener('paste', async e=>{
-    const item=[...(e.clipboardData?.items||[])].find(it=>it.type.startsWith('image/'));
+
+  ['dragover','dragenter'].forEach(ev =>
+    box.addEventListener(ev, (e) => {
+      e.preventDefault();
+      box.style.outline = '2px dashed #2f7f79';
+    })
+  );
+
+  ['dragleave','drop'].forEach(ev =>
+    box.addEventListener(ev, (e) => {
+      e.preventDefault();
+      box.style.outline = 'none';
+    })
+  );
+
+  box.addEventListener('drop', async (e) => {
+    const f = e.dataTransfer?.files?.[0];
+    await handlePickedFile(f);
+  });
+
+  box.addEventListener('paste', async (e) => {
+    // نأخذ أي ملف من اللصق ثم نتحقق برمجيًا هل هو صورة
+    const item = [...(e.clipboardData?.items || [])].find(it => it.kind === 'file');
     if(!item) return;
-    try{ setImage(await renderFillNoDistortion(item.getAsFile(), box)); }catch{ alert('تعذّر معالجة الصورة'); }
+    const f = item.getAsFile?.();
+    await handlePickedFile(f);
   });
 }
 
